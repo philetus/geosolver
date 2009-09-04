@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/compositionview" >
+        <file>resources/zoomin.png</file>
+        <file>resources/zoomout.png</file>
+    </qresource>
+</RCC>

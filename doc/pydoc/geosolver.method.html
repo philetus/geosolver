@@ -1,0 +1,345 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.method</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.method</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/method.py">/home/rick/Programming/Python/GeoSolver/geosolver/method.py</a></font></td></tr></table>
+    <p><tt>Module&nbsp;for&nbsp;method&nbsp;graphs&nbsp;<br>
+Copyright&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden,&nbsp;2003,&nbsp;2004<br>
+Created:&nbsp;1&nbsp;Nov&nbsp;2003.<br>
+&nbsp;<br>
+A&nbsp;method&nbsp;graph&nbsp;contains&nbsp;variables&nbsp;and&nbsp;methods.&nbsp;Methods&nbsp;are&nbsp;objects&nbsp;that<br>
+specify&nbsp;input&nbsp;and&nbsp;output&nbsp;variables&nbsp;and&nbsp;an&nbsp;'execute'&nbsp;method.&nbsp;Whenever&nbsp;the<br>
+value&nbsp;of&nbsp;a&nbsp;variable&nbsp;is&nbsp;changed,&nbsp;one&nbsp;or&nbsp;more&nbsp;methods&nbsp;are&nbsp;executed&nbsp;to&nbsp;update<br>
+the&nbsp;value&nbsp;of&nbsp;'upstream'&nbsp;variables.&nbsp;<br>
+&nbsp;<br>
+Changes:<br>
+23&nbsp;Nov&nbsp;2004&nbsp;-&nbsp;added&nbsp;Error&nbsp;classes,&nbsp;updated&nbsp;naming&nbsp;and&nbsp;doc&nbsp;conventions&nbsp;(<a href="http://www.python.org/peps/pep-0008.html">PEP&nbsp;8</a>,&nbsp;257)</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="exceptions.html#Exception">exceptions.Exception</a>(<a href="exceptions.html#BaseException">exceptions.BaseException</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.method.html#ValidityError">ValidityError</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.method.html#Method">Method</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.method.html#AddMethod">AddMethod</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.method.html#AssignMethod">AssignMethod</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.method.html#SetMethod">SetMethod</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.method.html#SubMethod">SubMethod</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.method.html#MethodGraph">MethodGraph</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AddMethod">class <strong>AddMethod</strong></a>(<a href="geosolver.method.html#Method">Method</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AddMethod-__init__"><strong>__init__</strong></a>(self, a, b, c)</dt><dd><tt>new&nbsp;method&nbsp;c&nbsp;:=&nbsp;a&nbsp;+&nbsp;b</tt></dd></dl>
+
+<dl><dt><a name="AddMethod-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="AddMethod-execute"><strong>execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">Method</a>:<br>
+<dl><dt><a name="AddMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="AddMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="AssignMethod">class <strong>AssignMethod</strong></a>(<a href="geosolver.method.html#Method">Method</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="AssignMethod-__init__"><strong>__init__</strong></a>(self, a, b)</dt><dd><tt>new&nbsp;method&nbsp;a&nbsp;:=&nbsp;b<br>
+&nbsp;<br>
+keyword&nbsp;arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;-&nbsp;variable&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;b&nbsp;-&nbsp;variable&nbsp;name</tt></dd></dl>
+
+<dl><dt><a name="AssignMethod-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="AssignMethod-execute"><strong>execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">Method</a>:<br>
+<dl><dt><a name="AssignMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="AssignMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Method">class <strong>Method</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Abstract&nbsp;method<br>
+&nbsp;<br>
+A&nbsp;<a href="#Method">Method</a>&nbsp;is&nbsp;an&nbsp;object&nbsp;that&nbsp;defines&nbsp;input&nbsp;variables,&nbsp;output&nbsp;variables<br>
+and&nbsp;an&nbsp;execute&nbsp;method.&nbsp;This&nbsp;class&nbsp;should&nbsp;be&nbsp;considered&nbsp;abstract.<br>
+Instances&nbsp;(of&nbsp;subclasses&nbsp;of)&nbsp;<a href="#Method">Method</a>&nbsp;must&nbsp;be&nbsp;non-mutable,&nbsp;hashable&nbsp;objects.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Method-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>Execute&nbsp;method.<br>
+&nbsp;<br>
+Returns&nbsp;a&nbsp;mapping&nbsp;(dictionary)&nbsp;of&nbsp;output&nbsp;variables&nbsp;to&nbsp;values,&nbsp;<br>
+given&nbsp;an&nbsp;input&nbsp;map,&nbsp;mapping&nbsp;input&nbsp;variables&nbsp;to&nbsp;values&nbsp;(dictionary)<br>
+The&nbsp;previous&nbsp;value&nbsp;of&nbsp;the&nbsp;output&nbsp;variable&nbsp;should&nbsp;also&nbsp;be&nbsp;in&nbsp;inmap.<br>
+If&nbsp;the&nbsp;method&nbsp;cannot&nbsp;be&nbsp;executed,&nbsp;it&nbsp;should&nbsp;return&nbsp;an&nbsp;empty&nbsp;map.</tt></dd></dl>
+
+<dl><dt><a name="Method-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Method-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MethodGraph">class <strong>MethodGraph</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Implementation&nbsp;of&nbsp;a&nbsp;method&nbsp;graph<br>
+&nbsp;<br>
+A&nbsp;method&nbsp;graph&nbsp;is&nbsp;represented&nbsp;by&nbsp;<br>
+a&nbsp;directed&nbsp;bi-partite&nbsp;graph:&nbsp;nodes&nbsp;are&nbsp;either&nbsp;varables&nbsp;or&nbsp;methods.&nbsp;<br>
+Edges&nbsp;run&nbsp;from&nbsp;input&nbsp;variables&nbsp;to&nbsp;methods&nbsp;and&nbsp;from&nbsp;methods&nbsp;to&nbsp;ouput<br>
+variables.&nbsp;<br>
+&nbsp;<br>
+A&nbsp;method&nbsp;graph&nbsp;may&nbsp;not&nbsp;contain&nbsp;cycles.&nbsp;Every&nbsp;variable&nbsp;must&nbsp;be&nbsp;<br>
+determined&nbsp;by&nbsp;at&nbsp;most&nbsp;one&nbsp;constraint.<br>
+&nbsp;<br>
+Methods&nbsp;must&nbsp;be&nbsp;instances&nbsp;of&nbsp;(subclasses&nbsp;of)&nbsp;class&nbsp;<a href="#Method">Method</a>.<br>
+Variables&nbsp;are&nbsp;basically&nbsp;just&nbsp;names,&nbsp;and&nbsp;may&nbsp;be&nbsp;any&nbsp;<br>
+non-mutable,&nbsp;hashable&nbsp;object,&nbsp;e.g.&nbsp;strings.<br>
+Values&nbsp;associated&nbsp;with&nbsp;variables&nbsp;may&nbsp;be&nbsp;of&nbsp;any&nbsp;type.<br>
+&nbsp;<br>
+If&nbsp;no&nbsp;value&nbsp;is&nbsp;explicitly&nbsp;associated&nbsp;with&nbsp;a&nbsp;variable,&nbsp;it&nbsp;defaults&nbsp;to&nbsp;None.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="MethodGraph-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MethodGraph-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MethodGraph-add_method"><strong>add_method</strong></a>(self, met, prop<font color="#909090">=True</font>)</dt><dd><tt>Add&nbsp;a&nbsp;method.<br>
+&nbsp;<br>
+Iff&nbsp;prop&nbsp;is&nbsp;true&nbsp;then&nbsp;this&nbsp;change&nbsp;and&nbsp;any&nbsp;pending<br>
+changes&nbsp;will&nbsp;be&nbsp;propagated.</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-add_variable"><strong>add_variable</strong></a>(self, varname, value<font color="#909090">=None</font>)</dt><dd><tt>Add&nbsp;a&nbsp;variable,&nbsp;optionally&nbsp;with&nbsp;a&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-clear"><strong>clear</strong></a>(self)</dt><dd><tt>clear&nbsp;methodgraph&nbsp;by&nbsp;removing&nbsp;all&nbsp;variables</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-execute"><strong>execute</strong></a>(self, met)</dt><dd><tt>Execute&nbsp;a&nbsp;method&nbsp;and&nbsp;proagate&nbsp;changes.&nbsp;<a href="#Method">Method</a>&nbsp;must&nbsp;be&nbsp;in&nbsp;Methodgraph</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-get"><strong>get</strong></a>(self, varname)</dt><dd><tt>get&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;variable</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-methods"><strong>methods</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-propagate"><strong>propagate</strong></a>(self)</dt><dd><tt>Propagate&nbsp;any&nbsp;pending&nbsp;changes.<br>
+&nbsp;<br>
+Changes&nbsp;are&nbsp;propagated&nbsp;until&nbsp;no&nbsp;changes&nbsp;are&nbsp;left&nbsp;or&nbsp;until<br>
+no&nbsp;more&nbsp;changes&nbsp;can&nbsp;be&nbsp;propagated.&nbsp;This&nbsp;method&nbsp;is&nbsp;called<br>
+from&nbsp;<a href="#MethodGraph-set">set</a>()&nbsp;and&nbsp;<a href="#MethodGraph-add_method">add_method</a>()&nbsp;by&nbsp;default.&nbsp;However,&nbsp;if&nbsp;the<br>
+user&nbsp;so&nbsp;chooses,&nbsp;the&nbsp;methods&nbsp;will&nbsp;not&nbsp;call&nbsp;propagate,&nbsp;and<br>
+the&nbsp;user&nbsp;should&nbsp;call&nbsp;this&nbsp;fucntion&nbsp;at&nbsp;a&nbsp;convenient&nbsp;time.</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-rem_method"><strong>rem_method</strong></a>(self, met)</dt><dd><tt>Remove&nbsp;a&nbsp;method</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-rem_variable"><strong>rem_variable</strong></a>(self, varname)</dt><dd><tt>Remove&nbsp;a&nbsp;variable&nbsp;and&nbsp;all&nbsp;methods&nbsp;on&nbsp;that&nbsp;variable</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-set"><strong>set</strong></a>(self, varname, value, prop<font color="#909090">=True</font>)</dt><dd><tt>Set&nbsp;the&nbsp;value&nbsp;of&nbsp;a&nbsp;variable.<br>
+&nbsp;<br>
+Iff&nbsp;prop&nbsp;is&nbsp;true&nbsp;then&nbsp;this&nbsp;change&nbsp;and&nbsp;any&nbsp;pending<br>
+changes&nbsp;will&nbsp;be&nbsp;propagated.</tt></dd></dl>
+
+<dl><dt><a name="MethodGraph-variables"><strong>variables</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;variables</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SetMethod">class <strong>SetMethod</strong></a>(<a href="geosolver.method.html#Method">Method</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SetMethod-__init__"><strong>__init__</strong></a>(self, var, value)</dt><dd><tt>new&nbsp;method&nbsp;var&nbsp;:=&nbsp;value<br>
+&nbsp;<br>
+keyword&nbsp;arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;-&nbsp;variable&nbsp;name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;-&nbsp;any&nbsp;object&nbsp;to&nbsp;be&nbsp;associated&nbsp;with&nbsp;var</tt></dd></dl>
+
+<dl><dt><a name="SetMethod-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SetMethod-execute"><strong>execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">Method</a>:<br>
+<dl><dt><a name="SetMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="SetMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SubMethod">class <strong>SubMethod</strong></a>(<a href="geosolver.method.html#Method">Method</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="SubMethod-__init__"><strong>__init__</strong></a>(self, a, b, c)</dt><dd><tt>new&nbsp;method&nbsp;c&nbsp;:=&nbsp;a&nbsp;-&nbsp;b</tt></dd></dl>
+
+<dl><dt><a name="SubMethod-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SubMethod-execute"><strong>execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">Method</a>:<br>
+<dl><dt><a name="SubMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="SubMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ValidityError">class <strong>ValidityError</strong></a>(<a href="exceptions.html#Exception">exceptions.Exception</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Error&nbsp;indicating&nbsp;operation&nbsp;violated&nbsp;<a href="#MethodGraph">MethodGraph</a>&nbsp;validity<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.method.html#ValidityError">ValidityError</a></dd>
+<dd><a href="exceptions.html#Exception">exceptions.Exception</a></dd>
+<dd><a href="exceptions.html#BaseException">exceptions.BaseException</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ValidityError-__init__"><strong>__init__</strong></a>(self, message)</dt><dd><tt>Constructor&nbsp;for&nbsp;<a href="#ValidityError">ValidityError</a><br>
+&nbsp;<br>
+arguments:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;message&nbsp;-&nbsp;message&nbsp;to&nbsp;be&nbsp;displayed</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="exceptions.html#Exception">exceptions.Exception</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x8145ea0&gt;<dd><tt>T.<a href="#ValidityError-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+<hr>
+Methods inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><a name="ValidityError-__delattr__"><strong>__delattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ValidityError-__delattr__">__delattr__</a>('name')&nbsp;&lt;==&gt;&nbsp;del&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#ValidityError-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#ValidityError-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__getslice__"><strong>__getslice__</strong></a>(...)</dt><dd><tt>x.<a href="#ValidityError-__getslice__">__getslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__reduce__"><strong>__reduce__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ValidityError-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#ValidityError-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__setattr__"><strong>__setattr__</strong></a>(...)</dt><dd><tt>x.<a href="#ValidityError-__setattr__">__setattr__</a>('name',&nbsp;value)&nbsp;&lt;==&gt;&nbsp;x.name&nbsp;=&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="ValidityError-__setstate__"><strong>__setstate__</strong></a>(...)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="exceptions.html#BaseException">exceptions.BaseException</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+</dl>
+<dl><dt><strong>args</strong></dt>
+</dl>
+<dl><dt><strong>message</strong></dt>
+<dd><tt>exception&nbsp;message</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-test"><strong>test</strong></a>()</dt></dl>
+</td></tr></table>
+</body></html>

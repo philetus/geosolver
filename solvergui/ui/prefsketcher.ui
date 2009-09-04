@@ -1,0 +1,528 @@
+<ui version="4.0" >
+ <class>sketcherForm</class>
+ <widget class="QWidget" name="sketcherForm" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>439</width>
+    <height>417</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="QLabel" name="label_10" >
+     <property name="maximumSize" >
+      <size>
+       <width>16777215</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="font" >
+      <font>
+       <pointsize>16</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text" >
+      <string>Sketcher Options</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="colorsizeGroupBox" >
+     <property name="title" >
+      <string>Color &amp;&amp; Size</string>
+     </property>
+     <layout class="QGridLayout" >
+      <property name="margin" >
+       <number>9</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Point:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" >
+       <widget class="QLabel" name="label_3" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Distance Constraint:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QPushButton" name="fPointClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Fixed point constraint color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" >
+       <widget class="QSpinBox" name="fPointSizeSpin" >
+        <property name="maximumSize" >
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Radius of the fixed point constraint</string>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" >
+       <widget class="QPushButton" name="dConstraintClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Distance constraint color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" >
+       <widget class="QPushButton" name="angleClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Angle constraint color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" >
+       <widget class="QLabel" name="label_7" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Background:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" >
+       <widget class="QLabel" name="label_6" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Selection:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" >
+       <widget class="QPushButton" name="selectClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Selection color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" >
+       <widget class="QLabel" name="label_4" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Angle Constraint:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2" >
+       <widget class="QSpinBox" name="distanceSizeSpin" >
+        <property name="maximumSize" >
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Radius of distance constraint</string>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QPushButton" name="distanceClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Line color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="label_5" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Fixed Point Constraint:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_2" >
+        <property name="font" >
+         <font>
+          <pointsize>9</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Line:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" >
+       <widget class="QPushButton" name="bgClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Background color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QPushButton" name="pointClrButton" >
+        <property name="maximumSize" >
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Point color</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="flat" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" >
+       <widget class="QSpinBox" name="pointSizeSpin" >
+        <property name="maximumSize" >
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Radius of the point</string>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <widget class="QSpinBox" name="lineSizeSpin" >
+        <property name="maximumSize" >
+         <size>
+          <width>50</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Radius of line</string>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="gridGroupBox" >
+     <property name="title" >
+      <string>Grid</string>
+     </property>
+     <layout class="QGridLayout" >
+      <property name="margin" >
+       <number>9</number>
+      </property>
+      <property name="spacing" >
+       <number>6</number>
+      </property>
+      <item row="1" column="4" >
+       <widget class="QSpinBox" name="gridHeightSpin" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize" >
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Height of one cell</string>
+        </property>
+        <property name="maximum" >
+         <number>999</number>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="label_8" >
+        <property name="font" >
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Show Grid:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="label_11" >
+        <property name="font" >
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Width:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3" >
+       <widget class="QLabel" name="label_12" >
+        <property name="minimumSize" >
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize" >
+         <size>
+          <width>16777215</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="font" >
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text" >
+         <string>Height:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QCheckBox" name="showgridCheckBox" >
+        <property name="toolTip" >
+         <string>Grid visibility</string>
+        </property>
+        <property name="text" >
+         <string/>
+        </property>
+        <property name="checked" >
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QSpinBox" name="gridWidthSpin" >
+        <property name="enabled" >
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize" >
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip" >
+         <string>Width of one cell</string>
+        </property>
+        <property name="suffix" >
+         <string/>
+        </property>
+        <property name="maximum" >
+         <number>999</number>
+        </property>
+        <property name="minimum" >
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2" >
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>20</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>showgridCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>gridWidthSpin</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>129</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>143</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showgridCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>gridHeightSpin</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>129</x>
+     <y>345</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>333</x>
+     <y>377</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

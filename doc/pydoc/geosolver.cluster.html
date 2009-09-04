@@ -1,0 +1,228 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.cluster</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.cluster</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/cluster.py">/home/rick/Programming/Python/GeoSolver/geosolver/cluster.py</a></font></td></tr></table>
+    <p><tt>Clusters&nbsp;are&nbsp;generalised&nbsp;constraints&nbsp;on&nbsp;sets&nbsp;of&nbsp;points&nbsp;in&nbsp;R^n.&nbsp;<a href="#Cluster">Cluster</a><br>
+types&nbsp;are&nbsp;Rigids,&nbsp;Hedgehogs&nbsp;and&nbsp;Balloons.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="geosolver.cluster.html#Angle">Angle</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.cluster.html#Distance">Distance</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.cluster.html#Cluster">Cluster</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.cluster.html#Balloon">Balloon</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.cluster.html#Hedgehog">Hedgehog</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.cluster.html#Rigid">Rigid</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Angle">class <strong>Angle</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;<a href="#Angle">Angle</a>&nbsp;represents&nbsp;a&nbsp;known&nbsp;angle<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Angle-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="Angle-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Angle-__init__"><strong>__init__</strong></a>(self, a, b, c)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#Angle">Angle</a><br>
+&nbsp;<br>
+keyword&nbsp;args:<br>
+&nbsp;a&nbsp;-&nbsp;point&nbsp;variable<br>
+&nbsp;b&nbsp;-&nbsp;point&nbsp;variable<br>
+&nbsp;c&nbsp;-&nbsp;point&nbsp;variable</tt></dd></dl>
+
+<dl><dt><a name="Angle-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Balloon">class <strong>Balloon</strong></a>(<a href="geosolver.cluster.html#Cluster">Cluster</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;<a href="#Balloon">Balloon</a>&nbsp;(or&nbsp;ScalableCluster)&nbsp;is&nbsp;set&nbsp;of&nbsp;points&nbsp;that&nbsp;is&nbsp;<br>
+invariant&nbsp;to&nbsp;rotation,&nbsp;translation&nbsp;and&nbsp;scaling.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.cluster.html#Balloon">Balloon</a></dd>
+<dd><a href="geosolver.cluster.html#Cluster">Cluster</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Balloon-__init__"><strong>__init__</strong></a>(self, variables)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;balloon<br>
+&nbsp;<br>
+keyword&nbsp;args:<br>
+&nbsp;vars&nbsp;-&nbsp;collection&nbsp;of&nbsp;PointVar's</tt></dd></dl>
+
+<dl><dt><a name="Balloon-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Balloon-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.cluster.html#Cluster">Cluster</a>:<br>
+<dl><dt><a name="Balloon-intersection"><strong>intersection</strong></a>(self, other)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a>:<br>
+<dl><dt><a name="Balloon-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Cluster">class <strong>Cluster</strong></a>(<a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;set&nbsp;of&nbsp;points,&nbsp;satisfying&nbsp;some&nbsp;constaint<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Cluster-intersection"><strong>intersection</strong></a>(self, other)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a>:<br>
+<dl><dt><a name="Cluster-__init__"><strong>__init__</strong></a>(self, name<font color="#909090">=None</font>)</dt></dl>
+
+<dl><dt><a name="Cluster-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Cluster-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Distance">class <strong>Distance</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;<a href="#Distance">Distance</a>&nbsp;represents&nbsp;a&nbsp;known&nbsp;distance<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Distance-__eq__"><strong>__eq__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="Distance-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Distance-__init__"><strong>__init__</strong></a>(self, a, b)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;<a href="#Distance">Distance</a><br>
+&nbsp;<br>
+keyword&nbsp;args:<br>
+&nbsp;a&nbsp;-&nbsp;point&nbsp;variable<br>
+&nbsp;b&nbsp;-&nbsp;point&nbsp;variable</tt></dd></dl>
+
+<dl><dt><a name="Distance-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Hedgehog">class <strong>Hedgehog</strong></a>(<a href="geosolver.cluster.html#Cluster">Cluster</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>An&nbsp;<a href="#Hedgehog">Hedgehog</a>&nbsp;(or&nbsp;AngleCluster)&nbsp;represents&nbsp;a&nbsp;set&nbsp;of&nbsp;points&nbsp;(M,X1...XN)&nbsp;<br>
+where&nbsp;all&nbsp;angles&nbsp;a(Xi,M,Xj)&nbsp;are&nbsp;known.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.cluster.html#Hedgehog">Hedgehog</a></dd>
+<dd><a href="geosolver.cluster.html#Cluster">Cluster</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Hedgehog-__init__"><strong>__init__</strong></a>(self, cvar, xvars)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;hedgehog<br>
+&nbsp;<br>
+keyword&nbsp;args:<br>
+&nbsp;cvar&nbsp;-&nbsp;center&nbsp;variable&nbsp;<br>
+&nbsp;xvars&nbsp;-&nbsp;list&nbsp;of&nbsp;variables</tt></dd></dl>
+
+<dl><dt><a name="Hedgehog-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Hedgehog-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.cluster.html#Cluster">Cluster</a>:<br>
+<dl><dt><a name="Hedgehog-intersection"><strong>intersection</strong></a>(self, other)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a>:<br>
+<dl><dt><a name="Hedgehog-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Rigid">class <strong>Rigid</strong></a>(<a href="geosolver.cluster.html#Cluster">Cluster</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;<a href="#Rigid">Rigid</a>&nbsp;(or&nbsp;RigidCluster)&nbsp;represent&nbsp;a&nbsp;cluster&nbsp;of&nbsp;points&nbsp;variables&nbsp;<br>
+that&nbsp;forms&nbsp;a&nbsp;rigid&nbsp;body.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.cluster.html#Rigid">Rigid</a></dd>
+<dd><a href="geosolver.cluster.html#Cluster">Cluster</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Rigid-__init__"><strong>__init__</strong></a>(self, vars)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;cluster<br>
+&nbsp;<br>
+keyword&nbsp;args:<br>
+&nbsp;vars&nbsp;-&nbsp;list&nbsp;of&nbsp;variables</tt></dd></dl>
+
+<dl><dt><a name="Rigid-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Rigid-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.cluster.html#Cluster">Cluster</a>:<br>
+<dl><dt><a name="Rigid-intersection"><strong>intersection</strong></a>(self, other)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiVariable">geosolver.multimethod.MultiVariable</a>:<br>
+<dl><dt><a name="Rigid-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-binomial"><strong>binomial</strong></a>(n, k)</dt></dl>
+ <dl><dt><a name="-num_angles"><strong>num_angles</strong></a>(cluster)</dt></dl>
+ <dl><dt><a name="-num_constraints"><strong>num_constraints</strong></a>(cluster)</dt></dl>
+ <dl><dt><a name="-num_distances"><strong>num_distances</strong></a>(cluster)</dt></dl>
+ <dl><dt><a name="-over_angles"><strong>over_angles</strong></a>(c1, c2)</dt></dl>
+ <dl><dt><a name="-over_angles_bb"><strong>over_angles_bb</strong></a>(b1, b2)</dt></dl>
+ <dl><dt><a name="-over_angles_bh"><strong>over_angles_bh</strong></a>(balloon, hog)</dt></dl>
+ <dl><dt><a name="-over_angles_cb"><strong>over_angles_cb</strong></a>(cluster, balloon)</dt></dl>
+ <dl><dt><a name="-over_angles_ch"><strong>over_angles_ch</strong></a>(cluster, hog)</dt></dl>
+ <dl><dt><a name="-over_angles_hh"><strong>over_angles_hh</strong></a>(hog1, hog2)</dt></dl>
+ <dl><dt><a name="-over_constraints"><strong>over_constraints</strong></a>(c1, c2)</dt><dd><tt>returns&nbsp;the&nbsp;over-constraints&nbsp;(duplicate&nbsp;distances&nbsp;and&nbsp;angles)&nbsp;for<br>
+a&nbsp;pair&nbsp;of&nbsp;clusters&nbsp;(rigid,&nbsp;angle&nbsp;or&nbsp;scalable).</tt></dd></dl>
+ <dl><dt><a name="-over_distances"><strong>over_distances</strong></a>(c1, c2)</dt><dd><tt>determine&nbsp;set&nbsp;of&nbsp;distances&nbsp;in&nbsp;c1&nbsp;and&nbsp;c2</tt></dd></dl>
+ <dl><dt><a name="-test"><strong>test</strong></a>()</dt></dl>
+</td></tr></table>
+</body></html>

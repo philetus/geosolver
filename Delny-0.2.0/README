@@ -1,0 +1,148 @@
+Delny
+=====
+
+This package contains some Python modules for Delaunay triangulation
+using the Qhull C library libqhull.
+
+
+Prerequisites
+=============
+
+Before the installation you will need an installation of qhull 2003.1
+including it's header files and libqhull in the standard locations for
+your system.  The _qhull module is an extension module and needs this
+to compile.
+
+Next the Numeric module for Python should be available, also including
+it's development files in the standard locations.
+
+And of course a proper Python installation with the header files and
+other development files.
+
+For Debian and Ubuntu these are the packages you want, some may
+depend on each other:
+python
+python-dev
+python-numeric
+libqhull5
+libqhull-dev
+
+
+Installation
+============
+
+Delny uses the Distutils, so to install run
+
+  $ ./setup install
+
+from within Delny's root directory.
+
+Or to install in your home directory for example, make sure
+~/lib/pyton exists and is included in your Python path (by setting the
+PYTHONPATH environment variable for instance) and run:
+
+  $ ./setup install --home=~
+
+For more information on the installation (recommended!) using
+Distutils use:
+
+  $ ./setup --help
+
+Extensive online Distutils documentation for sysadmins can be found on
+http://www.python.org/inst/inst.html
+
+
+Testing the installation
+========================
+
+Tests are included under the subdirectory `test'.  Files testing an
+individual module name "module" will be called "test_module", to test
+all modules at once there is a convenience script `all.py'.  If you
+want to run them make sure the correct `delaunay' package will get
+imported (see NOTE under "Using Delny" below), so to test a recent
+build e.g.:
+
+  $ ./setup build
+  $ cd build/lib.linux-i686-2.3  # or whichever dir for your setup
+  $ ../../test/all.py
+
+If tests fail be sure to check the `BUGS' file to see if there is any
+information about them.
+
+
+Using Delny
+===========
+
+Once installed, information on how to use is available from within
+Python as:
+
+  import delaunay
+  help(delaunay)
+
+NOTE: when the current directory is the package root the Python
+interpreter will import the Delaunay package form there instead as
+from the installed location because it comes first in sys.path.  This
+results in an error as __init__.py tries to load the _qhull module
+which is not available there as it is provided by _qhull.so which is
+only in the build/ directory and in it's installed directory.  Make
+sure you are using the package with the compiled extension module.
+
+
+Upgrading from pre 0.2.0
+========================
+
+No incompatible API changes where made.  Only the
+delaunay.facets_indices() method has been added.  Most changes where
+internally inside the _qhull module which is now much cleaner and more
+flexible.
+
+Note that there is still no guaranteed API stability as long as 1.0 is
+not reached.  In fact changes are still planned.
+
+The new versioning sheme doesn't use the `a' or `b' suffixes anymore
+for alpha or beta.  Just now that there's no stability untill 1.0 is
+reached.  The alpha and beta releases may come back when 1.0 is
+reached or just before.
+
+
+Upgrading from pre 0.1.0a2
+==========================
+
+Please note the API changes, this is still alpha so you should have
+know this would happen.
+
+Basically: (i) the package name is changed to "delaunay" (formerly
+"Delaunay").  (ii) the format for method (and function) names has
+changed.  Wat formally was "get_this_stuff()" is now "getThisStuff()".
+(iii) the tests have moved to the directory which they are testing,
+that is "Delny-xxx/tests/*" has moved to "Delny-xxx/delaunay/tests/*"
+
+As always, hopefully these things won't change anymore...
+
+
+Using qhull3.1
+==============
+
+When using qhull3.1 it will be necessary to modify the
+delaunay/_qhullmodule.c file.  Near the top you will see a line where
+#define QHULL_31_COMP=1 is commented out, uncomment this and it should
+work for qhull3.1.
+A more automated way for this is envisioned for a future release.
+
+Please note that any earlier version of qhull does not support
+triangulated output (Qt) and thus will not normally work with Delny,
+qhull3.1 is the oldest version you can use.
+
+
+Feedback
+========
+
+Please send feedback and bug reports to floris.bruynooghe@gmail.com.
+
+
+Authors
+=======
+
+This package was written by Floris Bruynooghe
+(floris.bruynooghe@gmail.com).  Ola Skavhaug <skavhaug@simula.no>
+contributed the initial patch for referring to nodes by index.

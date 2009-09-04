@@ -1,0 +1,203 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.clsolver</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.clsolver</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/clsolver.py">/home/rick/Programming/Python/GeoSolver/geosolver/clsolver.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;generic&nbsp;geometric&nbsp;constraint&nbsp;solver.&nbsp;<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;provides&nbsp;basic&nbsp;functionality&nbsp;for&nbsp;<br>
+ClusterSolver2D&nbsp;and&nbsp;ClusterSolver3D.<br>
+&nbsp;<br>
+The&nbsp;solver&nbsp;finds&nbsp;a&nbsp;generic&nbsp;solution<br>
+for&nbsp;problems&nbsp;formulated&nbsp;by&nbsp;Clusters.&nbsp;The&nbsp;generic&nbsp;solution&nbsp;<br>
+is&nbsp;a&nbsp;directed&nbsp;acyclic&nbsp;graph&nbsp;of&nbsp;Clusters&nbsp;and&nbsp;Methods.&nbsp;Particilar&nbsp;problems<br>
+and&nbsp;solutions&nbsp;are&nbsp;represented&nbsp;by&nbsp;a&nbsp;Configuration&nbsp;for&nbsp;each&nbsp;cluster.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>(<a href="geosolver.method.html#Method">geosolver.method.Method</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver.html#ClusterMethod">ClusterMethod</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver.html#PrototypeMethod">PrototypeMethod</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.notify.html#Notifier">geosolver.notify.Notifier</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver.html#ClusterSolver">ClusterSolver</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ClusterMethod">class <strong>ClusterMethod</strong></a>(<a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;derive&nbsp;is&nbsp;a&nbsp;method&nbsp;such&nbsp;that&nbsp;a&nbsp;single&nbsp;ouput&nbsp;cluster&nbsp;is&nbsp;a&nbsp;<br>
+subconsraint&nbsp;of&nbsp;a&nbsp;single&nbsp;input&nbsp;cluster.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ClusterMethod-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ClusterMethod-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ClusterMethod-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="ClusterMethod-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="ClusterMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="ClusterMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ClusterSolver">class <strong>ClusterSolver</strong></a>(<a href="geosolver.notify.html#Notifier">geosolver.notify.Notifier</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Constraints&nbsp;are&nbsp;Clusers:&nbsp;Rigids,&nbsp;Hedgehogs&nbsp;and&nbsp;Balloons.&nbsp;<br>
+After&nbsp;adding&nbsp;each&nbsp;cluster,&nbsp;the&nbsp;solver&nbsp;tries&nbsp;to&nbsp;merge<br>
+clusters,&nbsp;adding&nbsp;new&nbsp;clusters&nbsp;and&nbsp;methods&nbsp;between&nbsp;clusters.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ClusterSolver-__init__"><strong>__init__</strong></a>(self, dimension)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;empty&nbsp;solver</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ClusterSolver-add"><strong>add</strong></a>(self, cluster)</dt><dd><tt>Add&nbsp;a&nbsp;cluster.&nbsp;<br>
+&nbsp;<br>
+arguments:<br>
+&nbsp;&nbsp;&nbsp;cluster:&nbsp;A&nbsp;Rigid</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-angles"><strong>angles</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;angles</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-balloons"><strong>balloons</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;balloons</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-contains"><strong>contains</strong></a>(self, obj)</dt></dl>
+
+<dl><dt><a name="ClusterSolver-distances"><strong>distances</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;distances</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-find_dependend"><strong>find_dependend</strong></a>(self, object)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;objects&nbsp;that&nbsp;depend&nbsp;on&nbsp;given&nbsp;object&nbsp;directly.</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-find_depends"><strong>find_depends</strong></a>(self, object)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;objects&nbsp;that&nbsp;the&nbsp;given&nbsp;object&nbsp;depends&nbsp;on&nbsp;directly</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-get"><strong>get</strong></a>(self, cluster)</dt><dd><tt>Return&nbsp;a&nbsp;set&nbsp;of&nbsp;configurations&nbsp;associated&nbsp;with&nbsp;a&nbsp;cluster</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-hedgehogs"><strong>hedgehogs</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;hedgehogs</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-is_top_level"><strong>is_top_level</strong></a>(self, object)</dt></dl>
+
+<dl><dt><a name="ClusterSolver-methods"><strong>methods</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-remove"><strong>remove</strong></a>(self, cluster)</dt><dd><tt>Remove&nbsp;a&nbsp;cluster.&nbsp;<br>
+All&nbsp;dependend&nbsp;objects&nbsp;are&nbsp;also&nbsp;removed.</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-rigids"><strong>rigids</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;rigids</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-set"><strong>set</strong></a>(self, cluster, configurations)</dt><dd><tt>Associate&nbsp;a&nbsp;list&nbsp;of&nbsp;configurations&nbsp;with&nbsp;a&nbsp;cluster</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-set_root"><strong>set_root</strong></a>(self, rigid)</dt><dd><tt>Make&nbsp;given&nbsp;rigid&nbsp;cluster&nbsp;the&nbsp;root&nbsp;cluster<br>
+&nbsp;<br>
+arguments:<br>
+&nbsp;&nbsp;&nbsp;cluster:&nbsp;A&nbsp;Rigid</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-top_level"><strong>top_level</strong></a>(self)</dt><dd><tt>get&nbsp;top-level&nbsp;objects</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-variables"><strong>variables</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;variables</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.notify.html#Notifier">geosolver.notify.Notifier</a>:<br>
+<dl><dt><a name="ClusterSolver-add_listener"><strong>add_listener</strong></a>(self, listener)</dt><dd><tt>add&nbsp;a&nbsp;listener&nbsp;to&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;to&nbsp;listers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-rem_listener"><strong>rem_listener</strong></a>(self, listener)</dt><dd><tt>remove&nbsp;a&nbsp;listener&nbsp;from&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;from&nbsp;listers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver-send_notify"><strong>send_notify</strong></a>(self, message)</dt><dd><tt>send&nbsp;a&nbsp;message&nbsp;to&nbsp;all&nbsp;listeners</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PrototypeMethod">class <strong>PrototypeMethod</strong></a>(<a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;<a href="#PrototypeMethod">PrototypeMethod</a>&nbsp;selects&nbsp;those&nbsp;solutions&nbsp;of&nbsp;a&nbsp;cluster&nbsp;for&nbsp;which<br>
+the&nbsp;protoype&nbsp;and&nbsp;the&nbsp;solution&nbsp;satisfy&nbsp;the&nbsp;same&nbsp;constraints.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver.html#PrototypeMethod">PrototypeMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="PrototypeMethod-__init__"><strong>__init__</strong></a>(self, incluster, selclusters, outcluster, constraints)</dt></dl>
+
+<dl><dt><a name="PrototypeMethod-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="PrototypeMethod-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="PrototypeMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="PrototypeMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-is_information_increasing"><strong>is_information_increasing</strong></a>(method)</dt></dl>
+</td></tr></table>
+</body></html>

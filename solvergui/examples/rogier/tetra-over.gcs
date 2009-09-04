@@ -1,0 +1,14 @@
+<!DOCTYPE Geometric Constraints>
+<Objects>
+ <Point posX="-73.3571240964" posY="0.0" key="p1" posZ="-38.3773" name="p1" />
+ <Point posX="-175.226958827" posY="0.0" key="p4" posZ="70.0879" name="p4" />
+ <DistanceConstraint pBeginKey="p1" key="d5" distance="148.802428875" pEndKey="p4" name="d5" fixed="False" />
+ <Point posX="-38.2672092953" posY="0.0" key="p8" posZ="161.3944" name="p8" />
+ <DistanceConstraint pBeginKey="p4" key="d9" distance="164.605133377" pEndKey="p8" name="d9" fixed="False" />
+ <DistanceConstraint pBeginKey="p8" key="d12" distance="202.83006247" pEndKey="p1" name="d12" fixed="False" />
+ <Point posX="-108.766517105" posY="146.327118476" key="p15" posZ="59.2192" name="p15" />
+ <DistanceConstraint pBeginKey="p1" key="d16" distance="179.417188494" pEndKey="p15" name="d16" fixed="False" />
+ <DistanceConstraint pBeginKey="p15" key="d19" distance="161.079932192" pEndKey="p4" name="d19" fixed="False" />
+ <DistanceConstraint pBeginKey="p15" key="d24" distance="191.889419975" pEndKey="p8" name="d24" fixed="False" />
+ <AngleConstraint pMiddleKey="p15" pBeginKey="p4" key="a27" pEndKey="p8" name="a27" angle="30.3173" />
+</Objects>

@@ -1,0 +1,25 @@
+Metadata-Version: 1.0
+Name: Delny
+Version: 0.2.0
+Summary: Delaunay triangulation.
+Home-page: http://flub.stuffwillmade.org/delny
+Author: Floris Bruynooghe
+Author-email: floris.bruynooghe@gmail.com
+License: GNU General Pucblic License (GPL)
+Download-URL: http://flub.stuffwillmade.org/delny/dist/Delny-0.2.0.tar.gz
+Description: This package can be used to make a Delaunay triangulation of a set of
+        n-dimennsional points.  Currently it uses the C libqhull library to do
+        the triangulation.
+        
+Keywords: delaunay,qhull,geometry,triangulation
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: DFSG approved
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python
+Classifier: Topic :: Scientific/Engineering

@@ -1,0 +1,98 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.intersections</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.intersections</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/intersections.py">/home/rick/Programming/Python/GeoSolver/geosolver/intersections.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="geosolver.vector.html">geosolver.vector</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-angle_3p"><strong>angle_3p</strong></a>(p1, p2, p3)</dt><dd><tt>Returns&nbsp;the&nbsp;angle,&nbsp;in&nbsp;radians,&nbsp;rotating&nbsp;vector&nbsp;p2p1&nbsp;to&nbsp;vector&nbsp;p2p3.<br>
+arg&nbsp;keywords:<br>
+&nbsp;&nbsp;&nbsp;p1&nbsp;-&nbsp;a&nbsp;vector<br>
+&nbsp;&nbsp;&nbsp;p2&nbsp;-&nbsp;a&nbsp;vector<br>
+&nbsp;&nbsp;&nbsp;p3&nbsp;-&nbsp;a&nbsp;vector<br>
+returns:&nbsp;a&nbsp;number<br>
+In&nbsp;2D,&nbsp;the&nbsp;angle&nbsp;is&nbsp;a&nbsp;signed&nbsp;angle,&nbsp;range&nbsp;[-pi,pi],&nbsp;corresponding<br>
+to&nbsp;a&nbsp;clockwise&nbsp;rotation.&nbsp;If&nbsp;p1-p2-p3&nbsp;is&nbsp;clockwise,&nbsp;then&nbsp;angle&nbsp;&gt;&nbsp;0.<br>
+In&nbsp;3D,&nbsp;the&nbsp;angle&nbsp;is&nbsp;unsigned,&nbsp;range&nbsp;[0,pi]</tt></dd></dl>
+ <dl><dt><a name="-cc_int"><strong>cc_int</strong></a>(p1, r1, p2, r2)</dt><dd><tt>Intersect&nbsp;circle&nbsp;(p1,r1)&nbsp;circle&nbsp;(p2,r2)<br>
+where&nbsp;p1&nbsp;and&nbsp;p2&nbsp;are&nbsp;2-vectors&nbsp;and&nbsp;r1&nbsp;and&nbsp;r2&nbsp;are&nbsp;scalars<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero,&nbsp;one&nbsp;or&nbsp;two&nbsp;solution&nbsp;points.</tt></dd></dl>
+ <dl><dt><a name="-cl_int"><strong>cl_int</strong></a>(p1, r, p2, v)</dt><dd><tt>Intersect&nbsp;a&nbsp;circle&nbsp;(p1,r)&nbsp;with&nbsp;line&nbsp;(p2,v)<br>
+where&nbsp;p1,&nbsp;p2&nbsp;and&nbsp;v&nbsp;are&nbsp;2-vectors,&nbsp;r&nbsp;is&nbsp;a&nbsp;scalar<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero,&nbsp;one&nbsp;or&nbsp;two&nbsp;solution&nbsp;points</tt></dd></dl>
+ <dl><dt><a name="-cr_int"><strong>cr_int</strong></a>(p1, r, p2, v)</dt><dd><tt>Intersect&nbsp;a&nbsp;circle&nbsp;(p1,r)&nbsp;with&nbsp;ray&nbsp;(p2,v)&nbsp;(a&nbsp;half-line)<br>
+where&nbsp;p1,&nbsp;p2&nbsp;and&nbsp;v&nbsp;are&nbsp;2-vectors,&nbsp;r&nbsp;is&nbsp;a&nbsp;scalar<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero,&nbsp;one&nbsp;or&nbsp;two&nbsp;solutions.</tt></dd></dl>
+ <dl><dt><a name="-cs_transform_matrix"><strong>cs_transform_matrix</strong></a>(from_cs, to_cs)</dt><dd><tt>returns&nbsp;a&nbsp;transform&nbsp;matrix&nbsp;from&nbsp;from_cs&nbsp;to&nbsp;to_cs</tt></dd></dl>
+ <dl><dt><a name="-distance_2p"><strong>distance_2p</strong></a>(p1, p2)</dt><dd><tt>Returns&nbsp;the&nbsp;euclidean&nbsp;distance&nbsp;between&nbsp;two&nbsp;points<br>
+arg&nbsp;keywords:<br>
+&nbsp;&nbsp;&nbsp;p1&nbsp;-&nbsp;a&nbsp;vector<br>
+&nbsp;&nbsp;&nbsp;p2&nbsp;-&nbsp;a&nbsp;vector<br>
+returns:&nbsp;a&nbsp;number</tt></dd></dl>
+ <dl><dt><a name="-is_acute"><strong>is_acute</strong></a>(p1, p2, p3)</dt><dd><tt>returns&nbsp;True&nbsp;iff&nbsp;angle&nbsp;p1,p2,p3&nbsp;is&nbsp;acute,&nbsp;i.e.&nbsp;less&nbsp;than&nbsp;pi/2</tt></dd></dl>
+ <dl><dt><a name="-is_clockwise"><strong>is_clockwise</strong></a>(p1, p2, p3)</dt><dd><tt>returns&nbsp;True&nbsp;iff&nbsp;triangle&nbsp;p1,p2,p3&nbsp;is&nbsp;clockwise&nbsp;oriented</tt></dd></dl>
+ <dl><dt><a name="-is_counterclockwise"><strong>is_counterclockwise</strong></a>(p1, p2, p3)</dt><dd><tt>returns&nbsp;True&nbsp;iff&nbsp;triangle&nbsp;p1,p2,p3&nbsp;is&nbsp;counterclockwise&nbsp;oriented</tt></dd></dl>
+ <dl><dt><a name="-is_flat"><strong>is_flat</strong></a>(p1, p2, p3)</dt><dd><tt>returns&nbsp;True&nbsp;iff&nbsp;triangle&nbsp;p1,p2,p3&nbsp;is&nbsp;flat&nbsp;(neither&nbsp;clockwise&nbsp;of&nbsp;counterclockwise&nbsp;oriented)</tt></dd></dl>
+ <dl><dt><a name="-is_left_handed"><strong>is_left_handed</strong></a>(p1, p2, p3, p4)</dt><dd><tt>return&nbsp;True&nbsp;if&nbsp;tetrahedron&nbsp;p1&nbsp;p2&nbsp;p3&nbsp;p4&nbsp;is&nbsp;left&nbsp;handed</tt></dd></dl>
+ <dl><dt><a name="-is_obtuse"><strong>is_obtuse</strong></a>(p1, p2, p3)</dt><dd><tt>returns&nbsp;True&nbsp;iff&nbsp;angle&nbsp;p1,p2,p3&nbsp;is&nbsp;obtuse,&nbsp;i.e.&nbsp;greater&nbsp;than&nbsp;pi/2</tt></dd></dl>
+ <dl><dt><a name="-is_right_handed"><strong>is_right_handed</strong></a>(p1, p2, p3, p4)</dt><dd><tt>return&nbsp;True&nbsp;if&nbsp;tetrahedron&nbsp;p1&nbsp;p2&nbsp;p3&nbsp;p4&nbsp;is&nbsp;right&nbsp;handed</tt></dd></dl>
+ <dl><dt><a name="-ll_int"><strong>ll_int</strong></a>(p1, v1, p2, v2)</dt><dd><tt>Intersect&nbsp;line&nbsp;though&nbsp;p1&nbsp;direction&nbsp;v1&nbsp;with&nbsp;line&nbsp;through&nbsp;p2&nbsp;direction&nbsp;v2.<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero&nbsp;or&nbsp;one&nbsp;solutions</tt></dd></dl>
+ <dl><dt><a name="-lr_int"><strong>lr_int</strong></a>(p1, v1, p2, v2)</dt><dd><tt>Intersect&nbsp;line&nbsp;though&nbsp;p1&nbsp;direction&nbsp;v1&nbsp;with&nbsp;ray&nbsp;through&nbsp;p2&nbsp;direction&nbsp;v2.<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero&nbsp;or&nbsp;one&nbsp;solutions</tt></dd></dl>
+ <dl><dt><a name="-make_hcs_2d"><strong>make_hcs_2d</strong></a>(a, b)</dt><dd><tt>build&nbsp;a&nbsp;2D&nbsp;homogeneus&nbsp;coordiate&nbsp;system&nbsp;from&nbsp;two&nbsp;vectors</tt></dd></dl>
+ <dl><dt><a name="-make_hcs_2d_scaled"><strong>make_hcs_2d_scaled</strong></a>(a, b)</dt><dd><tt>build&nbsp;a&nbsp;2D&nbsp;homogeneus&nbsp;coordiate&nbsp;system&nbsp;from&nbsp;two&nbsp;vectors,&nbsp;but&nbsp;scale&nbsp;with&nbsp;distance&nbsp;between&nbsp;input&nbsp;point</tt></dd></dl>
+ <dl><dt><a name="-make_hcs_3d"><strong>make_hcs_3d</strong></a>(a, b, c)</dt><dd><tt>build&nbsp;a&nbsp;3D&nbsp;homogeneus&nbsp;coordiate&nbsp;system&nbsp;from&nbsp;three&nbsp;vectors</tt></dd></dl>
+ <dl><dt><a name="-make_hcs_3d_scaled"><strong>make_hcs_3d_scaled</strong></a>(a, b, c)</dt><dd><tt>build&nbsp;a&nbsp;3D&nbsp;homogeneus&nbsp;coordiate&nbsp;system&nbsp;from&nbsp;three&nbsp;vectors</tt></dd></dl>
+ <dl><dt><a name="-pivot_scale_3D"><strong>pivot_scale_3D</strong></a>(pivot, scale)</dt></dl>
+ <dl><dt><a name="-rotate_2D"><strong>rotate_2D</strong></a>(angle)</dt></dl>
+ <dl><dt><a name="-rr_int"><strong>rr_int</strong></a>(p1, v1, p2, v2)</dt><dd><tt>Intersect&nbsp;ray&nbsp;though&nbsp;p1&nbsp;direction&nbsp;v1&nbsp;with&nbsp;ray&nbsp;through&nbsp;p2&nbsp;direction&nbsp;v2.<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero&nbsp;or&nbsp;one&nbsp;solutions</tt></dd></dl>
+ <dl><dt><a name="-scale_3D"><strong>scale_3D</strong></a>(sx, sy, sz)</dt></dl>
+ <dl><dt><a name="-sign"><strong>sign</strong></a>(x)</dt><dd><tt>Returns&nbsp;1&nbsp;if&nbsp;x&gt;0,&nbsp;return&nbsp;-1&nbsp;if&nbsp;x&lt;=0</tt></dd></dl>
+ <dl><dt><a name="-sss_int"><strong>sss_int</strong></a>(p1, r1, p2, r2, p3, r3)</dt><dd><tt>Intersect&nbsp;three&nbsp;spheres,&nbsp;centered&nbsp;in&nbsp;p1,&nbsp;p2,&nbsp;p3&nbsp;with&nbsp;radius&nbsp;r1,r2,r3&nbsp;respectively.&nbsp;<br>
+Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;zero,&nbsp;one&nbsp;or&nbsp;two&nbsp;solution&nbsp;points.</tt></dd></dl>
+ <dl><dt><a name="-test1"><strong>test1</strong></a>()</dt></dl>
+ <dl><dt><a name="-test_ll_int"><strong>test_ll_int</strong></a>()</dt><dd><tt>test&nbsp;random&nbsp;line-line&nbsp;intersection.&nbsp;returns&nbsp;True&nbsp;iff&nbsp;succesful</tt></dd></dl>
+ <dl><dt><a name="-test_rr_int"><strong>test_rr_int</strong></a>()</dt><dd><tt>test&nbsp;random&nbsp;ray-ray&nbsp;intersection.&nbsp;returns&nbsp;True&nbsp;iff&nbsp;succesful</tt></dd></dl>
+ <dl><dt><a name="-test_sss_int"><strong>test_sss_int</strong></a>()</dt></dl>
+ <dl><dt><a name="-transform_point"><strong>transform_point</strong></a>(point, transform)</dt><dd><tt>transform&nbsp;a&nbsp;point&nbsp;from&nbsp;from_cs&nbsp;to&nbsp;to_cs</tt></dd></dl>
+ <dl><dt><a name="-translate_2D"><strong>translate_2D</strong></a>(dx, dy)</dt></dl>
+ <dl><dt><a name="-translate_3D"><strong>translate_3D</strong></a>(dx, dy, dz)</dt></dl>
+ <dl><dt><a name="-uniform_scale_3D"><strong>uniform_scale_3D</strong></a>(scale)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>NegInf</strong> = geosolver.tolerance.NegInf<br>
+<strong>PosInf</strong> = geosolver.tolerance.PosInf<br>
+<strong>default_tol</strong> = 9.9999999999999995e-07<br>
+<strong>diag_selector</strong> = &lt;_sre.SRE_Pattern object at 0xb7ec9b60&gt;<br>
+<strong>diag_stream</strong> = &lt;open file '&lt;stdout&gt;', mode 'w' at 0xb7eb3068&gt;</td></tr></table>
+</body></html>

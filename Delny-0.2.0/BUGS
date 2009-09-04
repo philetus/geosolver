@@ -1,0 +1,14 @@
+Known issues
+============
+
+* Some sets might fail to triangulate.  For example the square from
+  the delaunay/test/test_qhull.py script.  Problems can only occur
+  when having non-simplical facets (but don't have to), so normally
+  everything will work.  With a bit of luck this problem might get
+  solved reasonable soon.
+
+
+Reporting new bugs
+==================
+
+Please send new bugreports to fb102@soton.ac.uk

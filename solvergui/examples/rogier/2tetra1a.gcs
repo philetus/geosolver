@@ -1,0 +1,17 @@
+<!DOCTYPE Geometric Constraints>
+<Objects>
+ <Point posX="-4.60611512629" posY="0.0" key="p1" posZ="-116.688254705" name="p1" />
+ <Point posX="-148.93105575" posY="0.0" key="p2" posZ="-3.07074354487" name="p2" />
+ <Point posX="144.324940624" posY="0.0" key="p3" posZ="-3.07074354487" name="p3" />
+ <Point posX="-1.53537170876" posY="0.0" key="p4" posZ="109.011395843" name="p4" />
+ <Point posX="2.95611926501" posY="93.6746905489" key="p5" posZ="1.36321034663" name="p5" />
+ <DistanceConstraint pBeginKey="p1" key="d8" distance="183.680775609" pEndKey="p2" name="d8" />
+ <DistanceConstraint pBeginKey="p2" key="d11" distance="185.1699048" pEndKey="p4" name="d11" />
+ <DistanceConstraint pBeginKey="p4" key="d14" distance="183.950092915" pEndKey="p3" name="d14" />
+ <DistanceConstraint pBeginKey="p3" key="d17" distance="187.321643728" pEndKey="p1" name="d17" />
+ <DistanceConstraint pBeginKey="p1" key="d20" distance="150.891628128" pEndKey="p5" name="d20" />
+ <DistanceConstraint pBeginKey="p5" key="d23" distance="142.769930242" pEndKey="p4" name="d23" />
+ <AngleConstraint pMiddleKey="p2" pBeginKey="p1" key="a26" pEndKey="p4" name="a26" angle="75.4609913022" />
+ <DistanceConstraint pBeginKey="p3" key="d29" distance="169.64595854" pEndKey="p5" name="d29" />
+ <DistanceConstraint pBeginKey="p5" key="d32" distance="178.505802512" pEndKey="p2" name="d32" />
+</Objects>

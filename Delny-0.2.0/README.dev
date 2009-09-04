@@ -1,0 +1,17 @@
+Coding Style
+============
+
+In general try and follow the PEP's.  In particular these are:
+
+* PEP 7 for C code
+   Exeptions:
+    - When splitting lines the operators go in the *beginning of the
+      next* line.
+    - The naming conventions can be mostly ignored as this is not a
+      stdlib module, follow the GNU coding standards instead.
+    - Maybe also stick to GNU standards for indentation?
+
+* PEP 8 for python code
+* PEP 257 tells about docstrings
+
+All PEP's can be found on http://python.org/peps.

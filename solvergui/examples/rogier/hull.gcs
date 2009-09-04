@@ -1,0 +1,8 @@
+<!DOCTYPE Geometric Constraints>
+<Objects>
+ <Point posX="-102.042567557" posY="0.0" key="p1" posZ="-125.625695757" name="p1" />
+ <Point posX="182.212891938" posY="0.0" key="p2" posZ="-172.240480171" name="p2" />
+ <Point posX="39.4489138172" posY="0.0" key="p3" posZ="152.329810134" name="p3" />
+ <Point posX="-116.821440551" posY="0.0" key="p4" posZ="153.872905504" name="p4" />
+ <Point posX="-25.3354" posY="65.4036847931" key="p5" posZ="22.0612" name="p5" />
+</Objects>

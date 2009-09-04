@@ -1,0 +1,75 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.notify</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.notify</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/notify.py">/home/rick/Programming/Python/GeoSolver/geosolver/notify.py</a></font></td></tr></table>
+    <p><tt>This&nbsp;module&nbsp;implements&nbsp;a&nbsp;simple&nbsp;listen/notify&nbsp;schema</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="weakref.html">weakref</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="geosolver.notify.html#Listener">Listener</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.notify.html#Notifier">Notifier</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Listener">class <strong>Listener</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;listener&nbsp;is&nbsp;notified&nbsp;by&nbsp;one&nbsp;or&nbsp;more&nbsp;Notifiers.<br>
+&nbsp;<br>
+instance&nbsp;attributes:<br>
+&nbsp;notifiers&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Notifier">Notifier</a>&nbsp;objects<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Listener-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Listener-add_notifier"><strong>add_notifier</strong></a>(self, notifier)</dt><dd><tt>add&nbsp;a&nbsp;notifier&nbsp;to&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;to&nbsp;notifiers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="Listener-receive_notify"><strong>receive_notify</strong></a>(self, source, message)</dt><dd><tt>receive&nbsp;a&nbsp;message&nbsp;from&nbsp;a&nbsp;notifier.&nbsp;Implementing&nbsp;classes&nbsp;should&nbsp;override&nbsp;this.</tt></dd></dl>
+
+<dl><dt><a name="Listener-rem_notifier"><strong>rem_notifier</strong></a>(self, notifier)</dt><dd><tt>remove&nbsp;a&nbsp;notifier&nbsp;from&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;from&nbsp;notifiers'&nbsp;list)</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Notifier">class <strong>Notifier</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;notifier&nbsp;keeps&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Listener">Listener</a>&nbsp;instances&nbsp;that&nbsp;are&nbsp;to&nbsp;be&nbsp;informed&nbsp;of&nbsp;certain&nbsp;events.<br>
+&nbsp;<br>
+instance&nbsp;attributes:<br>
+&nbsp;listeners&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;a&nbsp;list&nbsp;of&nbsp;<a href="#Listener">Listener</a>&nbsp;instances<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Notifier-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Notifier-add_listener"><strong>add_listener</strong></a>(self, listener)</dt><dd><tt>add&nbsp;a&nbsp;listener&nbsp;to&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;to&nbsp;listers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="Notifier-rem_listener"><strong>rem_listener</strong></a>(self, listener)</dt><dd><tt>remove&nbsp;a&nbsp;listener&nbsp;from&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;from&nbsp;listers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="Notifier-send_notify"><strong>send_notify</strong></a>(self, message)</dt><dd><tt>send&nbsp;a&nbsp;message&nbsp;to&nbsp;all&nbsp;listeners</tt></dd></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

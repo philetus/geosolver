@@ -1,0 +1,1387 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.matfunc</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.matfunc</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/matfunc.py">/home/rick/Programming/Python/GeoSolver/geosolver/matfunc.py</a></font></td></tr></table>
+    <p><tt>Basic&nbsp;<a href="#Table">Table</a>,&nbsp;<a href="#Matrix">Matrix</a>&nbsp;and&nbsp;Vector&nbsp;functions&nbsp;for&nbsp;Python&nbsp;2.2<br>
+License:&nbsp;&nbsp;Public&nbsp;Domain&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Author:&nbsp;&nbsp;&nbsp;Raymond&nbsp;Hettinger&nbsp;email:&nbsp;&nbsp;python@rcn.com<br>
+Updates&nbsp;and&nbsp;documentation:&nbsp;&nbsp;<a href="http://users.rcn.com/python/download/python.htm">http://users.rcn.com/python/download/python.htm</a><br>
+Revision&nbsp;In&nbsp;Use:&nbsp;&nbsp;'File&nbsp;%n,&nbsp;Ver&nbsp;%v,&nbsp;Date&nbsp;%f'</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="operator.html">operator</a><br>
+</td><td width="25%" valign=top><a href="random.html">random</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="__builtin__.html#list">__builtin__.list</a>(<a href="__builtin__.html#object">__builtin__.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#Table">Table</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#Matrix">Matrix</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#Square">Square</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#Triangular">Triangular</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#LowerTri">LowerTri</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#UpperTri">UpperTri</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.matfunc.html#Vec">Vec</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="LowerTri">class <strong>LowerTri</strong></a>(<a href="geosolver.matfunc.html#Triangular">Triangular</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#LowerTri">LowerTri</a></dd>
+<dd><a href="geosolver.matfunc.html#Triangular">Triangular</a></dd>
+<dd><a href="geosolver.matfunc.html#Square">Square</a></dd>
+<dd><a href="geosolver.matfunc.html#Matrix">Matrix</a></dd>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Triangular">Triangular</a>:<br>
+<dl><dt><a name="LowerTri-det"><strong>det</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-eigs"><strong>eigs</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Square">Square</a>:<br>
+<dl><dt><a name="LowerTri-__pow__"><strong>__pow__</strong></a>(self, exp)</dt><dd><tt>Raise&nbsp;a&nbsp;square&nbsp;matrix&nbsp;to&nbsp;an&nbsp;integer&nbsp;power&nbsp;(i.e.&nbsp;A**3&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;A.<a href="#LowerTri-mmul">mmul</a>(A.<a href="#LowerTri-mmul">mmul</a>(A))</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-hessenberg"><strong>hessenberg</strong></a>(self)</dt><dd><tt>Householder&nbsp;reduction&nbsp;to&nbsp;Hessenberg&nbsp;Form&nbsp;(zeroes&nbsp;below&nbsp;the&nbsp;diagonal)<br>
+while&nbsp;keeping&nbsp;the&nbsp;same&nbsp;eigenvalues&nbsp;as&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-inverse"><strong>inverse</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-lu"><strong>lu</strong></a>(self)</dt><dd><tt>Factor&nbsp;a&nbsp;square&nbsp;matrix&nbsp;into&nbsp;lower&nbsp;and&nbsp;upper&nbsp;triangular&nbsp;form&nbsp;such&nbsp;that&nbsp;L.<a href="#LowerTri-mmul">mmul</a>(U)==A</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><a name="LowerTri-__init__"><strong>__init__</strong></a>(self, elems)</dt><dd><tt>Form&nbsp;a&nbsp;matrix&nbsp;from&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;lists&nbsp;or&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;Vecs</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-augment"><strong>augment</strong></a>(self, otherMat)</dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;matrix&nbsp;with&nbsp;the&nbsp;two&nbsp;original&nbsp;matrices&nbsp;laid&nbsp;side&nbsp;by&nbsp;side</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-diag"><strong>diag</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;vector&nbsp;composed&nbsp;of&nbsp;elements&nbsp;on&nbsp;the&nbsp;matrix&nbsp;diagonal</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-mmul"><strong>mmul</strong></a>(self, other)</dt><dd><tt><a href="#Matrix">Matrix</a>&nbsp;multiply&nbsp;by&nbsp;another&nbsp;matrix&nbsp;or&nbsp;a&nbsp;column&nbsp;vector</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-qr"><strong>qr</strong></a>(self, ROnly<font color="#909090">=0</font>)</dt><dd><tt>QR&nbsp;decomposition&nbsp;using&nbsp;Householder&nbsp;reflections:&nbsp;Q*R==self,&nbsp;Q.<a href="#LowerTri-tr">tr</a>()*Q==I(n),&nbsp;R&nbsp;upper&nbsp;triangular</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-rank"><strong>rank</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-solve"><strong>solve</strong></a>(self, b)</dt><dd><tt>Divide&nbsp;matrix&nbsp;into&nbsp;a&nbsp;column&nbsp;vector&nbsp;or&nbsp;matrix&nbsp;and&nbsp;iterate&nbsp;to&nbsp;improve&nbsp;the&nbsp;solution</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-star"><strong>star</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Hermetian&nbsp;adjoint&nbsp;so&nbsp;that&nbsp;Star[i][j]&nbsp;=&nbsp;Original[j][i].<a href="#LowerTri-conjugate">conjugate</a>()</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-tr"><strong>tr</strong></a>(self)</dt><dd><tt>Tranpose&nbsp;elements&nbsp;so&nbsp;that&nbsp;Transposed[i][j]&nbsp;=&nbsp;Original[j][i]</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-trace"><strong>trace</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><strong>cols</strong></dt>
+</dl>
+<dl><dt><strong>rows</strong></dt>
+</dl>
+<dl><dt><strong>size</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><a name="LowerTri-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="LowerTri-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="LowerTri-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="LowerTri-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="LowerTri-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#LowerTri-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="LowerTri-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="LowerTri-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#LowerTri-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#LowerTri-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="LowerTri-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#LowerTri-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#LowerTri-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Matrix">class <strong>Matrix</strong></a>(<a href="geosolver.matfunc.html#Table">Table</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#Matrix">Matrix</a></dd>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Matrix-__init__"><strong>__init__</strong></a>(self, elems)</dt><dd><tt>Form&nbsp;a&nbsp;matrix&nbsp;from&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;lists&nbsp;or&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;Vecs</tt></dd></dl>
+
+<dl><dt><a name="Matrix-augment"><strong>augment</strong></a>(self, otherMat)</dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;matrix&nbsp;with&nbsp;the&nbsp;two&nbsp;original&nbsp;matrices&nbsp;laid&nbsp;side&nbsp;by&nbsp;side</tt></dd></dl>
+
+<dl><dt><a name="Matrix-diag"><strong>diag</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;vector&nbsp;composed&nbsp;of&nbsp;elements&nbsp;on&nbsp;the&nbsp;matrix&nbsp;diagonal</tt></dd></dl>
+
+<dl><dt><a name="Matrix-mmul"><strong>mmul</strong></a>(self, other)</dt><dd><tt><a href="#Matrix">Matrix</a>&nbsp;multiply&nbsp;by&nbsp;another&nbsp;matrix&nbsp;or&nbsp;a&nbsp;column&nbsp;vector</tt></dd></dl>
+
+<dl><dt><a name="Matrix-qr"><strong>qr</strong></a>(self, ROnly<font color="#909090">=0</font>)</dt><dd><tt>QR&nbsp;decomposition&nbsp;using&nbsp;Householder&nbsp;reflections:&nbsp;Q*R==self,&nbsp;Q.<a href="#Matrix-tr">tr</a>()*Q==I(n),&nbsp;R&nbsp;upper&nbsp;triangular</tt></dd></dl>
+
+<dl><dt><a name="Matrix-rank"><strong>rank</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-solve"><strong>solve</strong></a>(self, b)</dt><dd><tt>Divide&nbsp;matrix&nbsp;into&nbsp;a&nbsp;column&nbsp;vector&nbsp;or&nbsp;matrix&nbsp;and&nbsp;iterate&nbsp;to&nbsp;improve&nbsp;the&nbsp;solution</tt></dd></dl>
+
+<dl><dt><a name="Matrix-star"><strong>star</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Hermetian&nbsp;adjoint&nbsp;so&nbsp;that&nbsp;Star[i][j]&nbsp;=&nbsp;Original[j][i].<a href="#Matrix-conjugate">conjugate</a>()</tt></dd></dl>
+
+<dl><dt><a name="Matrix-tr"><strong>tr</strong></a>(self)</dt><dd><tt>Tranpose&nbsp;elements&nbsp;so&nbsp;that&nbsp;Transposed[i][j]&nbsp;=&nbsp;Original[j][i]</tt></dd></dl>
+
+<dl><dt><a name="Matrix-trace"><strong>trace</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>cols</strong></dt>
+</dl>
+<dl><dt><strong>rows</strong></dt>
+</dl>
+<dl><dt><strong>size</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><a name="Matrix-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="Matrix-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Matrix-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Matrix-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Matrix-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Matrix-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#Matrix-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="Matrix-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="Matrix-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Matrix-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="Matrix-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="Matrix-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Matrix-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Matrix-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="Matrix-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#Matrix-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="Matrix-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Matrix-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="Matrix-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Matrix-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="Matrix-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="Matrix-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Matrix-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="Matrix-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#Matrix-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#Matrix-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Square">class <strong>Square</strong></a>(<a href="geosolver.matfunc.html#Matrix">Matrix</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#Square">Square</a></dd>
+<dd><a href="geosolver.matfunc.html#Matrix">Matrix</a></dd>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Square-__pow__"><strong>__pow__</strong></a>(self, exp)</dt><dd><tt>Raise&nbsp;a&nbsp;square&nbsp;matrix&nbsp;to&nbsp;an&nbsp;integer&nbsp;power&nbsp;(i.e.&nbsp;A**3&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;A.<a href="#Square-mmul">mmul</a>(A.<a href="#Square-mmul">mmul</a>(A))</tt></dd></dl>
+
+<dl><dt><a name="Square-det"><strong>det</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-eigs"><strong>eigs</strong></a>(self)</dt><dd><tt>Estimate&nbsp;principal&nbsp;eigenvalues&nbsp;using&nbsp;the&nbsp;QR&nbsp;with&nbsp;shifts&nbsp;method</tt></dd></dl>
+
+<dl><dt><a name="Square-hessenberg"><strong>hessenberg</strong></a>(self)</dt><dd><tt>Householder&nbsp;reduction&nbsp;to&nbsp;Hessenberg&nbsp;Form&nbsp;(zeroes&nbsp;below&nbsp;the&nbsp;diagonal)<br>
+while&nbsp;keeping&nbsp;the&nbsp;same&nbsp;eigenvalues&nbsp;as&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="Square-inverse"><strong>inverse</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-lu"><strong>lu</strong></a>(self)</dt><dd><tt>Factor&nbsp;a&nbsp;square&nbsp;matrix&nbsp;into&nbsp;lower&nbsp;and&nbsp;upper&nbsp;triangular&nbsp;form&nbsp;such&nbsp;that&nbsp;L.<a href="#Square-mmul">mmul</a>(U)==A</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><a name="Square-__init__"><strong>__init__</strong></a>(self, elems)</dt><dd><tt>Form&nbsp;a&nbsp;matrix&nbsp;from&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;lists&nbsp;or&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;Vecs</tt></dd></dl>
+
+<dl><dt><a name="Square-augment"><strong>augment</strong></a>(self, otherMat)</dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;matrix&nbsp;with&nbsp;the&nbsp;two&nbsp;original&nbsp;matrices&nbsp;laid&nbsp;side&nbsp;by&nbsp;side</tt></dd></dl>
+
+<dl><dt><a name="Square-diag"><strong>diag</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;vector&nbsp;composed&nbsp;of&nbsp;elements&nbsp;on&nbsp;the&nbsp;matrix&nbsp;diagonal</tt></dd></dl>
+
+<dl><dt><a name="Square-mmul"><strong>mmul</strong></a>(self, other)</dt><dd><tt><a href="#Matrix">Matrix</a>&nbsp;multiply&nbsp;by&nbsp;another&nbsp;matrix&nbsp;or&nbsp;a&nbsp;column&nbsp;vector</tt></dd></dl>
+
+<dl><dt><a name="Square-qr"><strong>qr</strong></a>(self, ROnly<font color="#909090">=0</font>)</dt><dd><tt>QR&nbsp;decomposition&nbsp;using&nbsp;Householder&nbsp;reflections:&nbsp;Q*R==self,&nbsp;Q.<a href="#Square-tr">tr</a>()*Q==I(n),&nbsp;R&nbsp;upper&nbsp;triangular</tt></dd></dl>
+
+<dl><dt><a name="Square-rank"><strong>rank</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-solve"><strong>solve</strong></a>(self, b)</dt><dd><tt>Divide&nbsp;matrix&nbsp;into&nbsp;a&nbsp;column&nbsp;vector&nbsp;or&nbsp;matrix&nbsp;and&nbsp;iterate&nbsp;to&nbsp;improve&nbsp;the&nbsp;solution</tt></dd></dl>
+
+<dl><dt><a name="Square-star"><strong>star</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Hermetian&nbsp;adjoint&nbsp;so&nbsp;that&nbsp;Star[i][j]&nbsp;=&nbsp;Original[j][i].<a href="#Square-conjugate">conjugate</a>()</tt></dd></dl>
+
+<dl><dt><a name="Square-tr"><strong>tr</strong></a>(self)</dt><dd><tt>Tranpose&nbsp;elements&nbsp;so&nbsp;that&nbsp;Transposed[i][j]&nbsp;=&nbsp;Original[j][i]</tt></dd></dl>
+
+<dl><dt><a name="Square-trace"><strong>trace</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><strong>cols</strong></dt>
+</dl>
+<dl><dt><strong>rows</strong></dt>
+</dl>
+<dl><dt><strong>size</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><a name="Square-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Square-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Square-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Square-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="Square-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Square-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Square-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Square-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Square-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Square-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Square-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Square-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Square-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#Square-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="Square-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="Square-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Square-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="Square-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Square-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Square-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Square-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Square-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Square-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Square-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Square-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="Square-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="Square-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Square-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Square-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Square-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Square-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Square-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Square-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#Square-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="Square-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Square-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Square-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Square-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#Square-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="Square-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#Square-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="Square-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#Square-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Square-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#Square-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="Square-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#Square-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Square-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#Square-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="Square-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#Square-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="Square-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#Square-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Square-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#Square-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="Square-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#Square-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#Square-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Table">class <strong>Table</strong></a>(<a href="__builtin__.html#list">__builtin__.list</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Table-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Table-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Table-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Table-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="Table-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-__init__"><strong>__init__</strong></a>(self, elems)</dt></dl>
+
+<dl><dt><a name="Table-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Table-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Table-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Table-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Table-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Table-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Table-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Table-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Table-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#Table-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="Table-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="Table-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Table-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="Table-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Table-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Table-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Table-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Table-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Table-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Table-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Table-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="Table-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="Table-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Table-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Table-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Table-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Table-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Table-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Table-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#Table-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="Table-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Table-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Table-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Table-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#Table-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="Table-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#Table-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="Table-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#Table-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Table-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#Table-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="Table-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#Table-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Table-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#Table-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="Table-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#Table-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="Table-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#Table-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Table-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#Table-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="Table-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#Table-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#Table-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Triangular">class <strong>Triangular</strong></a>(<a href="geosolver.matfunc.html#Square">Square</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#Triangular">Triangular</a></dd>
+<dd><a href="geosolver.matfunc.html#Square">Square</a></dd>
+<dd><a href="geosolver.matfunc.html#Matrix">Matrix</a></dd>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Triangular-det"><strong>det</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-eigs"><strong>eigs</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Square">Square</a>:<br>
+<dl><dt><a name="Triangular-__pow__"><strong>__pow__</strong></a>(self, exp)</dt><dd><tt>Raise&nbsp;a&nbsp;square&nbsp;matrix&nbsp;to&nbsp;an&nbsp;integer&nbsp;power&nbsp;(i.e.&nbsp;A**3&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;A.<a href="#Triangular-mmul">mmul</a>(A.<a href="#Triangular-mmul">mmul</a>(A))</tt></dd></dl>
+
+<dl><dt><a name="Triangular-hessenberg"><strong>hessenberg</strong></a>(self)</dt><dd><tt>Householder&nbsp;reduction&nbsp;to&nbsp;Hessenberg&nbsp;Form&nbsp;(zeroes&nbsp;below&nbsp;the&nbsp;diagonal)<br>
+while&nbsp;keeping&nbsp;the&nbsp;same&nbsp;eigenvalues&nbsp;as&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="Triangular-inverse"><strong>inverse</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-lu"><strong>lu</strong></a>(self)</dt><dd><tt>Factor&nbsp;a&nbsp;square&nbsp;matrix&nbsp;into&nbsp;lower&nbsp;and&nbsp;upper&nbsp;triangular&nbsp;form&nbsp;such&nbsp;that&nbsp;L.<a href="#Triangular-mmul">mmul</a>(U)==A</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><a name="Triangular-__init__"><strong>__init__</strong></a>(self, elems)</dt><dd><tt>Form&nbsp;a&nbsp;matrix&nbsp;from&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;lists&nbsp;or&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;Vecs</tt></dd></dl>
+
+<dl><dt><a name="Triangular-augment"><strong>augment</strong></a>(self, otherMat)</dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;matrix&nbsp;with&nbsp;the&nbsp;two&nbsp;original&nbsp;matrices&nbsp;laid&nbsp;side&nbsp;by&nbsp;side</tt></dd></dl>
+
+<dl><dt><a name="Triangular-diag"><strong>diag</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;vector&nbsp;composed&nbsp;of&nbsp;elements&nbsp;on&nbsp;the&nbsp;matrix&nbsp;diagonal</tt></dd></dl>
+
+<dl><dt><a name="Triangular-mmul"><strong>mmul</strong></a>(self, other)</dt><dd><tt><a href="#Matrix">Matrix</a>&nbsp;multiply&nbsp;by&nbsp;another&nbsp;matrix&nbsp;or&nbsp;a&nbsp;column&nbsp;vector</tt></dd></dl>
+
+<dl><dt><a name="Triangular-qr"><strong>qr</strong></a>(self, ROnly<font color="#909090">=0</font>)</dt><dd><tt>QR&nbsp;decomposition&nbsp;using&nbsp;Householder&nbsp;reflections:&nbsp;Q*R==self,&nbsp;Q.<a href="#Triangular-tr">tr</a>()*Q==I(n),&nbsp;R&nbsp;upper&nbsp;triangular</tt></dd></dl>
+
+<dl><dt><a name="Triangular-rank"><strong>rank</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-solve"><strong>solve</strong></a>(self, b)</dt><dd><tt>Divide&nbsp;matrix&nbsp;into&nbsp;a&nbsp;column&nbsp;vector&nbsp;or&nbsp;matrix&nbsp;and&nbsp;iterate&nbsp;to&nbsp;improve&nbsp;the&nbsp;solution</tt></dd></dl>
+
+<dl><dt><a name="Triangular-star"><strong>star</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Hermetian&nbsp;adjoint&nbsp;so&nbsp;that&nbsp;Star[i][j]&nbsp;=&nbsp;Original[j][i].<a href="#Triangular-conjugate">conjugate</a>()</tt></dd></dl>
+
+<dl><dt><a name="Triangular-tr"><strong>tr</strong></a>(self)</dt><dd><tt>Tranpose&nbsp;elements&nbsp;so&nbsp;that&nbsp;Transposed[i][j]&nbsp;=&nbsp;Original[j][i]</tt></dd></dl>
+
+<dl><dt><a name="Triangular-trace"><strong>trace</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><strong>cols</strong></dt>
+</dl>
+<dl><dt><strong>rows</strong></dt>
+</dl>
+<dl><dt><strong>size</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><a name="Triangular-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="Triangular-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Triangular-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Triangular-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Triangular-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Triangular-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#Triangular-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="Triangular-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="Triangular-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Triangular-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="Triangular-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="Triangular-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Triangular-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Triangular-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="Triangular-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#Triangular-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="Triangular-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Triangular-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="Triangular-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Triangular-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="Triangular-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="Triangular-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Triangular-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="Triangular-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#Triangular-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#Triangular-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UpperTri">class <strong>UpperTri</strong></a>(<a href="geosolver.matfunc.html#Triangular">Triangular</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#UpperTri">UpperTri</a></dd>
+<dd><a href="geosolver.matfunc.html#Triangular">Triangular</a></dd>
+<dd><a href="geosolver.matfunc.html#Square">Square</a></dd>
+<dd><a href="geosolver.matfunc.html#Matrix">Matrix</a></dd>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Triangular">Triangular</a>:<br>
+<dl><dt><a name="UpperTri-det"><strong>det</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-eigs"><strong>eigs</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Square">Square</a>:<br>
+<dl><dt><a name="UpperTri-__pow__"><strong>__pow__</strong></a>(self, exp)</dt><dd><tt>Raise&nbsp;a&nbsp;square&nbsp;matrix&nbsp;to&nbsp;an&nbsp;integer&nbsp;power&nbsp;(i.e.&nbsp;A**3&nbsp;is&nbsp;the&nbsp;same&nbsp;as&nbsp;A.<a href="#UpperTri-mmul">mmul</a>(A.<a href="#UpperTri-mmul">mmul</a>(A))</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-hessenberg"><strong>hessenberg</strong></a>(self)</dt><dd><tt>Householder&nbsp;reduction&nbsp;to&nbsp;Hessenberg&nbsp;Form&nbsp;(zeroes&nbsp;below&nbsp;the&nbsp;diagonal)<br>
+while&nbsp;keeping&nbsp;the&nbsp;same&nbsp;eigenvalues&nbsp;as&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-inverse"><strong>inverse</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-lu"><strong>lu</strong></a>(self)</dt><dd><tt>Factor&nbsp;a&nbsp;square&nbsp;matrix&nbsp;into&nbsp;lower&nbsp;and&nbsp;upper&nbsp;triangular&nbsp;form&nbsp;such&nbsp;that&nbsp;L.<a href="#UpperTri-mmul">mmul</a>(U)==A</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><a name="UpperTri-__init__"><strong>__init__</strong></a>(self, elems)</dt><dd><tt>Form&nbsp;a&nbsp;matrix&nbsp;from&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;lists&nbsp;or&nbsp;a&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;of&nbsp;Vecs</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-augment"><strong>augment</strong></a>(self, otherMat)</dt><dd><tt>Make&nbsp;a&nbsp;new&nbsp;matrix&nbsp;with&nbsp;the&nbsp;two&nbsp;original&nbsp;matrices&nbsp;laid&nbsp;side&nbsp;by&nbsp;side</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-diag"><strong>diag</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;vector&nbsp;composed&nbsp;of&nbsp;elements&nbsp;on&nbsp;the&nbsp;matrix&nbsp;diagonal</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-mmul"><strong>mmul</strong></a>(self, other)</dt><dd><tt><a href="#Matrix">Matrix</a>&nbsp;multiply&nbsp;by&nbsp;another&nbsp;matrix&nbsp;or&nbsp;a&nbsp;column&nbsp;vector</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-qr"><strong>qr</strong></a>(self, ROnly<font color="#909090">=0</font>)</dt><dd><tt>QR&nbsp;decomposition&nbsp;using&nbsp;Householder&nbsp;reflections:&nbsp;Q*R==self,&nbsp;Q.<a href="#UpperTri-tr">tr</a>()*Q==I(n),&nbsp;R&nbsp;upper&nbsp;triangular</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-rank"><strong>rank</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-solve"><strong>solve</strong></a>(self, b)</dt><dd><tt>Divide&nbsp;matrix&nbsp;into&nbsp;a&nbsp;column&nbsp;vector&nbsp;or&nbsp;matrix&nbsp;and&nbsp;iterate&nbsp;to&nbsp;improve&nbsp;the&nbsp;solution</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-star"><strong>star</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;Hermetian&nbsp;adjoint&nbsp;so&nbsp;that&nbsp;Star[i][j]&nbsp;=&nbsp;Original[j][i].<a href="#UpperTri-conjugate">conjugate</a>()</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-tr"><strong>tr</strong></a>(self)</dt><dd><tt>Tranpose&nbsp;elements&nbsp;so&nbsp;that&nbsp;Transposed[i][j]&nbsp;=&nbsp;Original[j][i]</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-trace"><strong>trace</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Matrix">Matrix</a>:<br>
+<dl><dt><strong>cols</strong></dt>
+</dl>
+<dl><dt><strong>rows</strong></dt>
+</dl>
+<dl><dt><strong>size</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><a name="UpperTri-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="UpperTri-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="UpperTri-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="UpperTri-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="UpperTri-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#UpperTri-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="UpperTri-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="UpperTri-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#UpperTri-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#UpperTri-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="UpperTri-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#UpperTri-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#UpperTri-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Vec">class <strong>Vec</strong></a>(<a href="geosolver.matfunc.html#Table">Table</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.matfunc.html#Vec">Vec</a></dd>
+<dd><a href="geosolver.matfunc.html#Table">Table</a></dd>
+<dd><a href="__builtin__.html#list">__builtin__.list</a></dd>
+<dd><a href="__builtin__.html#object">__builtin__.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Vec-cross"><strong>cross</strong></a>(self, otherVec)</dt><dd><tt>Compute&nbsp;a&nbsp;Vector&nbsp;or&nbsp;Cross&nbsp;Product&nbsp;with&nbsp;another&nbsp;vector</tt></dd></dl>
+
+<dl><dt><a name="Vec-dot"><strong>dot</strong></a>(self, otherVec)</dt></dl>
+
+<dl><dt><a name="Vec-house"><strong>house</strong></a>(self, index)</dt><dd><tt>Compute&nbsp;a&nbsp;Householder&nbsp;vector&nbsp;which&nbsp;zeroes&nbsp;all&nbsp;but&nbsp;the&nbsp;index&nbsp;element&nbsp;after&nbsp;a&nbsp;reflection</tt></dd></dl>
+
+<dl><dt><a name="Vec-norm"><strong>norm</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-normSquared"><strong>normSquared</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-normalize"><strong>normalize</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-outer"><strong>outer</strong></a>(self, otherVec)</dt></dl>
+
+<dl><dt><a name="Vec-polyval"><strong>polyval</strong></a>(self, x)</dt><dd><tt><a href="#Vec">Vec</a>([6,3,4]).<a href="#Vec-polyval">polyval</a>(5)&nbsp;evaluates&nbsp;to&nbsp;6*x**2&nbsp;+&nbsp;3*x&nbsp;+&nbsp;4&nbsp;at&nbsp;x=5</tt></dd></dl>
+
+<dl><dt><a name="Vec-ratval"><strong>ratval</strong></a>(self, x)</dt><dd><tt><a href="#Vec">Vec</a>([10,20,30,40,50]).<a href="#-ratfit">ratfit</a>(5)&nbsp;evaluates&nbsp;to&nbsp;(10*x**2&nbsp;+&nbsp;20*x&nbsp;+&nbsp;30)&nbsp;/&nbsp;(40*x**2&nbsp;+&nbsp;50*x&nbsp;+&nbsp;1)&nbsp;at&nbsp;x=5.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><a name="Vec-__abs__"><strong>__abs__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-__add__"><strong>__add__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Vec-__div__"><strong>__div__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Vec-__eq__"><strong>__eq__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Vec-__getslice__"><strong>__getslice__</strong></a>(self, i, j)</dt></dl>
+
+<dl><dt><a name="Vec-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-__init__"><strong>__init__</strong></a>(self, elems)</dt></dl>
+
+<dl><dt><a name="Vec-__mul__"><strong>__mul__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Vec-__neg__"><strong>__neg__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-__radd__"><strong>__radd__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Vec-__rdiv__"><strong>__rdiv__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Vec-__rmul__"><strong>__rmul__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Vec-__rsub__"><strong>__rsub__</strong></a>(self, lhs)</dt></dl>
+
+<dl><dt><a name="Vec-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-__sub__"><strong>__sub__</strong></a>(self, rhs)</dt></dl>
+
+<dl><dt><a name="Vec-conjugate"><strong>conjugate</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-exists"><strong>exists</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Vec-flatten"><strong>flatten</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-forall"><strong>forall</strong></a>(self, predicate)</dt></dl>
+
+<dl><dt><a name="Vec-imag"><strong>imag</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-makehash"><strong>makehash</strong></a>(self)</dt><dd><tt>#&nbsp;by&nbsp;Rick&nbsp;van&nbsp;der&nbsp;Meiden&nbsp;2007-01-25<br>
+#&nbsp;Tables&nbsp;and&nbsp;it's&nbsp;subclasses&nbsp;can&nbsp;now&nbsp;be&nbsp;used&nbsp;<br>
+#&nbsp;in&nbsp;sets&nbsp;and&nbsp;dictionaries,&nbsp;but&nbsp;please&nbsp;be&nbsp;<br>
+#&nbsp;careful&nbsp;with&nbsp;mutations.&nbsp;It&nbsp;is&nbsp;possible<br>
+#&nbsp;to&nbsp;compute&nbsp;a&nbsp;new&nbsp;__hash__&nbsp;by&nbsp;calling<br>
+#&nbsp;<a href="#Vec-makehash">makehash</a>()</tt></dd></dl>
+
+<dl><dt><a name="Vec-map"><strong>map</strong></a>(self, op, rhs<font color="#909090">=None</font>)</dt><dd><tt>Apply&nbsp;a&nbsp;unary&nbsp;operator&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;the&nbsp;matrix&nbsp;or&nbsp;a&nbsp;binary&nbsp;operator&nbsp;to&nbsp;corresponding<br>
+elements&nbsp;in&nbsp;two&nbsp;arrays.&nbsp;&nbsp;If&nbsp;the&nbsp;dimensions&nbsp;are&nbsp;different,&nbsp;broadcast&nbsp;the&nbsp;smaller&nbsp;dimension&nbsp;over<br>
+the&nbsp;larger&nbsp;(i.e.&nbsp;match&nbsp;a&nbsp;scalar&nbsp;to&nbsp;every&nbsp;element&nbsp;in&nbsp;a&nbsp;vector&nbsp;or&nbsp;a&nbsp;vector&nbsp;to&nbsp;a&nbsp;matrix).</tt></dd></dl>
+
+<dl><dt><a name="Vec-prod"><strong>prod</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-real"><strong>real</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Vec-sum"><strong>sum</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="geosolver.matfunc.html#Table">Table</a>:<br>
+<dl><dt><strong>dim</strong> = 1</dl>
+
+<hr>
+Methods inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><a name="Vec-__contains__"><strong>__contains__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__contains__">__contains__</a>(y)&nbsp;&lt;==&gt;&nbsp;y&nbsp;in&nbsp;x</tt></dd></dl>
+
+<dl><dt><a name="Vec-__delitem__"><strong>__delitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__delitem__">__delitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Vec-__delslice__"><strong>__delslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__delslice__">__delslice__</a>(i,&nbsp;j)&nbsp;&lt;==&gt;&nbsp;del&nbsp;x[i:j]<br>
+&nbsp;<br>
+Use&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Vec-__ge__"><strong>__ge__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__ge__">__ge__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;=y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__getattribute__"><strong>__getattribute__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__getattribute__">__getattribute__</a>('name')&nbsp;&lt;==&gt;&nbsp;x.name</tt></dd></dl>
+
+<dl><dt><a name="Vec-__getitem__"><strong>__getitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__getitem__">__getitem__</a>(y)&nbsp;&lt;==&gt;&nbsp;x[y]</tt></dd></dl>
+
+<dl><dt><a name="Vec-__gt__"><strong>__gt__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__gt__">__gt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&gt;y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__iadd__"><strong>__iadd__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__iadd__">__iadd__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+=y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__imul__"><strong>__imul__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__imul__">__imul__</a>(y)&nbsp;&lt;==&gt;&nbsp;x*=y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__iter__"><strong>__iter__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__iter__">__iter__</a>()&nbsp;&lt;==&gt;&nbsp;iter(x)</tt></dd></dl>
+
+<dl><dt><a name="Vec-__le__"><strong>__le__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__le__">__le__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;=y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__len__"><strong>__len__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__len__">__len__</a>()&nbsp;&lt;==&gt;&nbsp;len(x)</tt></dd></dl>
+
+<dl><dt><a name="Vec-__lt__"><strong>__lt__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__lt__">__lt__</a>(y)&nbsp;&lt;==&gt;&nbsp;x&lt;y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__ne__"><strong>__ne__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__ne__">__ne__</a>(y)&nbsp;&lt;==&gt;&nbsp;x!=y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__repr__"><strong>__repr__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__repr__">__repr__</a>()&nbsp;&lt;==&gt;&nbsp;repr(x)</tt></dd></dl>
+
+<dl><dt><a name="Vec-__reversed__"><strong>__reversed__</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-__reversed__">__reversed__</a>()&nbsp;--&nbsp;return&nbsp;a&nbsp;reverse&nbsp;iterator&nbsp;over&nbsp;the&nbsp;<a href="__builtin__.html#list">list</a></tt></dd></dl>
+
+<dl><dt><a name="Vec-__setitem__"><strong>__setitem__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__setitem__">__setitem__</a>(i,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i]=y</tt></dd></dl>
+
+<dl><dt><a name="Vec-__setslice__"><strong>__setslice__</strong></a>(...)</dt><dd><tt>x.<a href="#Vec-__setslice__">__setslice__</a>(i,&nbsp;j,&nbsp;y)&nbsp;&lt;==&gt;&nbsp;x[i:j]=y<br>
+&nbsp;<br>
+Use&nbsp;&nbsp;of&nbsp;negative&nbsp;indices&nbsp;is&nbsp;not&nbsp;supported.</tt></dd></dl>
+
+<dl><dt><a name="Vec-append"><strong>append</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-append">append</a>(object)&nbsp;--&nbsp;append&nbsp;object&nbsp;to&nbsp;end</tt></dd></dl>
+
+<dl><dt><a name="Vec-concat"><strong>concat</strong></a> = __add__(...)</dt><dd><tt>x.<a href="#Vec-__add__">__add__</a>(y)&nbsp;&lt;==&gt;&nbsp;x+y</tt></dd></dl>
+
+<dl><dt><a name="Vec-count"><strong>count</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-count">count</a>(value)&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;number&nbsp;of&nbsp;occurrences&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Vec-extend"><strong>extend</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-extend">extend</a>(iterable)&nbsp;--&nbsp;extend&nbsp;<a href="__builtin__.html#list">list</a>&nbsp;by&nbsp;appending&nbsp;elements&nbsp;from&nbsp;the&nbsp;iterable</tt></dd></dl>
+
+<dl><dt><a name="Vec-index"><strong>index</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-index">index</a>(value,&nbsp;[start,&nbsp;[stop]])&nbsp;-&gt;&nbsp;integer&nbsp;--&nbsp;return&nbsp;first&nbsp;index&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Vec-insert"><strong>insert</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-insert">insert</a>(index,&nbsp;object)&nbsp;--&nbsp;insert&nbsp;object&nbsp;before&nbsp;index</tt></dd></dl>
+
+<dl><dt><a name="Vec-pop"><strong>pop</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-pop">pop</a>([index])&nbsp;-&gt;&nbsp;item&nbsp;--&nbsp;remove&nbsp;and&nbsp;return&nbsp;item&nbsp;at&nbsp;index&nbsp;(default&nbsp;last)</tt></dd></dl>
+
+<dl><dt><a name="Vec-remove"><strong>remove</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-remove">remove</a>(value)&nbsp;--&nbsp;remove&nbsp;first&nbsp;occurrence&nbsp;of&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Vec-reverse"><strong>reverse</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-reverse">reverse</a>()&nbsp;--&nbsp;reverse&nbsp;*IN&nbsp;PLACE*</tt></dd></dl>
+
+<dl><dt><a name="Vec-sort"><strong>sort</strong></a>(...)</dt><dd><tt>L.<a href="#Vec-sort">sort</a>(cmp=None,&nbsp;key=None,&nbsp;reverse=False)&nbsp;--&nbsp;stable&nbsp;sort&nbsp;*IN&nbsp;PLACE*;<br>
+cmp(x,&nbsp;y)&nbsp;-&gt;&nbsp;-1,&nbsp;0,&nbsp;1</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="__builtin__.html#list">__builtin__.list</a>:<br>
+<dl><dt><strong>__new__</strong> = &lt;built-in method __new__ of type object at 0x814a120&gt;<dd><tt>T.<a href="#Vec-__new__">__new__</a>(S,&nbsp;...)&nbsp;-&gt;&nbsp;a&nbsp;new&nbsp;object&nbsp;with&nbsp;type&nbsp;S,&nbsp;a&nbsp;subtype&nbsp;of&nbsp;T</tt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-Mat"><strong>Mat</strong></a>(elems)</dt><dd><tt>Factory&nbsp;function&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;matrix.</tt></dd></dl>
+ <dl><dt><a name="-eye"><strong>eye</strong></a>(m<font color="#909090">=1</font>, n<font color="#909090">=None</font>)</dt><dd><tt>Identity&nbsp;matrix&nbsp;with&nbsp;side&nbsp;length&nbsp;m-by-m&nbsp;or&nbsp;m-by-n</tt></dd></dl>
+ <dl><dt><a name="-funToVec"><strong>funToVec</strong></a>(tgtfun, low<font color="#909090">=-1</font>, high<font color="#909090">=1</font>, steps<font color="#909090">=40</font>, EqualSpacing<font color="#909090">=0</font>)</dt><dd><tt>Compute&nbsp;x,y&nbsp;points&nbsp;from&nbsp;evaluating&nbsp;a&nbsp;target&nbsp;function&nbsp;over&nbsp;an&nbsp;interval&nbsp;(low&nbsp;to&nbsp;high)<br>
+at&nbsp;evenly&nbsp;spaces&nbsp;points&nbsp;or&nbsp;with&nbsp;Chebyshev&nbsp;abscissa&nbsp;spacing&nbsp;(default)</tt></dd></dl>
+ <dl><dt><a name="-funfit"><strong>funfit</strong></a>((xvec, yvec), basisfuns)</dt><dd><tt>Solves&nbsp;design&nbsp;matrix&nbsp;for&nbsp;approximating&nbsp;to&nbsp;basis&nbsp;functions</tt></dd></dl>
+ <dl><dt><a name="-genmat"><strong>genmat</strong></a>(m, n, func)</dt></dl>
+ <dl><dt><a name="-getconj"><strong>getconj</strong></a>(z)</dt></dl>
+ <dl><dt><a name="-getimag"><strong>getimag</strong></a>(z)</dt></dl>
+ <dl><dt><a name="-getreal"><strong>getreal</strong></a>(z)</dt></dl>
+ <dl><dt><a name="-hilb"><strong>hilb</strong></a>(m<font color="#909090">=1</font>, n<font color="#909090">=None</font>)</dt><dd><tt>Hilbert&nbsp;matrix&nbsp;with&nbsp;side&nbsp;length&nbsp;m-by-m&nbsp;or&nbsp;m-by-n.&nbsp;&nbsp;Elem[i][j]=1/(i+j+1)</tt></dd></dl>
+ <dl><dt><a name="-iszero"><strong>iszero</strong></a>(z)</dt></dl>
+ <dl><dt><a name="-polyfit"><strong>polyfit</strong></a>((xvec, yvec), degree<font color="#909090">=2</font>)</dt><dd><tt>Solves&nbsp;Vandermonde&nbsp;design&nbsp;matrix&nbsp;for&nbsp;approximating&nbsp;polynomial&nbsp;coefficients</tt></dd></dl>
+ <dl><dt><a name="-rand"><strong>rand</strong></a>(m<font color="#909090">=1</font>, n<font color="#909090">=None</font>)</dt><dd><tt>Random&nbsp;matrix&nbsp;with&nbsp;side&nbsp;length&nbsp;m-by-m&nbsp;or&nbsp;m-by-n</tt></dd></dl>
+ <dl><dt><a name="-ratfit"><strong>ratfit</strong></a>((xvec, yvec), degree<font color="#909090">=2</font>)</dt><dd><tt>Solves&nbsp;design&nbsp;matrix&nbsp;for&nbsp;approximating&nbsp;rational&nbsp;polynomial&nbsp;coefficients&nbsp;(a*x**2&nbsp;+&nbsp;b*x&nbsp;+&nbsp;c)/(d*x**2&nbsp;+&nbsp;e*x&nbsp;+&nbsp;1)</tt></dd></dl>
+ <dl><dt><a name="-zeroes"><strong>zeroes</strong></a>(m<font color="#909090">=1</font>, n<font color="#909090">=None</font>)</dt><dd><tt>Zero&nbsp;matrix&nbsp;with&nbsp;side&nbsp;length&nbsp;m-by-m&nbsp;or&nbsp;m-by-n.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>NPOST</strong> = 0<br>
+<strong>NPRE</strong> = 0<br>
+<strong>Version</strong> = 'File MATFUNC.PY, Ver 183, Date 12-Dec-2002,14:33:42'<br>
+<strong>separator</strong> = ['', '<font color="#c040c0">\t</font>', '<font color="#c040c0">\n</font>', '<font color="#c040c0">\n</font>----------<font color="#c040c0">\n</font>', '<font color="#c040c0">\n</font>===========<font color="#c040c0">\n</font>']</td></tr></table>
+</body></html>

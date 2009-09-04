@@ -1,0 +1,23 @@
+<!DOCTYPE Geometric Constraints>
+<Objects>
+ <Point posX="-4.1440416981" posY="0.0" key="p1" posZ="-65.4478" name="p1" />
+ <Point posX="-71.8300587061" posY="0.0" key="p4" posZ="39.8084" name="p4" />
+ <DistanceConstraint pBeginKey="p1" key="d5" distance="125.140978647" pEndKey="p4" name="d5" fixed="False" />
+ <Point posX="52.4911961455" posY="0.0" key="p8" posZ="42.5073" name="p8" />
+ <DistanceConstraint pBeginKey="p4" key="d9" distance="124.350546718" pEndKey="p8" name="d9" fixed="False" />
+ <DistanceConstraint pBeginKey="p8" key="d12" distance="121.909203023" pEndKey="p1" name="d12" fixed="False" />
+ <Point posX="-70.403415311" posY="71.8097206119" key="p15" posZ="-33.0613" name="p15" />
+ <Point posX="0.0" posY="75.8744" key="p18" posZ="64.0983" name="p18" />
+ <DistanceConstraint pBeginKey="p15" key="d19" distance="120.054780738" pEndKey="p18" name="d19" fixed="False" />
+ <Point posX="56.6352378435" posY="75.8744" key="p22" posZ="-30.3623" name="p22" />
+ <DistanceConstraint pBeginKey="p18" key="d23" distance="110.137891381" pEndKey="p22" name="d23" fixed="False" />
+ <DistanceConstraint pBeginKey="p22" key="d26" distance="127.132315384" pEndKey="p15" name="d26" fixed="False" />
+ <DistanceConstraint pBeginKey="p15" key="d31" distance="102.936028426" pEndKey="p1" name="d31" fixed="False" />
+ <DistanceConstraint pBeginKey="p1" key="d34" distance="103.35394384" pEndKey="p22" name="d34" fixed="False" />
+ <DistanceConstraint pBeginKey="p22" key="d37" distance="105.280939686" pEndKey="p8" name="d37" fixed="False" />
+ <DistanceConstraint pBeginKey="p8" key="d40" distance="94.7545330269" pEndKey="p18" name="d40" fixed="False" />
+ <DistanceConstraint pBeginKey="p18" key="d43" distance="107.268267214" pEndKey="p4" name="d43" fixed="False" />
+ <DistanceConstraint pBeginKey="p4" key="d46" distance="102.316491651" pEndKey="p15" name="d46" fixed="False" />
+ <DistanceConstraint pBeginKey="p18" key="d56" distance="150.187515068" pEndKey="p1" name="d56" fixed="False" />
+ <Prototypes numberOfImports="0" number="59" />
+</Objects>

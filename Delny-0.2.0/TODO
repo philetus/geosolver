@@ -1,0 +1,57 @@
+Roughly in order of importance.  Feel free to reorder.
+
+
+For current release
+===================
+
+Empty - release?!
+
+
+For future release
+===================
+
+* Clean up API
+   This is described in various points below.
+
+* Use attributes intead of getters/setters.
+   Getters and setters are not very Python like, they come from Java
+   and are no real benefit.  The rule is only to use functions if the
+   `properties' way of doing it is non-trivial.
+
+   Mention the public attributes in the class docstrings, or dig out
+   an other way of doing this in the PEP's.
+
+* Use node indexes internally.
+   Since node index is supported now we could rewrite this module to
+   use that exclusively.  This would save space and be more
+   traditional.  The core.py wrapper could then still behave the same
+   for a while.
+
+* Solve the qh_version problem with qhull3.1.
+   Is there no way of figuring out from the header files if it's 3.1?
+
+* Create a flag that will return Numeric sequences.
+   In case the users is working with Numeric too it is a waste for the
+   data to be converted back and forth.
+
+* Remove option to update the set?
+   Is there any point in being able to update the set?  Any advantage
+   above instantiating a new Triangulation object?
+
+* Qhull error output.
+   Shoud this go to stderr (as it is now) or should we catch it
+   somehow different.
+
+* Allow flags to call qhull to be set in Python?
+   This is more likely to be converging of the question wheather to
+   support more the just Delaunay tiangulation of Qhull.
+
+* Solve the issue demonstrated with TestPredictedOutputs.testSquare()
+   This might have to move to the core module (and it's tests) instead
+   of in _qhull.  This could also end up in a large rewrite of the
+   delny function (and core module), i.e. accept user flags to qhull
+   etc.  Basically lots of questions.
+
+* The number of input points seems to be limited by the length of `int'.
+   Is this really true?  Should this be mentioned as "Known issues" in
+   the "BUGS" file?

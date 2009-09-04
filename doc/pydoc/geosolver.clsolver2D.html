@@ -1,0 +1,1047 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.clsolver2D</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.clsolver2D</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/clsolver2D.py">/home/rick/Programming/Python/GeoSolver/geosolver/clsolver2D.py</a></font></td></tr></table>
+    <p><tt>A&nbsp;generic&nbsp;2D&nbsp;geometric&nbsp;constraint&nbsp;solver.<br>
+&nbsp;<br>
+The&nbsp;solver&nbsp;finds&nbsp;a&nbsp;generic&nbsp;solution<br>
+for&nbsp;problems&nbsp;formulated&nbsp;by&nbsp;Clusters.&nbsp;The&nbsp;generic&nbsp;solution&nbsp;<br>
+is&nbsp;a&nbsp;directed&nbsp;acyclic&nbsp;graph&nbsp;of&nbsp;Clusters&nbsp;and&nbsp;Methods.&nbsp;Particilar&nbsp;problems<br>
+and&nbsp;solutions&nbsp;are&nbsp;represented&nbsp;by&nbsp;a&nbsp;Configuration&nbsp;for&nbsp;each&nbsp;cluster.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="geosolver.vector.html">geosolver.vector</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>(<a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Derive">Derive</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Balloon2Hog">Balloon2Hog</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Rigid2Hog">Rigid2Hog</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#SubHog">SubHog</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Merge">Merge</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#BalloonFromHogs">BalloonFromHogs</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#BalloonMerge">BalloonMerge</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#BalloonRigidMerge">BalloonRigidMerge</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Merge1C">Merge1C</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Merge2C">Merge2C</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#Merge3C">Merge3C</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#MergeBH">MergeBH</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#MergeCCH">MergeCCH</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#MergeCH">MergeCH</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#MergeCHC">MergeCHC</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#MergeHogs">MergeHogs</a>
+</font></dt></dl>
+</dd>
+</dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver.html#ClusterSolver">geosolver.clsolver.ClusterSolver</a>(<a href="geosolver.notify.html#Notifier">geosolver.notify.Notifier</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#ClusterSolver2D">ClusterSolver2D</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>(<a href="geosolver.method.html#Method">geosolver.method.Method</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="geosolver.clsolver2D.html#PrototypeMethod">PrototypeMethod</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Balloon2Hog">class <strong>Balloon2Hog</strong></a>(<a href="geosolver.clsolver2D.html#Derive">Derive</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;derivation&nbsp;of&nbsp;a&nbsp;hog&nbsp;from&nbsp;a&nbsp;balloon<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Balloon2Hog">Balloon2Hog</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Derive">Derive</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Balloon2Hog-__init__"><strong>__init__</strong></a>(self, balloon, hog)</dt></dl>
+
+<dl><dt><a name="Balloon2Hog-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Balloon2Hog-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Balloon2Hog-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Balloon2Hog-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Balloon2Hog-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Balloon2Hog-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Balloon2Hog-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BalloonFromHogs">class <strong>BalloonFromHogs</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represent&nbsp;a&nbsp;balloon&nbsp;merged&nbsp;from&nbsp;two&nbsp;hogs<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#BalloonFromHogs">BalloonFromHogs</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BalloonFromHogs-__init__"><strong>__init__</strong></a>(self, hog1, hog2, balloon)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;balloon&nbsp;from&nbsp;two&nbsp;angles<br>
+&nbsp;<br>
+keyword&nbsp;args:<br>
+&nbsp;hog1&nbsp;-&nbsp;a&nbsp;Hedghog&nbsp;<br>
+&nbsp;hog2&nbsp;-&nbsp;a&nbsp;Hedehog<br>
+&nbsp;balloon&nbsp;-&nbsp;a&nbsp;Balloon&nbsp;instance</tt></dd></dl>
+
+<dl><dt><a name="BalloonFromHogs-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BalloonFromHogs-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="BalloonFromHogs-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BalloonFromHogs-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="BalloonFromHogs-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="BalloonFromHogs-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="BalloonFromHogs-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BalloonMerge">class <strong>BalloonMerge</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;two&nbsp;balloons<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#BalloonMerge">BalloonMerge</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BalloonMerge-__init__"><strong>__init__</strong></a>(self, in1, in2, out)</dt></dl>
+
+<dl><dt><a name="BalloonMerge-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BalloonMerge-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="BalloonMerge-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BalloonMerge-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="BalloonMerge-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="BalloonMerge-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="BalloonMerge-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BalloonRigidMerge">class <strong>BalloonRigidMerge</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;a&nbsp;balloon&nbsp;and&nbsp;a&nbsp;cluster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#BalloonRigidMerge">BalloonRigidMerge</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="BalloonRigidMerge-__init__"><strong>__init__</strong></a>(self, balloon, cluster, output)</dt></dl>
+
+<dl><dt><a name="BalloonRigidMerge-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BalloonRigidMerge-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="BalloonRigidMerge-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="BalloonRigidMerge-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="BalloonRigidMerge-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="BalloonRigidMerge-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="BalloonRigidMerge-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ClusterSolver2D">class <strong>ClusterSolver2D</strong></a>(<a href="geosolver.clsolver.html#ClusterSolver">geosolver.clsolver.ClusterSolver</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;generic&nbsp;2D&nbsp;geometric&nbsp;constraint&nbsp;solver.&nbsp;<br>
+&nbsp;<br>
+Finds&nbsp;a&nbsp;geneneric&nbsp;solution&nbsp;for&nbsp;problems&nbsp;formulated&nbsp;by&nbsp;cluster-constraints.<br>
+&nbsp;<br>
+Constraints&nbsp;are&nbsp;Clusers:&nbsp;Rigids,&nbsp;Hedgehogs&nbsp;and&nbsp;Balloons.&nbsp;<br>
+Cluster&nbsp;are&nbsp;added&nbsp;and&nbsp;removed&nbsp;using&nbsp;the&nbsp;add&nbsp;and&nbsp;remove&nbsp;methods.&nbsp;<br>
+After&nbsp;adding&nbsp;each&nbsp;Cluster,&nbsp;the&nbsp;solver&nbsp;tries&nbsp;to&nbsp;merge&nbsp;it&nbsp;with<br>
+other&nbsp;clusters,&nbsp;resulting&nbsp;in&nbsp;new&nbsp;Clusters&nbsp;and&nbsp;Methods.<br>
+&nbsp;<br>
+For&nbsp;each&nbsp;Cluster&nbsp;a&nbsp;set&nbsp;of&nbsp;Configurations&nbsp;can&nbsp;be&nbsp;set&nbsp;using&nbsp;the<br>
+set&nbsp;method.&nbsp;Configurations&nbsp;are&nbsp;propagated&nbsp;via&nbsp;Methods&nbsp;and&nbsp;can<br>
+be&nbsp;retrieved&nbsp;with&nbsp;the&nbsp;get&nbsp;method.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#ClusterSolver2D">ClusterSolver2D</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterSolver">geosolver.clsolver.ClusterSolver</a></dd>
+<dd><a href="geosolver.notify.html#Notifier">geosolver.notify.Notifier</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ClusterSolver2D-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Instantiate&nbsp;a&nbsp;<a href="#ClusterSolver2D">ClusterSolver2D</a></tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterSolver">geosolver.clsolver.ClusterSolver</a>:<br>
+<dl><dt><a name="ClusterSolver2D-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="ClusterSolver2D-add"><strong>add</strong></a>(self, cluster)</dt><dd><tt>Add&nbsp;a&nbsp;cluster.&nbsp;<br>
+&nbsp;<br>
+arguments:<br>
+&nbsp;&nbsp;&nbsp;cluster:&nbsp;A&nbsp;Rigid</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-angles"><strong>angles</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;angles</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-balloons"><strong>balloons</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;balloons</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-contains"><strong>contains</strong></a>(self, obj)</dt></dl>
+
+<dl><dt><a name="ClusterSolver2D-distances"><strong>distances</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;distances</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-find_dependend"><strong>find_dependend</strong></a>(self, object)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;objects&nbsp;that&nbsp;depend&nbsp;on&nbsp;given&nbsp;object&nbsp;directly.</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-find_depends"><strong>find_depends</strong></a>(self, object)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;objects&nbsp;that&nbsp;the&nbsp;given&nbsp;object&nbsp;depends&nbsp;on&nbsp;directly</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-get"><strong>get</strong></a>(self, cluster)</dt><dd><tt>Return&nbsp;a&nbsp;set&nbsp;of&nbsp;configurations&nbsp;associated&nbsp;with&nbsp;a&nbsp;cluster</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-hedgehogs"><strong>hedgehogs</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;hedgehogs</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-is_top_level"><strong>is_top_level</strong></a>(self, object)</dt></dl>
+
+<dl><dt><a name="ClusterSolver2D-methods"><strong>methods</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;methods</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-remove"><strong>remove</strong></a>(self, cluster)</dt><dd><tt>Remove&nbsp;a&nbsp;cluster.&nbsp;<br>
+All&nbsp;dependend&nbsp;objects&nbsp;are&nbsp;also&nbsp;removed.</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-rigids"><strong>rigids</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;rigids</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-set"><strong>set</strong></a>(self, cluster, configurations)</dt><dd><tt>Associate&nbsp;a&nbsp;list&nbsp;of&nbsp;configurations&nbsp;with&nbsp;a&nbsp;cluster</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-set_root"><strong>set_root</strong></a>(self, rigid)</dt><dd><tt>Make&nbsp;given&nbsp;rigid&nbsp;cluster&nbsp;the&nbsp;root&nbsp;cluster<br>
+&nbsp;<br>
+arguments:<br>
+&nbsp;&nbsp;&nbsp;cluster:&nbsp;A&nbsp;Rigid</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-top_level"><strong>top_level</strong></a>(self)</dt><dd><tt>get&nbsp;top-level&nbsp;objects</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-variables"><strong>variables</strong></a>(self)</dt><dd><tt>get&nbsp;list&nbsp;of&nbsp;variables</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.notify.html#Notifier">geosolver.notify.Notifier</a>:<br>
+<dl><dt><a name="ClusterSolver2D-add_listener"><strong>add_listener</strong></a>(self, listener)</dt><dd><tt>add&nbsp;a&nbsp;listener&nbsp;to&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;to&nbsp;listers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-rem_listener"><strong>rem_listener</strong></a>(self, listener)</dt><dd><tt>remove&nbsp;a&nbsp;listener&nbsp;from&nbsp;the&nbsp;list&nbsp;(and&nbsp;self&nbsp;from&nbsp;listers'&nbsp;list)</tt></dd></dl>
+
+<dl><dt><a name="ClusterSolver2D-send_notify"><strong>send_notify</strong></a>(self, message)</dt><dd><tt>send&nbsp;a&nbsp;message&nbsp;to&nbsp;all&nbsp;listeners</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Derive">class <strong>Derive</strong></a>(<a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;merge&nbsp;is&nbsp;a&nbsp;method&nbsp;such&nbsp;that&nbsp;a&nbsp;single&nbsp;ouput&nbsp;cluster&nbsp;satisfies<br>
+all&nbsp;constraints&nbsp;in&nbsp;several&nbsp;input&nbsp;clusters.&nbsp;The&nbsp;output&nbsp;cluster<br>
+replaces&nbsp;the&nbsp;input&nbsp;clusters&nbsp;in&nbsp;the&nbsp;constriant&nbsp;problem<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Derive">Derive</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Derive-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Derive-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Derive-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Derive-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Derive-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Derive-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Merge">class <strong>Merge</strong></a>(<a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>A&nbsp;derive&nbsp;is&nbsp;a&nbsp;method&nbsp;such&nbsp;that&nbsp;a&nbsp;single&nbsp;ouput&nbsp;cluster&nbsp;is&nbsp;a&nbsp;<br>
+subconsraint&nbsp;of&nbsp;a&nbsp;single&nbsp;input&nbsp;cluster.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Merge-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Merge-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Merge-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Merge-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Merge-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Merge-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Merge1C">class <strong>Merge1C</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;a&nbsp;one-point&nbsp;cluster&nbsp;with&nbsp;any&nbsp;other&nbsp;cluster&nbsp;<br>
+The&nbsp;first&nbsp;cluster&nbsp;determines&nbsp;the&nbsp;orientation&nbsp;of&nbsp;the&nbsp;resulting<br>
+cluster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Merge1C">Merge1C</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Merge1C-__init__"><strong>__init__</strong></a>(self, in1, in2, out)</dt></dl>
+
+<dl><dt><a name="Merge1C-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Merge1C-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Merge1C-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Merge1C-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Merge1C-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Merge1C-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Merge1C-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Merge2C">class <strong>Merge2C</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;two&nbsp;clusters&nbsp;(overconstrained)<br>
+The&nbsp;first&nbsp;cluster&nbsp;determines&nbsp;the&nbsp;orientation&nbsp;of&nbsp;the&nbsp;resulting<br>
+cluster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Merge2C">Merge2C</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Merge2C-__init__"><strong>__init__</strong></a>(self, in1, in2, out)</dt></dl>
+
+<dl><dt><a name="Merge2C-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Merge2C-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Merge2C-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Merge2C-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Merge2C-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Merge2C-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Merge2C-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Merge3C">class <strong>Merge3C</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;three&nbsp;clusters&nbsp;<br>
+The&nbsp;first&nbsp;cluster&nbsp;determines&nbsp;the&nbsp;orientation&nbsp;of&nbsp;the&nbsp;resulting<br>
+cluster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Merge3C">Merge3C</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Merge3C-__init__"><strong>__init__</strong></a>(self, c1, c2, c3, out)</dt></dl>
+
+<dl><dt><a name="Merge3C-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Merge3C-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<dl><dt><a name="Merge3C-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Merge3C-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Merge3C-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Merge3C-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Merge3C-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MergeBH">class <strong>MergeBH</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;a&nbsp;balloon&nbsp;and&nbsp;a&nbsp;hog&nbsp;(where<br>
+the&nbsp;hog&nbsp;is&nbsp;absorbed&nbsp;by&nbsp;the&nbsp;balloon).&nbsp;Overconstrained.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#MergeBH">MergeBH</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MergeBH-__init__"><strong>__init__</strong></a>(self, balloon, hog, out)</dt></dl>
+
+<dl><dt><a name="MergeBH-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeBH-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="MergeBH-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeBH-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="MergeBH-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="MergeBH-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="MergeBH-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MergeCCH">class <strong>MergeCCH</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;two&nbsp;clusters&nbsp;and&nbsp;a&nbsp;hedgehog<br>
+The&nbsp;first&nbsp;cluster&nbsp;determines&nbsp;the&nbsp;orientation&nbsp;of&nbsp;the&nbsp;resulting<br>
+cluster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#MergeCCH">MergeCCH</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MergeCCH-__init__"><strong>__init__</strong></a>(self, c1, c2, hog, out)</dt></dl>
+
+<dl><dt><a name="MergeCCH-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeCCH-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<dl><dt><a name="MergeCCH-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="MergeCCH-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="MergeCCH-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="MergeCCH-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="MergeCCH-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MergeCH">class <strong>MergeCH</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;a&nbsp;cluster&nbsp;and&nbsp;a&nbsp;hog&nbsp;(where<br>
+the&nbsp;hog&nbsp;is&nbsp;absorbed&nbsp;by&nbsp;the&nbsp;cluster).&nbsp;Overconstrained.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#MergeCH">MergeCH</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MergeCH-__init__"><strong>__init__</strong></a>(self, cluster, hog, out)</dt></dl>
+
+<dl><dt><a name="MergeCH-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeCH-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="MergeCH-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeCH-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="MergeCH-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="MergeCH-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="MergeCH-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MergeCHC">class <strong>MergeCHC</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;two&nbsp;clusters&nbsp;and&nbsp;a&nbsp;hedgehog<br>
+The&nbsp;first&nbsp;cluster&nbsp;determines&nbsp;the&nbsp;orientation&nbsp;of&nbsp;the&nbsp;resulting<br>
+cluster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#MergeCHC">MergeCHC</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MergeCHC-__init__"><strong>__init__</strong></a>(self, c1, hog, c2, out)</dt></dl>
+
+<dl><dt><a name="MergeCHC-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeCHC-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="MergeCHC-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeCHC-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="MergeCHC-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="MergeCHC-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="MergeCHC-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="MergeHogs">class <strong>MergeHogs</strong></a>(<a href="geosolver.clsolver2D.html#Merge">Merge</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;merging&nbsp;of&nbsp;two&nbsp;hogs&nbsp;to&nbsp;form&nbsp;a&nbsp;new&nbsp;hog<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#MergeHogs">MergeHogs</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Merge">Merge</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="MergeHogs-__init__"><strong>__init__</strong></a>(self, hog1, hog2, output)</dt></dl>
+
+<dl><dt><a name="MergeHogs-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeHogs-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="MergeHogs-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="MergeHogs-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="MergeHogs-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="MergeHogs-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="MergeHogs-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="PrototypeMethod">class <strong>PrototypeMethod</strong></a>(<a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#PrototypeMethod">PrototypeMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="PrototypeMethod-__init__"><strong>__init__</strong></a>(self, incluster, selclusters, outcluster, constraints)</dt></dl>
+
+<dl><dt><a name="PrototypeMethod-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="PrototypeMethod-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="PrototypeMethod-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="PrototypeMethod-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Rigid2Hog">class <strong>Rigid2Hog</strong></a>(<a href="geosolver.clsolver2D.html#Derive">Derive</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Represents&nbsp;a&nbsp;derivation&nbsp;of&nbsp;a&nbsp;hog&nbsp;from&nbsp;a&nbsp;c)luster<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#Rigid2Hog">Rigid2Hog</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Derive">Derive</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Rigid2Hog-__init__"><strong>__init__</strong></a>(self, cluster, hog)</dt></dl>
+
+<dl><dt><a name="Rigid2Hog-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Rigid2Hog-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="Rigid2Hog-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="Rigid2Hog-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="Rigid2Hog-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="Rigid2Hog-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="Rigid2Hog-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="SubHog">class <strong>SubHog</strong></a>(<a href="geosolver.clsolver2D.html#Derive">Derive</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="geosolver.clsolver2D.html#SubHog">SubHog</a></dd>
+<dd><a href="geosolver.clsolver2D.html#Derive">Derive</a></dd>
+<dd><a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a></dd>
+<dd><a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a></dd>
+<dd><a href="geosolver.method.html#Method">geosolver.method.Method</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="SubHog-__init__"><strong>__init__</strong></a>(self, hog, sub)</dt></dl>
+
+<dl><dt><a name="SubHog-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SubHog-multi_execute"><strong>multi_execute</strong></a>(self, inmap)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.clsolver.html#ClusterMethod">geosolver.clsolver.ClusterMethod</a>:<br>
+<dl><dt><a name="SubHog-prototype_constraints"><strong>prototype_constraints</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="SubHog-status_str"><strong>status_str</strong></a>(self)</dt></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.multimethod.html#MultiMethod">geosolver.multimethod.MultiMethod</a>:<br>
+<dl><dt><a name="SubHog-execute"><strong>execute</strong></a>(self, inmap)</dt><dd><tt>calls&nbsp;multi_execute&nbsp;for&nbsp;each&nbsp;permutation&nbsp;of&nbsp;multi-valued&nbsp;input&nbsp;variables&nbsp;and&nbsp;collects<br>
+result&nbsp;in&nbsp;multi-valued&nbsp;ouput&nbsp;variables.&nbsp;Subclasses&nbsp;should&nbsp;implement&nbsp;multi_execute.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="geosolver.method.html#Method">geosolver.method.Method</a>:<br>
+<dl><dt><a name="SubHog-inputs"><strong>inputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;input&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_inputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="SubHog-outputs"><strong>outputs</strong></a>(self)</dt><dd><tt>return&nbsp;a&nbsp;list&nbsp;of&nbsp;output&nbsp;variables<br>
+&nbsp;<br>
+If&nbsp;an&nbsp;attribute&nbsp;'_outputs'&nbsp;has&nbsp;been&nbsp;defined,&nbsp;a&nbsp;new&nbsp;list<br>
+with&nbsp;the&nbsp;contents&nbsp;of&nbsp;that&nbsp;attribute&nbsp;will&nbsp;be&nbsp;returned.&nbsp;<br>
+Subclasses&nbsp;may&nbsp;choose&nbsp;to&nbsp;initialise&nbsp;this&nbsp;variable&nbsp;or&nbsp;to&nbsp;<br>
+override&nbsp;this&nbsp;function.</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-solve_ada"><strong>solve_ada</strong></a>(a, b, c, a_cab, d_ab, a_abc)</dt></dl>
+ <dl><dt><a name="-solve_add"><strong>solve_add</strong></a>(a, b, c, a_cab, d_ab, d_bc)</dt></dl>
+ <dl><dt><a name="-solve_dad"><strong>solve_dad</strong></a>(v1, v2, v3, d12, a123, d23)</dt></dl>
+ <dl><dt><a name="-solve_ddd"><strong>solve_ddd</strong></a>(v1, v2, v3, d12, d23, d31)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>NegInf</strong> = geosolver.tolerance.NegInf<br>
+<strong>PosInf</strong> = geosolver.tolerance.PosInf<br>
+<strong>default_tol</strong> = 9.9999999999999995e-07<br>
+<strong>diag_selector</strong> = &lt;_sre.SRE_Pattern object at 0xb7ec9b60&gt;<br>
+<strong>diag_stream</strong> = &lt;open file '&lt;stdout&gt;', mode 'w' at 0xb7eb3068&gt;</td></tr></table>
+</body></html>

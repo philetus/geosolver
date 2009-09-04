@@ -1,0 +1,24 @@
+TODO/WISH LIST
+--------------
+
+Code: Some bits of the code are ugly:
+ 	- vector module, matpy module and Numpy package, all offer similar functionality. 
+	  Use only one, get rid of two. 
+	- more documentation!
+
+Speed: The solver is currently much too slow. The problem is the pattern matching algorithms that is used to find 
+combinations of clusters that can be rewritten/merged. Solutions:
+	- hand-coded matching algorithms per merge rule (labourous and error prone)
+	- incremental pattern matching system (work in progress)
+	- compliled implementation (Psycho/C++/Haskell/???)
+
+Rules: More rewrite rules to increase the problem domain:
+	- larger subproblems (octahedron, variable radius spheres/cylinders)
+	- new clusters types (N degrees of freedom)
+
+Extentions:
+	- implement geometry: lines, planes, spheres, cylinders, tori (mappings to cluster)
+	- constraints on parameters (equality, algebraic constraints)
+	- different variable domains (integers, reals, n-dimensional points, surfaces, volumes, logic variables, lists)
+
+

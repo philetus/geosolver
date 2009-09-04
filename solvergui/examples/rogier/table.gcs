@@ -1,0 +1,94 @@
+<!DOCTYPE Geometric Constraints>
+<Objects>
+ <Point posX="-104.716026306" posY="0.0" key="p1" posZ="32.4261665344" name="p1" />
+ <Point posX="-54.6344490051" posY="0.0" key="p4" posZ="33.9068641663" name="p4" />
+ <DistanceConstraint pBeginKey="p1" key="d5" distance="50.1034614616" pEndKey="p4" name="d5" fixed="False" />
+ <Point posX="-50.081577301" posY="0.0" key="p8" posZ="-16.4387359619" name="p8" />
+ <DistanceConstraint pBeginKey="p4" key="d9" distance="50.5510444306" pEndKey="p8" name="d9" fixed="False" />
+ <Point posX="-101.680778503" posY="0.0" key="p12" posZ="-17.9195346832" name="p12" />
+ <DistanceConstraint pBeginKey="p8" key="d13" distance="51.6204448797" pEndKey="p12" name="d13" fixed="False" />
+ <DistanceConstraint pBeginKey="p12" key="d16" distance="50.4371129261" pEndKey="p1" name="d16" fixed="False" />
+ <Point posX="-102.138801575" posY="110.062599182" key="p21" posZ="31.6858005524" name="p21" />
+ <DistanceConstraint pBeginKey="p1" key="d22" distance="110.095258607" pEndKey="p21" name="d22" fixed="False" />
+ <Point posX="-48.7827110291" posY="108.575302124" key="p25" posZ="31.6858005524" name="p25" />
+ <DistanceConstraint pBeginKey="p21" key="d26" distance="53.376815668" pEndKey="p25" name="d26" fixed="False" />
+ <DistanceConstraint pBeginKey="p25" key="d29" distance="108.755561661" pEndKey="p4" name="d29" fixed="False" />
+ <Point posX="-92.9920425415" posY="113.0373" key="p36" posZ="-27.5444" name="p36" />
+ <DistanceConstraint pBeginKey="p12" key="d37" distance="113.778571604" pEndKey="p36" name="d37" fixed="False" />
+ <Point posX="-38.111492157" posY="113.03730011" key="p40" posZ="-27.5443992615" name="p40" />
+ <DistanceConstraint pBeginKey="p36" key="d41" distance="54.8805503845" pEndKey="p40" name="d41" fixed="False" />
+ <DistanceConstraint pBeginKey="p40" key="d44" distance="114.21055079" pEndKey="p8" name="d44" fixed="False" />
+ <DistanceConstraint pBeginKey="p36" key="d49" distance="60.0060722197" pEndKey="p21" name="d49" fixed="False" />
+ <DistanceConstraint pBeginKey="p40" key="d54" distance="60.3489926033" pEndKey="p25" name="d54" fixed="False" />
+ <DistanceConstraint pBeginKey="p1" key="d146" distance="122.137955325" pEndKey="p25" name="d146" fixed="False" />
+ <DistanceConstraint pBeginKey="p4" key="d151" distance="129.71775937" pEndKey="p40" name="d151" fixed="False" />
+ <DistanceConstraint pBeginKey="p8" key="d156" distance="121.41694689" pEndKey="p36" name="d156" fixed="False" />
+ <DistanceConstraint pBeginKey="p12" key="d161" distance="120.72561786" pEndKey="p21" name="d161" fixed="False" />
+ <DistanceConstraint pBeginKey="p21" key="d166" distance="87.2729154255" pEndKey="p40" name="d166" fixed="False" />
+ <DistanceConstraint pBeginKey="p4" key="d171" distance="69.9952336732" pEndKey="p12" name="d171" fixed="False" />
+ <DistanceConstraint pBeginKey="p1" key="d176" distance="144.256937259" pEndKey="p40" name="d176" fixed="False" />
+ <Point posX="116.328559875" posY="0.0" key="p179" posZ="32.6964645386" name="p179" />
+ <Point posX="178.364395142" posY="0.0" key="p182" posZ="34.944065094" name="p182" />
+ <DistanceConstraint pBeginKey="p179" key="d183" distance="62.0765379626" pEndKey="p182" name="d183" fixed="False" />
+ <Point posX="185.53968811" posY="0.0" key="p186" posZ="-23.5809001923" name="p186" />
+ <DistanceConstraint pBeginKey="p182" key="d187" distance="58.9631782636" pEndKey="p186" name="d187" fixed="False" />
+ <Point posX="120.714912415" posY="0.0" key="p190" posZ="-26.3398361206" name="p190" />
+ <DistanceConstraint pBeginKey="p186" key="d191" distance="64.8834591515" pEndKey="p190" name="d191" fixed="False" />
+ <DistanceConstraint pBeginKey="p190" key="d194" distance="59.1990277295" pEndKey="p179" name="d194" fixed="False" />
+ <DistanceConstraint pBeginKey="p190" key="d199" distance="84.1378595329" pEndKey="p182" name="d199" fixed="False" />
+ <Point posX="106.81438446" posY="116.723800659" key="p204" posZ="26.8330001831" name="p204" />
+ <DistanceConstraint pBeginKey="p179" key="d205" distance="117.257602689" pEndKey="p204" name="d205" fixed="False" />
+ <Point posX="170.394378662" posY="111.703399658" key="p208" posZ="26.8330001831" name="p208" />
+ <DistanceConstraint pBeginKey="p204" key="d209" distance="63.7778965543" pEndKey="p208" name="d209" fixed="False" />
+ <DistanceConstraint pBeginKey="p208" key="d212" distance="112.280719769" pEndKey="p182" name="d212" fixed="False" />
+ <Point posX="119.530387878" posY="115.88710022" key="p219" posZ="-28.3911991119" name="p219" />
+ <DistanceConstraint pBeginKey="p190" key="d220" distance="115.911307411" pEndKey="p219" name="d220" fixed="False" />
+ <Point posX="175.480773926" posY="117.5606" key="p223" posZ="-28.3912" name="p223" />
+ <DistanceConstraint pBeginKey="p219" key="d224" distance="55.9754079964" pEndKey="p223" name="d224" fixed="False" />
+ <DistanceConstraint pBeginKey="p223" key="d227" distance="118.088167956" pEndKey="p186" name="d227" fixed="False" />
+ <DistanceConstraint pBeginKey="p223" key="d232" distance="55.7663921954" pEndKey="p208" name="d232" fixed="False" />
+ <DistanceConstraint pBeginKey="p219" key="d237" distance="56.6754708699" pEndKey="p204" name="d237" fixed="False" />
+ <DistanceConstraint pBeginKey="p223" key="d242" distance="88.1219924945" pEndKey="p204" name="d242" fixed="False" />
+ <DistanceConstraint pBeginKey="p179" key="d247" distance="124.238248823" pEndKey="p208" name="d247" fixed="False" />
+ <DistanceConstraint pBeginKey="p182" key="d252" distance="133.567083326" pEndKey="p223" name="d252" fixed="False" />
+ <DistanceConstraint pBeginKey="p186" key="d257" distance="133.454811416" pEndKey="p219" name="d257" fixed="False" />
+ <DistanceConstraint pBeginKey="p190" key="d262" distance="129.015583703" pEndKey="p204" name="d262" fixed="False" />
+ <DistanceConstraint pBeginKey="p223" key="d267" distance="145.090254181" pEndKey="p179" name="d267" fixed="False" />
+ <Point posX="-266.9347229" posY="140.5545" key="p270" posZ="125.6497" name="p270" />
+ <Point posX="270.159210205" posY="140.5545" key="p273" posZ="117.9041" name="p273" />
+ <DistanceConstraint pBeginKey="p270" key="d274" distance="537.149781065" pEndKey="p273" name="d274" fixed="False" />
+ <Point posX="291.717987061" posY="140.554504395" key="p277" posZ="-123.254203796" name="p277" />
+ <DistanceConstraint pBeginKey="p273" key="d278" distance="242.120028807" pEndKey="p277" name="d278" fixed="False" />
+ <Point posX="-272.623321533" posY="140.554504395" key="p281" posZ="-117.8674" name="p281" />
+ <DistanceConstraint pBeginKey="p277" key="d282" distance="564.367017322" pEndKey="p281" name="d282" fixed="False" />
+ <DistanceConstraint pBeginKey="p281" key="d285" distance="243.583534228" pEndKey="p270" name="d285" fixed="False" />
+ <Point posX="273.336273193" posY="156.349" key="p290" posZ="119.2127" name="p290" />
+ <DistanceConstraint pBeginKey="p273" key="d291" distance="16.1639225883" pEndKey="p290" name="d291" fixed="False" />
+ <Point posX="294.219421387" posY="156.349060059" key="p294" posZ="-124.243415833" name="p294" />
+ <DistanceConstraint pBeginKey="p290" key="d295" distance="244.350130376" pEndKey="p294" name="d295" fixed="False" />
+ <DistanceConstraint pBeginKey="p294" key="d298" distance="16.0219756199" pEndKey="p277" name="d298" fixed="False" />
+ <Point posX="-272.383453369" posY="158.022460938" key="p303" posZ="114.282958984" name="p303" />
+ <DistanceConstraint pBeginKey="p270" key="d304" distance="21.5411495597" pEndKey="p303" name="d304" fixed="False" />
+ <Point posX="-272.383453369" posY="158.859161377" key="p307" posZ="-106.284080505" name="p307" />
+ <DistanceConstraint pBeginKey="p303" key="d308" distance="220.568626456" pEndKey="p307" name="d308" fixed="False" />
+ <DistanceConstraint pBeginKey="p307" key="d311" distance="21.6631321488" pEndKey="p281" name="d311" fixed="False" />
+ <DistanceConstraint pBeginKey="p303" key="d316" distance="545.744558175" pEndKey="p290" name="d316" fixed="False" />
+ <DistanceConstraint pBeginKey="p307" key="d321" distance="566.892984624" pEndKey="p294" name="d321" fixed="False" />
+ <DistanceConstraint pBeginKey="p270" key="d328" distance="611.593004924" pEndKey="p277" name="d328" fixed="False" />
+ <DistanceConstraint pBeginKey="p270" key="d333" distance="540.540146908" pEndKey="p290" name="d333" fixed="False" />
+ <DistanceConstraint pBeginKey="p273" key="d338" distance="243.851965982" pEndKey="p294" name="d338" fixed="False" />
+ <DistanceConstraint pBeginKey="p277" key="d343" distance="564.653416395" pEndKey="p307" name="d343" fixed="False" />
+ <DistanceConstraint pBeginKey="p281" key="d348" distance="232.806735768" pEndKey="p303" name="d348" fixed="False" />
+ <DistanceConstraint pBeginKey="p307" key="d353" distance="590.478720097" pEndKey="p290" name="d353" fixed="False" />
+ <DistanceConstraint pBeginKey="p270" key="d358" distance="192.137102353" pEndKey="p21" name="d358" fixed="False" />
+ <DistanceConstraint pBeginKey="p281" key="d363" distance="202.93554952" pEndKey="p36" name="d363" fixed="False" />
+ <DistanceConstraint pBeginKey="p223" key="d368" distance="151.785370988" pEndKey="p277" name="d368" fixed="False" />
+ <DistanceConstraint pBeginKey="p273" key="d373" distance="138.128030557" pEndKey="p208" name="d373" fixed="False" />
+ <DistanceConstraint pBeginKey="p25" key="d378" distance="155.885867944" pEndKey="p204" name="d378" fixed="False" />
+ <DistanceConstraint pBeginKey="p40" key="d383" distance="157.6699108" pEndKey="p219" name="d383" fixed="False" />
+ <AngleConstraint pMiddleKey="p40" pBeginKey="p25" key="a87" pEndKey="p219" name="a87" angle="100.567933831" />
+ <AngleConstraint pMiddleKey="p208" pBeginKey="p273" key="a88" pEndKey="p223" name="a88" angle="124.409129566" />
+ <AngleConstraint pMiddleKey="p21" pBeginKey="p36" key="a89" pEndKey="p270" name="a89" angle="127.271682738" />
+ <DistanceConstraint pBeginKey="p223" key="d94" distance="469.029626081" pEndKey="p270" name="d94" fixed="False" />
+ <DistanceConstraint pBeginKey="p273" key="d99" distance="392.162332229" pEndKey="p36" name="d99" fixed="False" />
+</Objects>

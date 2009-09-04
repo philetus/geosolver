@@ -1,0 +1,97 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.tolerance</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.tolerance</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/tolerance.py">/home/rick/Programming/Python/GeoSolver/geosolver/tolerance.py</a></font></td></tr></table>
+    <p><tt>Basic&nbsp;toleranced&nbsp;comparison&nbsp;functions.&nbsp;Intended&nbsp;for&nbsp;use&nbsp;on&nbsp;double&nbsp;values,&nbsp;<br>
+and&nbsp;extention&nbsp;to&nbsp;positive&nbsp;and&nbsp;negative&nbsp;infinity,&nbsp;represented&nbsp;by&nbsp;<br>
+PosInf&nbsp;and&nbsp;NegInf&nbsp;respectively.&nbsp;<br>
+Note&nbsp;that&nbsp;<a href="#-tol_eq">tol_eq</a>(PosInf,PosInf)=True.&nbsp;This&nbsp;is&nbsp;matematically&nbsp;acceptable<br>
+if&nbsp;we&nbsp;consider&nbsp;PosInf&nbsp;as&nbsp;a&nbsp;single&nbsp;value,&nbsp;greater&nbsp;than&nbsp;any&nbsp;other&nbsp;value&nbsp;that<br>
+can&nbsp;be&nbsp;represented&nbsp;by&nbsp;a&nbsp;computer.&nbsp;Same&nbsp;for&nbsp;NegInf.<br>
+All&nbsp;toleranced&nbsp;comparison&nbsp;function&nbsp;accept&nbsp;a&nbsp;tolerance&nbsp;value.&nbsp;When&nbsp;it&nbsp;is&nbsp;<br>
+ommited&nbsp;or&nbsp;when&nbsp;"Default"&nbsp;is&nbsp;specified,&nbsp;a&nbsp;default&nbsp;value&nbsp;is&nbsp;used.&nbsp;This&nbsp;default<br>
+value&nbsp;is&nbsp;stored&nbsp;in&nbsp;the&nbsp;variable:&nbsp;default_tol.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="geosolver.tolerance.html#negativeinfinity">negativeinfinity</a>
+</font></dt><dt><font face="helvetica, arial"><a href="geosolver.tolerance.html#positiveinfinity">positiveinfinity</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="negativeinfinity">class <strong>negativeinfinity</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Negative&nbsp;Infinity,&nbsp;a&nbsp;value&nbsp;greater&nbsp;then&nbsp;any&nbsp;other&nbsp;value&nbsp;except&nbsp;itself.&nbsp;<br>
+Only&nbsp;one&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;is&nbsp;needed,&nbsp;instantiated&nbsp;in&nbsp;this&nbsp;module&nbsp;as&nbsp;<br>
+NegInf.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="negativeinfinity-__cmp__"><strong>__cmp__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="negativeinfinity-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="negativeinfinity-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="negativeinfinity-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="positiveinfinity">class <strong>positiveinfinity</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Positive&nbsp;Infinity,&nbsp;a&nbsp;value&nbsp;greater&nbsp;then&nbsp;any&nbsp;other&nbsp;value&nbsp;except&nbsp;itself.&nbsp;<br>
+Only&nbsp;one&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;is&nbsp;needed,&nbsp;instantiated&nbsp;in&nbsp;this&nbsp;module&nbsp;as&nbsp;<br>
+PosInf.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="positiveinfinity-__cmp__"><strong>__cmp__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="positiveinfinity-__hash__"><strong>__hash__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="positiveinfinity-__repr__"><strong>__repr__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="positiveinfinity-__str__"><strong>__str__</strong></a>(self)</dt></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-test"><strong>test</strong></a>()</dt></dl>
+ <dl><dt><a name="-tol_compare"><strong>tol_compare</strong></a>(a, b, tol<font color="#909090">='Default'</font>)</dt></dl>
+ <dl><dt><a name="-tol_eq"><strong>tol_eq</strong></a>(a, b, tol<font color="#909090">='Default'</font>)</dt><dd><tt>Tolerant&nbsp;equal:&nbsp;return&nbsp;abs(a-b)&lt;=tol</tt></dd></dl>
+ <dl><dt><a name="-tol_gt"><strong>tol_gt</strong></a>(a, b, tol<font color="#909090">='Default'</font>)</dt><dd><tt>Tolerant&nbsp;greater-than:&nbsp;return&nbsp;a-b&gt;tol</tt></dd></dl>
+ <dl><dt><a name="-tol_gte"><strong>tol_gte</strong></a>(a, b, tol<font color="#909090">='Default'</font>)</dt><dd><tt>Tolerant&nbsp;greater-than-or-equal:&nbsp;return&nbsp;not&nbsp;<a href="#-tol_lt">tol_lt</a>(a,b,tol)</tt></dd></dl>
+ <dl><dt><a name="-tol_lt"><strong>tol_lt</strong></a>(a, b, tol<font color="#909090">='Default'</font>)</dt><dd><tt>Tolerant&nbsp;less-than:&nbsp;return&nbsp;b-a&gt;tol</tt></dd></dl>
+ <dl><dt><a name="-tol_lte"><strong>tol_lte</strong></a>(a, b, tol<font color="#909090">='Default'</font>)</dt><dd><tt>Tolerant&nbsp;less-than-or-equal:&nbsp;return&nbsp;not&nbsp;<a href="#-tol_gt">tol_gt</a>(a,b,tol)</tt></dd></dl>
+ <dl><dt><a name="-tol_round"><strong>tol_round</strong></a>(val, tol<font color="#909090">='Default'</font>)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>NegInf</strong> = geosolver.tolerance.NegInf<br>
+<strong>PosInf</strong> = geosolver.tolerance.PosInf<br>
+<strong>default_tol</strong> = 9.9999999999999995e-07</td></tr></table>
+</body></html>

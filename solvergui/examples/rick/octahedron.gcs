@@ -1,0 +1,22 @@
+<!DOCTYPE Geometric Constraints>
+<Objects>
+ <Point posX="-59.3979297032" posY="0.0" key="p1" posZ="-73.9849" name="p1" />
+ <Point posX="99.4570007543" posY="0.0" key="p4" posZ="-69.8363" name="p4" />
+ <DistanceConstraint pBeginKey="p1" key="d5" distance="158.90909292" pEndKey="p4" name="d5" fixed="False" />
+ <Point posX="96.6943088947" posY="0.0" key="p8" posZ="76.7507" name="p8" />
+ <DistanceConstraint pBeginKey="p4" key="d9" distance="146.613031601" pEndKey="p8" name="d9" fixed="False" />
+ <Point posX="-55.2538880051" posY="0.0" key="p12" posZ="71.2191" name="p12" />
+ <DistanceConstraint pBeginKey="p8" key="d13" distance="152.048851162" pEndKey="p12" name="d13" fixed="False" />
+ <DistanceConstraint pBeginKey="p12" key="d16" distance="145.263122291" pEndKey="p1" name="d16" fixed="False" />
+ <Point posX="20.7202084905" posY="92.654" key="p19" posZ="11.7546" name="p19" />
+ <DistanceConstraint pBeginKey="p1" key="d20" distance="149.515690293" pEndKey="p19" name="d20" fixed="False" />
+ <DistanceConstraint pBeginKey="p19" key="d23" distance="146.428553004" pEndKey="p4" name="d23" fixed="False" />
+ <DistanceConstraint pBeginKey="p8" key="d28" distance="136.313317997" pEndKey="p19" name="d28" fixed="False" />
+ <DistanceConstraint pBeginKey="p19" key="d31" distance="133.764172388" pEndKey="p12" name="d31" fixed="False" />
+ <Point posX="22.1016" posY="-88.5054" key="p34" posZ="13.1375" name="p34" />
+ <DistanceConstraint pBeginKey="p8" key="d37" distance="132.075422633" pEndKey="p34" name="d37" fixed="False" />
+ <DistanceConstraint pBeginKey="p34" key="d48" distance="131.11273627" pEndKey="p12" name="d48" fixed="False" />
+ <DistanceConstraint pBeginKey="p34" key="d59" distance="148.545251532" pEndKey="p1" name="d59" fixed="False" />
+ <DistanceConstraint pBeginKey="p34" key="d64" distance="143.8809068" pEndKey="p4" name="d64" fixed="False" />
+ <Prototypes numberOfImports="0" number="67" />
+</Objects>

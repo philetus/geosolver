@@ -1,0 +1,47 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module geosolver.diagnostic</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="geosolver.html"><font color="#ffffff">geosolver</font></a>.diagnostic</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/rick/Programming/Python/GeoSolver/geosolver/diagnostic.py">/home/rick/Programming/Python/GeoSolver/geosolver/diagnostic.py</a></font></td></tr></table>
+    <p><tt>Mechanism&nbsp;for&nbsp;selective&nbsp;printing&nbsp;of&nbsp;diagnostic&nbsp;messages<br>
+&nbsp;<br>
+Programs&nbsp;call&nbsp;<a href="#-diag_print">diag_print</a>(str,&nbsp;code)&nbsp;at&nbsp;points&nbsp;where&nbsp;diagnotistic&nbsp;information<br>
+is&nbsp;available.&nbsp;The&nbsp;user&nbsp;of&nbsp;these&nbsp;programs&nbsp;sets&nbsp;diag_codes&nbsp;to&nbsp;some&nbsp;regular&nbsp;expression.<br>
+Only&nbsp;when&nbsp;the&nbsp;code&nbsp;argument&nbsp;in&nbsp;diag_print&nbsp;matches&nbsp;the&nbsp;regular&nbsp;expression&nbsp;diag_codes,&nbsp;<br>
+then&nbsp;the&nbsp;message&nbsp;is&nbsp;printed.&nbsp;Messages&nbsp;are&nbsp;printed&nbsp;to&nbsp;diag_stream,&nbsp;which&nbsp;defaults&nbsp;to&nbsp;<br>
+sys.stdout.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-diag_direct"><strong>diag_direct</strong></a>(stream)</dt><dd><tt>set&nbsp;stream&nbsp;to&nbsp;which&nbsp;messages&nbsp;are&nbsp;printed</tt></dd></dl>
+ <dl><dt><a name="-diag_print"><strong>diag_print</strong></a>(str, code<font color="#909090">=''</font>)</dt></dl>
+ <dl><dt><a name="-diag_select"><strong>diag_select</strong></a>(pattern)</dt><dd><tt>Set&nbsp;regexp&nbsp;pattern&nbsp;to&nbsp;filter&nbsp;which&nbsp;messages&nbsp;are&nbsp;printed.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>diag_selector</strong> = &lt;_sre.SRE_Pattern object at 0xb7ec9b60&gt;<br>
+<strong>diag_stream</strong> = &lt;open file '&lt;stdout&gt;', mode 'w' at 0xb7eb3068&gt;</td></tr></table>
+</body></html>

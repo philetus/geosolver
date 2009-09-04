@@ -1,0 +1,123 @@
+<ui version="4.0" >
+ <class>ConstraintDialog</class>
+ <widget class="QWidget" name="ConstraintDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>238</width>
+    <height>479</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <property name="leftMargin" >
+    <number>9</number>
+   </property>
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget" >
+     <property name="whatsThis" >
+      <string>Edit of the different constraints and other objects</string>
+     </property>
+     <property name="currentIndex" >
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="selectionTab" >
+      <attribute name="title" >
+       <string>Se&amp;lection</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <property name="leftMargin" >
+        <number>9</number>
+       </property>
+       <property name="topMargin" >
+        <number>9</number>
+       </property>
+       <property name="rightMargin" >
+        <number>9</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>9</number>
+       </property>
+       <item>
+        <widget class="QTreeWidget" name="treeWidget" >
+         <property name="uniformRowHeights" >
+          <bool>true</bool>
+         </property>
+         <property name="columnCount" >
+          <number>1</number>
+         </property>
+         <column>
+          <property name="text" >
+           <string>column 1</string>
+          </property>
+         </column>
+         <item>
+          <property name="text" >
+           <string>Points</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Distances</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Angles</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Fixed Points</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Lines</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="editTab" >
+      <attribute name="title" >
+       <string>E&amp;dit</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QStackedWidget" name="stackedWidget" >
+         <property name="currentIndex" >
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="pointEdit" />
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="3" margin="2" />
+ <resources/>
+ <connections/>
+</ui>
