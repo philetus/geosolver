@@ -14,7 +14,7 @@ class MultiVariable:
 
     def __str__(self):
         if self.name == None:
-            return "MultiVariable #"+str(id(self))
+            return "MultiVariable#"+str(id(self))
         else:
             return "MultiVariable("+self.name+")"
 

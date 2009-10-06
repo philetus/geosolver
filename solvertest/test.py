@@ -5,10 +5,30 @@ from geosolver.geometric import *
 from geosolver.vector import vector 
 from geosolver.randomproblem import *
 from geosolver.diagnostic import diag_select, diag_print
-import geosolver.tolerance
+import geosolver.tolerance as tolerance
 from time import time
 
 # ---------- 3D problems -----
+
+def fix_problem_3d():
+    """A problem with a fix constraint"""
+    problem = GeometricProblem(dimension=3)
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([1.0, 0.0, 0.0]))
+    problem.add_point('v3', vector([0.0, 1.0, 0.0]))
+    problem.add_point('v4', vector([0.0, 0.0, 1.0]))
+    #problem.add_constraint(DistanceConstraint('v1', 'v2', 10.0))
+    #problem.add_constraint(DistanceConstraint('v1', 'v3', 10.0))
+    #problem.add_constraint(DistanceConstraint('v2', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
+    
+    problem.add_constraint(FixConstraint('v1', vector([0.0,0.0,0.0])))
+    problem.add_constraint(FixConstraint('v2', vector([10.0,0.0,0.0])))
+    problem.add_constraint(FixConstraint('v3', vector([5.0,5.0,0.0])))
+    
+    return problem
 
 def double_banana_problem():
     """The double tetrahedron problem"""
@@ -381,6 +401,8 @@ def twoscisors():
     problem.add_constraint(DistanceConstraint('D', 'C', 6.0))
     return problem
 
+    
+
 # ------ 2D tests -------
 
 def test_fix(n):
@@ -742,15 +764,20 @@ def stats_parametric():
             t = t2-t1
             print size,"\t",i,"\t",t,"\t",result
 
-    
-#if __name__ == "__main__": test(double_banana_plus_one_problem())
-#if __name__ == "__main__": test(double_banana_problem())
-#if __name__ == "__main__": test(double_tetrahedron_problem())
-#if __name__ == "__main__": test(ada_tetrahedron_problem())
-#if __name__ == "__main__": test(random_triangular_problem_3D(10,10.0,0.0,0.5))
-if __name__ == "__main__": test(random_distance_problem_3D(15,1.0,0.0))
-#if __name__ == "__main__": stats_solving() 
-#if __name__ == "__main__": stats_incremental() 
-#if __name__ == "__main__": stats_parametric_incremental() 
-#if __name__ == "__main__": stats_parametric() 
-#if __name__ == "__main__": test(ada_tetrahedron_problem())
+def runstats():
+    stats_solving() 
+    stats_incremental() 
+    stats_parametric_incremental() 
+    stats_parametric() 
+
+def runtests():
+    #test(double_banana_plus_one_problem())
+    #test(double_banana_problem())
+    #test(double_tetrahedron_problem())
+    #test(ada_tetrahedron_problem())
+    #test(random_triangular_problem_3D(10,10.0,0.0,0.5))
+    #test(random_distance_problem_3D(10,1.0,0.0))
+    #diag_select("clsolver3D")
+    test(fix_problem_3d())
+
+if __name__ == "__main__": runtests()

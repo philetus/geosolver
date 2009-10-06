@@ -2,7 +2,7 @@
 problems incrementally."""
 
 import vector
-from clsolver import PrototypeMethod, is_information_increasing
+from clsolver import PrototypeMethod
 from clsolver2D import ClusterSolver2D 
 from clsolver3D import ClusterSolver3D 
 from cluster import Rigid, Hedgehog
@@ -309,7 +309,6 @@ class GeometricSolver (Listener):
                 
         # determine subclusters
         for method in self.dr.methods():
-            #if is_information_increasing(method):
                 for out in method.outputs():
                     if isinstance(out, Rigid):
                         parent = map[out]
@@ -414,12 +413,13 @@ class GeometricSolver (Listener):
         elif isinstance(con, FixConstraint):
             if self.fixcluster != None:
                 self.dr.remove(self.fixcluster)
-            self.fixvars.append(self.get(con.variables()[0]))
+            self.fixvars.append(con.variables()[0])
+            #if len(self.fixvars) >= 1:
             if len(self.fixvars) >= self.problem.dimension:
-                self.fixcluster = Cluster(self.fixvars)
+                self.fixcluster = Rigid(self.fixvars)
                 self.dr.add(self.fixcluster)
-                self.dr.set_root(fixcluster)
-            self._update_fix()
+                self.dr.set_root(self.fixcluster)
+                self._update_fix()
         else:
             ## raise StandardError, "unknown constraint type"
             pass
@@ -429,13 +429,13 @@ class GeometricSolver (Listener):
         if isinstance(con,FixConstraint):
             if self.fixcluster != None:
                 self.dr.remove(self.fixcluster)
-            var = self.get(con.variables()[0])
+            var = con.variables()[0]
             if var in self.fixvars:
                 self.fixvars.remove(var)
             if len(self.fixvars) < self.problem.dimension:
                 self.fixcluster = None
             else:
-                self.fixcluster = Cluster(self.fixvars)
+                self.fixcluster = Rigid(self.fixvars)
                 self.dr.add(self.fixcluster)
                 self.dr.set_root(self.fixcluster)
         elif con in self._map:
@@ -492,14 +492,14 @@ class GeometricSolver (Listener):
 
     def _update_fix(self):
         if self.fixcluster:
-            vars = fixcluster.vars
+            vars = self.fixcluster.vars
             map = {}
             for var in vars:
                 map[var] = self.problem.get_fix(var).get_parameter()
             conf = Configuration(map)
-            self.dr.set(fixcluster, [conf])
+            self.dr.set(self.fixcluster, [conf])
         else:
-            print "warning: no fixcluster to update"
+            diag_print("no fixcluster to update","geometric")
             pass
    
 #class GeometricSolver
@@ -611,8 +611,13 @@ class FixConstraint(ParametricConstraint):
 
     def satisfied(self, mapping):
         """return True iff mapping from variable names to points satisfies constraint""" 
-        a = mapping[self._variables[0]]
-        result = tol_eq(a[0], self._value[0]) and tol_eq(a[1], self.value[1])
+        point = mapping[self._variables[0]]
+        if len(point) != len(self._value):
+            diag_print("warning: FixConstraint.satisfied: vectors of unequal length", "geometric.FixConstraint.satisfied")
+            return False
+        result = True;
+        for i in range(len(self._value)):
+            result &= tol_eq(point[i], self._value[i])
         return result
 
     def __str__(self):

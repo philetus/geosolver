@@ -44,6 +44,8 @@ class ClusterMethod(MultiMethod):
             s += "wellconstrained"
         return s
 
+    def input_clusters(self):
+        return filter(lambda var: isinstance(var, Cluster), self.inputs())
 
 class PrototypeMethod(MultiMethod):
     """A PrototypeMethod selects those solutions of a cluster for which
@@ -91,9 +93,9 @@ def is_information_increasing(method):
         infinc = True
         connected = Set()
         output = method.outputs()[0]
-        for cluster in method.inputs():
+        for cluster in method.input_clusters():
             if num_constraints(cluster.intersection(output)) >= num_constraints(output):
-		infinc = False
+                infinc = False
                 break
         return infinc
 
@@ -428,7 +430,7 @@ class ClusterSolver(Notifier):
         outcluster = incluster.copy()
         # Rick 20090519 - copy does not copy structural overconstrained flag?
         outcluster.overconstrained = incluster.overconstrained
-	selector = PrototypeMethod(incluster, selclusters, outcluster, constraints)
+        selector = PrototypeMethod(incluster, selclusters, outcluster, constraints)
         self._add_cluster(outcluster)
         self._add_method(selector)
         self._rem_top_level(incluster)

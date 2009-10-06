@@ -25,10 +25,10 @@ class Distance:
         return hash(ImmutableSet(self.vars))
 
     def __eq__(self, other):
-	if isinstance(other, Distance):
-		return ImmutableSet(self.vars) == ImmutableSet(other.vars)
-	else:
-		return False
+        if isinstance(other, Distance):
+            return ImmutableSet(self.vars) == ImmutableSet(other.vars)
+        else:
+            return False
 
 
 class Angle:
@@ -45,10 +45,10 @@ class Angle:
         self.vars = (a,b,c)
 
     def __eq__(self, other):
-	if isinstance(other, Angle):
-		return self.vars[2] == other.vars[2] and ImmutableSet(self.vars) == ImmutableSet(other.vars)
-	else:
-		return False
+        if isinstance(other, Angle):
+            return self.vars[2] == other.vars[2] and ImmutableSet(self.vars) == ImmutableSet(other.vars)
+        else:
+            return False
 
 
     def __hash__(self):

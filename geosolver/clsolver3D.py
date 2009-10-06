@@ -9,6 +9,7 @@ from configuration import Configuration
 from cluster import *
 from map import Map
 from gmatch import gmatch
+from method import OrMethod
 
 def pattern2graph(pattern):
     """convert pattern to pattern graph"""
@@ -55,6 +56,10 @@ def reference2graph(nlet):
     #diag_print("reference graph:"+str(rgraph),"match");
     return rgraph
 
+def rootname(cluster):
+    return "root#"+str(id(cluster))
+
+
 class ClusterSolver3D(ClusterSolver):
     """A generic 3D geometric constraint solver. 
     
@@ -79,7 +84,19 @@ class ClusterSolver3D(ClusterSolver):
     def __init__(self):
         """Instantiate a ClusterSolver3D"""
         ClusterSolver.__init__(self, dimension=3)
-         
+        self.rootcluster = None
+
+    # overriding ClusterSolver.set_root
+    def set_root(self, cluster):
+        diag_print("set root "+str(self.rootcluster), "clsolver3D")
+        if self.rootcluster != None:
+            oldrootvar = rootname(self.rootcluster)
+            self._mg.set(oldrootvar, False)
+        newrootvar = rootname(cluster)
+        self._mg.set(newrootvar, True)
+        self.rootcluster = cluster
+
+
     # ------------ INTERNALLY USED METHODS --------
 
     def _all_sources_constraint_in_cluster(self, constraint, cluster):
@@ -90,7 +107,7 @@ class ClusterSolver3D(ClusterSolver):
         else:
             method = self._determining_method(cluster)
             sources = Set()
-            for inp in method.inputs():
+            for inp in method.input_clusters():
                 sources.union_update(self._all_sources_constraint_in_cluster(constraint, inp))
             return sources
      
@@ -99,7 +116,7 @@ class ClusterSolver3D(ClusterSolver):
     # --------------
     
     def _search(self, newcluster):
-        print "search from:", newcluster
+        diag_print("search from: "+str(newcluster),"clsolver3D")
         # find all toplevel clusters connected to newcluster via one or more variables
         connected = Set()
         for var in newcluster.vars:
@@ -112,80 +129,12 @@ class ClusterSolver3D(ClusterSolver):
             return True 
         return False
 
-    # end _search
-
-    def _search_old(self, newcluster):
-        #print "search:", newcluster
-        # find all toplevel clusters connected to newcluster via one or more variables
-        connected = Set()
-        for var in newcluster.vars:
-            dependend = self.find_dependend(var)
-            dependend = filter(lambda x: self.is_top_level(x), dependend)
-            connected.union_update(dependend)
-        connected.remove(newcluster)
-        #print "connected:", connected
-        # make pairs
-        pairs = Set()
-        for cluster in connected:
-            pair = Set([newcluster, cluster])
-            pairs.add(pair)
-        #print "pairs:",pairs
-        # try merging pairs
-        for pair in pairs:
-            if self._try_method(pair):
-                return True 
-        # make triplets
-        triplets = Set()
-        for pair in pairs:
-            for cluster in connected:
-                allconnected = True
-                for c in pair:
-                    if c is cluster:
-                        allconnected = False
-                        break
-                    shared = Set(cluster.vars).intersection(c.vars)
-                    if len(shared) == 0:
-                        allconnected = False
-                        break
-                if allconnected: 
-                    triplet = pair.union([cluster])
-                    triplets.add(triplet)
-        #print "triplets:",triplets
-        # try merging triplets
-        for triplet in triplets:
-            if self._try_method(triplet):
-                return True 
-        ## make quadlets
-        #quadlets = Set()
-        #for triplet in triplets:
-        #    for cluster in connected:
-        #        allconnected = True
-        #        for c in triplet:
-        #            if c is cluster:
-        #                allconnected = False
-        #                break
-        #            shared = Set(cluster.vars).intersection(c.vars)
-        #            if len(shared) == 0:
-        #                allconnected = False
-        #                break
-        #        if allconnected: 
-        #            quadlet = triplet.union([cluster])
-        #            quadlets.add(quadlet) 
-        #diag_print("quadlets:"+str(quadlets),"clsolver3D")
-        ## try merging quadlets
-        #for quadlet in quadlets:
-        #    if self._try_method(quadlet):
-        #        return True
-        return False
-
-    # end _search
-
     def _try_method(self, nlet):
         """finds a possible rewrite rule applications on given set of clusters, applies it 
            and returns True iff successfull
         """
         refgraph = reference2graph(nlet)
-        for methodclass in reversed([MergePR, MergeDR, MergeDDD, MergeADD, MergeDAD, MergeAA, MergeSD, MergeTTD, MergeRR]):
+        for methodclass in [MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA]:
             matches = gmatch(methodclass.patterngraph, refgraph)
             if len(matches) > 0:
                 diag_print("number of matches = "+str(len(matches)), "clsolver3D")
@@ -215,7 +164,7 @@ class ClusterSolver3D(ClusterSolver):
             dependend = self.find_dependend(var)
             dependend = filter(lambda x: self.is_top_level(x), dependend)
             connected.union_update(dependend)
-        #for cluster in merge.inputs():
+        #for cluster in merge.input_clusters():
         #    if cluster in connected:
         #        connected.remove(cluster)
 
@@ -223,15 +172,13 @@ class ClusterSolver3D(ClusterSolver):
 
         for cluster in connected:
             if num_constraints(cluster.intersection(output)) >= num_constraints(output):
-                    # if self._is_consistent_pair(cluster, output):
-                # print "#overconstraint=",len(oc), "#constraints"=num_constraints(cluster)
                 infinc = False
                 break
         diag_print("information increasing:"+str(infinc),"clsolver3D")
 
         # check if method reduces number of clusters (reduc)
         nremove = 0
-        for cluster in merge.inputs():
+        for cluster in merge.input_clusters():
             if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
                # will be removed from toplevel
                nremove += 1
@@ -246,10 +193,10 @@ class ClusterSolver3D(ClusterSolver):
         # check consistency and local/global overconstrained
         consistent = True
         local_oc = False
-        for i1 in range(0, len(merge.inputs())):
-            for i2 in range(i1+1, len(merge.inputs())):
-                c1 = merge.inputs()[i1] 
-                c2 = merge.inputs()[i2] 
+        for i1 in range(0, len(merge.input_clusters())):
+            for i2 in range(i1+1, len(merge.input_clusters())):
+                c1 = merge.input_clusters()[i1] 
+                c2 = merge.input_clusters()[i2] 
                 if num_constraints(c1.intersection(c2)) != 0:
                     local_oc = True
                 consistent = consistent and self._is_consistent_pair(c1, c2)
@@ -257,27 +204,54 @@ class ClusterSolver3D(ClusterSolver):
         merge.overconstrained = local_oc
         # global overconstrained? (store in output cluster)
         overconstrained = not consistent
-        for cluster in merge.inputs():
+        for cluster in merge.input_clusters():
             overconstrained = overconstrained or cluster.overconstrained
         output.overconstrained = overconstrained
         # add to graph
         self._add_cluster(output)
         self._add_method(merge)
-        # remove inputs from top_level
-        merge.restore_toplevel = []    # make restore list in method
-        for cluster in merge.inputs():
-            if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
-               diag_print("remove from top-level: "+str(cluster),"clsolver3D")
-               self._rem_top_level(cluster) 
-               merge.restore_toplevel.append(cluster)
-            else:
-               diag_print("keep top-level: "+str(cluster),"clsolver3D")
+        # remove input clusters from top_level
+        if not (hasattr(merge,"noremove") and merge.noremove == True):
+            merge.restore_toplevel = []    # make restore list in method
+            for cluster in merge.input_clusters():
+                if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
+                    diag_print("remove from top-level: "+str(cluster),"clsolver3D")
+                    self._rem_top_level(cluster) 
+                    merge.restore_toplevel.append(cluster)
+                else:
+                    diag_print("keep top-level: "+str(cluster),"clsolver3D")
+        # endif
         # add prototype selection method
         self._add_prototype_selector(merge)
         # add solution selection method
         self._add_solution_selector(merge)
+        # add method to determine root-variable
+        self._add_root_method(merge.input_clusters(),merge.outputs()[0])
         # pause
         return True
+
+    def _add_root_method(self,inclusters,outcluster):
+        inroots = []
+        for cluster in inclusters:
+            inroots.append(rootname(cluster))
+        outroot = rootname(outcluster)
+        method = OrMethod(inroots, outroot)
+        # add method
+        self._add_method(method)
+        # make sure its deleted when cluster is deleted
+        self._add_dependency(outcluster, method) 
+
+    # overriding superclass function
+    def _add_cluster(self, cluster):
+        # call superclass function
+        ClusterSolver._add_cluster(self, cluster)
+        # add root-variable if needed with default value False
+        root = rootname(cluster)
+        if not self._mg.contains(root):
+            self._mg.add_variable(root, False)
+            self._mg.set(root, False)
+            # add root-variable to dependency graph
+            self._add_dependency(cluster, root)
 
 # class ClusterSolver3D
 
@@ -285,10 +259,11 @@ class ClusterSolver3D(ClusterSolver):
 # ---------- Methods for 3D solving -------------
 # ----------------------------------------------
 
+# Merge<X> methods take root-cluster in considerations   
+# Derive<X> methods do not take root cluster in consideration
+
 class MergePR(ClusterMethod):
-    """Represents a merging of a one-point cluster with any other rigid
-       The first cluster determines the orientation of the resulting cluster
-    """
+    """Represents a merging of a one-point cluster with any other rigid."""
     def __init__(self, map):
         # check inputs
         in1 = map["$p"]
@@ -297,7 +272,9 @@ class MergePR(ClusterMethod):
         outvars = Set(in1.vars).union(in2.vars)
         out = Rigid(outvars)
         # set method properties
-        self._inputs = [in1, in2]
+        in1root = rootname(in1)
+        in2root = rootname(in2)
+        self._inputs = [in1, in2, in1root, in2root]
         self._outputs = [out]
         ClusterMethod.__init__(self)
 
@@ -314,21 +291,22 @@ class MergePR(ClusterMethod):
 
     def multi_execute(self, inmap):
         diag_print("MergePR.multi_execute called","clmethods")
-        c1 = self._inputs[0]
-        c2 = self._inputs[1]
-        conf1 = inmap[c1]
-        conf2 = inmap[c2]
-        #res = conf1.merge2D(conf2)
-        #return [res]
-        if len(c1.vars) == 1:
-            return [conf2.copy()]
-        else:
-            return [conf1.copy()]
+        #c1 = self._inputs[0]
+        #c2 = self._inputs[1]
+        conf1 = inmap[self._inputs[0]]
+        conf2 = inmap[self._inputs[1]]
+        isroot1 = inmap[self._inputs[2]]
+        isroot2 = inmap[self._inputs[3]]
+        if isroot1:
+            res = conf1.merge(conf2)
+        elif isroot2:
+            res = conf2.merge(conf1)
+        else: # cheapest
+            res = conf2.merge(conf1)
+        return [res]
 
 class MergeDR(ClusterMethod):
-    """Represents a merging of a distance (two-point cluster) with a rigid
-       The first cluster determines the orientation of the resulting cluster
-    """
+    """Represents a merging of a distance (two-point cluster) with a rigid."""
     def __init__(self, map):
         # check inputs
         in1 = map["$d"]
@@ -337,7 +315,9 @@ class MergeDR(ClusterMethod):
         outvars = Set(in1.vars).union(in2.vars)
         out = Rigid(outvars)
         # set method properties
-        self._inputs = [in1, in2]
+        in1root = rootname(in1)
+        in2root = rootname(in2)
+        self._inputs = [in1, in2, in1root, in2root]
         self._outputs = [out]
         ClusterMethod.__init__(self)
 
@@ -358,17 +338,18 @@ class MergeDR(ClusterMethod):
         c2 = self._inputs[1]
         conf1 = inmap[c1]
         conf2 = inmap[c2]
-        #res = conf1.merge2D(conf2)
-        #return [res]
-        if len(c1.vars) == 2:
-            return [conf2.copy()]
-        else:
-            return [conf1.copy()]
-
+        isroot1 = inmap[self._inputs[2]]
+        isroot2 = inmap[self._inputs[3]]
+        if isroot1:
+            res = conf1.merge(conf2)
+        elif isroot2:
+            res = conf2.merge(conf1)
+        else: # cheapest
+            res = conf2.merge(conf1)
+        return [res]
+   
 class MergeRR(ClusterMethod):
-    """Represents a merging of two rigids sharing three points (overconstrained).
-       The first cluster determines the orientation of the resulting cluster
-    """
+    """Represents a merging of two rigids sharing three points."""
     def __init__(self, map):
         # check inputs
         in1 = map["$r1"]
@@ -376,7 +357,9 @@ class MergeRR(ClusterMethod):
         # create output
         out = Rigid(Set(in1.vars).union(in2.vars))
         # set method parameters
-        self._inputs = [in1, in2]
+        in1root = rootname(in1)
+        in2root = rootname(in2)
+        self._inputs = [in1, in2, in1root, in2root]
         self._outputs = [out]
         ClusterMethod.__init__(self)
 
@@ -397,9 +380,19 @@ class MergeRR(ClusterMethod):
         c2 = self._inputs[1]
         conf1 = inmap[c1]
         conf2 = inmap[c2]
-        return [conf1.merge(conf2)]
+        isroot1 = inmap[self._inputs[2]]
+        isroot2 = inmap[self._inputs[3]]
+        if isroot1 and not isroot2:
+            res = conf1.merge(conf2)
+        elif isroot2 and not isroot1:
+            res = conf2.merge(conf1)
+        elif len(c1.vars) < len(c2.vars):  # cheapest
+            res = conf2.merge(conf1)
+        else:
+            res = conf1.merge(conf2)
+        return [res]
 
-class MergeDDD(ClusterMethod):
+class DeriveDDD(ClusterMethod):
     """Represents a merging of three distances"""
     def __init__(self, map):
         # check inputs
@@ -415,6 +408,8 @@ class MergeDDD(ClusterMethod):
         self._inputs = [self.d_ab, self.d_ac, self.d_bc]
         self._outputs = [out]
         ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
 
     def _pattern():
         pattern = [["rigid","$d_ab",["$a", "$b"]], 
@@ -426,12 +421,12 @@ class MergeDDD(ClusterMethod):
 
 
     def __str__(self):
-        s =  "MergeDDD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
+        s =  "DeriveDDD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
         s += "[" + self.status_str()+"]"
         return s
 
     def multi_execute(self, inmap):
-        diag_print("MergeDDD.multi_execute called","clmethods")
+        diag_print("DeriveDDD.multi_execute called","clmethods")
         c12 = inmap[self.d_ab]
         c13 = inmap[self.d_ac]
         c23 = inmap[self.d_bc]
@@ -444,7 +439,7 @@ class MergeDDD(ClusterMethod):
         solutions = solve_ddd_3D(v1,v2,v3,d12,d23,d31)
         return solutions
 
-class MergeTTD(ClusterMethod):
+class DeriveTTD(ClusterMethod):
     """Represents a derive of a tetra from six distances"""
     def __init__(self, map):
         # check inputs
@@ -461,9 +456,11 @@ class MergeTTD(ClusterMethod):
         self._inputs = [self.t_abc, self.t_abd, self.d_cd]
         self._outputs = [out]
         ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
 
     def __str__(self):
-        s =  "MergeTTD("+str(self._inputs[0])+\
+        s =  "DeriveTTD("+str(self._inputs[0])+\
                         str(self._inputs[1])+\
                         str(self._inputs[2])+\
                         ", ... -> "+\
@@ -480,7 +477,7 @@ class MergeTTD(ClusterMethod):
     patterngraph = _pattern()
 
     def multi_execute(self, inmap):
-        diag_print("MergeTTD.multi_execute called","clmethods")
+        diag_print("DeriveTTD.multi_execute called","clmethods")
         c123 = inmap[self.t_abc]
         c124 = inmap[self.t_abd]
         c34 = inmap[self.d_cd]
@@ -502,8 +499,8 @@ class MergeTTD(ClusterMethod):
         constraints.append(FunctionConstraint(fnot(is_right_handed),[self.a,self.b,self.c,self.d]))
         return constraints
 
-class MergeDAD(ClusterMethod):
-    """Represents a merging of three distances"""
+class DeriveDAD(ClusterMethod):
+    """Represents a merging of two distances and an angle"""
     def __init__(self, map):
         # check inputs
         self.d_ab = map["$d_ab"]
@@ -518,6 +515,8 @@ class MergeDAD(ClusterMethod):
         self._inputs = [self.d_ab, self.a_abc, self.d_bc]
         self._outputs = [out]
         ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
 
     def _pattern():
         pattern = [["rigid","$d_ab",["$a", "$b"]], 
@@ -528,12 +527,12 @@ class MergeDAD(ClusterMethod):
     patterngraph = _pattern()
 
     def __str__(self):
-        s =  "MergeDAD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
+        s =  "DeriveDAD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
         s += "[" + self.status_str()+"]"
         return s
 
     def multi_execute(self, inmap):
-        diag_print("MergeDDD.multi_execute called","clmethods")
+        diag_print("DeriveDAD.multi_execute called","clmethods")
         c12 = inmap[self.d_ab]
         c123 = inmap[self.a_abc]
         c23 = inmap[self.d_bc]
@@ -546,8 +545,8 @@ class MergeDAD(ClusterMethod):
         solutions = solve_dad_3D(v1,v2,v3,d12,a123,d23)
         return solutions
 
-class MergeADD(ClusterMethod):
-    """Represents a merging of three distances"""
+class DeriveADD(ClusterMethod):
+    """Represents a merging of one distance and to distances"""
     def __init__(self, map):
         # check inputs
         self.a_cab = map["$a_cab"]
@@ -562,6 +561,9 @@ class MergeADD(ClusterMethod):
         self._inputs = [self.a_cab, self.d_ab, self.d_bc]
         self._outputs = [out]
         ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
+
 
     def _pattern():
         pattern = [["hedgehog","$a_cab",["$a", "$c", "$b"]], 
@@ -572,12 +574,12 @@ class MergeADD(ClusterMethod):
     patterngraph = _pattern()
 
     def __str__(self):
-        s =  "MergeADD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
+        s =  "DeriveADD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
         s += "[" + self.status_str()+"]"
         return s
 
     def multi_execute(self, inmap):
-        diag_print("MergeADD.multi_execute called","clmethods")
+        diag_print("DeriveADD.multi_execute called","clmethods")
         c312 = inmap[self.a_cab]
         c12 = inmap[self.d_ab]
         c23 = inmap[self.d_bc]
@@ -590,7 +592,7 @@ class MergeADD(ClusterMethod):
         solutions = solve_add_3D(v1,v2,v3,a312,d12,d23)
         return solutions
 
-class MergeAA(ClusterMethod):
+class DeriveAA(ClusterMethod):
     """Derive a scalable from two angles"""
     def __init__(self, map):
         # check inputs
@@ -605,6 +607,10 @@ class MergeAA(ClusterMethod):
         self._inputs = [self.a_cab, self.a_abc]
         self._outputs = [out]
         ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
+
+
 
     def _pattern():
         pattern = [["hedgehog","$a_cab",["$a", "$c", "$b"]], 
@@ -614,12 +620,12 @@ class MergeAA(ClusterMethod):
     patterngraph = _pattern()
 
     def __str__(self):
-        s =  "MergeAA("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s =  "DeriveAA("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
         s += "[" + self.status_str()+"]"
         return s
 
     def multi_execute(self, inmap):
-        diag_print("MergeAA.multi_execute called","clmethods")
+        diag_print("DeriveAA.multi_execute called","clmethods")
         c312 = inmap[self.a_cab]
         c123 = inmap[self.a_abc]
         v1 = self.a
@@ -631,8 +637,8 @@ class MergeAA(ClusterMethod):
         solutions = solve_ada_3D(v1,v2,v3,a312,d12,a123)
         return solutions
 
-class MergeSD(ClusterMethod):
-    """Derive a Rigid from a Scalabe and a Rigid sharing two points"""
+class MergeSR(ClusterMethod):
+    """Merge a Rigid from a Scalabe and a Rigid sharing two points"""
     def __init__(self, map):
         # check inputs
         in1 = map["$r"]
@@ -651,12 +657,12 @@ class MergeSD(ClusterMethod):
     patterngraph = _pattern()
 
     def __str__(self):
-        s =  "MergeSD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s =  "MergeSR("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
         s += "[" + self.status_str()+"]"
         return s
 
     def multi_execute(self, inmap):
-        diag_print("MergeSD.multi_execute called","clmethods")
+        diag_print("MergeSR.multi_execute called","clmethods")
         c1 = self._inputs[0]
         c2 = self._inputs[1]
         conf1 = inmap[c1]

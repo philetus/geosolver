@@ -319,18 +319,32 @@ class Configuration:
         return self.hashvalue
 
     def __str__(self):
-        return "Configuration("+str(self.map)+")"
+        if self.underconstrained:
+            return "Configuration("+str(self.map)+" underconstrained)"
+        else:
+            return "Configuration("+str(self.map)+")"
 
+
+def testeq():
+    p1 = vector.vector([0.0,0.0,0.0])
+    p2 = vector.vector([1.0,0.0,0.0])
+    p3 = vector.vector([0.0,1.0,0.0])
+    c1 = Configuration({1:p1,2:p2,3:p3})
+    q1 = vector.vector([0.0,0.0,0.0])
+    q2 = vector.vector([1.0,0.0,0.0])
+    q3 = vector.vector([0.0,-1.0,0.0])
+    c2 = Configuration({1:q1,2:q2,3:q3})
+    print c1 == c2
 
 def test():
     p1 = vector.vector([0.0,0.0,0.0])
     p2 = vector.vector([1.0,0.0,0.0])
     p3 = vector.vector([0.0,1.0,0.0])
-    c1 = Configuration({1:p1,2:p2})
-    q1 = vector.vector([0.0,0.0,0.0])
-    q2 = vector.vector([1.0,0.0,0.0])
-    q3 = vector.vector([0.0,-1.0,0.0])
-    c2 = Configuration({1:q1,2:q2})
-    print c1 == c2
+    p = Configuration({1:p1,2:p2,3:p3})
+    q1 = vector.vector([0.0,0.0,3.0])
+    q = Configuration({1:q1})
+    print p.merge(q)
+    print q.merge(p)
+
 
 if __name__ == "__main__": test()

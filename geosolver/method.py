@@ -132,6 +132,9 @@ class MethodGraph:
         """return a list of methods"""
         return self._methods.keys()
 
+    def contains(self, object):
+        return self._graph.has_vertex(object)
+
     def add_variable(self, varname, value = None):
         """Add a variable, optionally with a value"""
         if not varname in self._map:
@@ -297,6 +300,30 @@ class MethodGraph:
 # end class MethodGraph
 
 # ----------- various Methods ---------
+
+class OrMethod(Method):
+    def __init__(self, inputs, output):
+        """new method output := input[0] | input[1] | ... """
+        self._inputs = list(inputs)
+        self._outputs = [output]
+
+    def execute(self, inmap):
+        result = False
+        for input in self._inputs:
+            result = result | inmap[input]
+        outmap = {}
+        outmap[self._outputs[0]] = result
+        return outmap
+
+    def __str__(self):
+        s = "OrMethod("
+        s += str(self._inputs[0])
+        s += ','
+        s += str(self._inputs[1])
+        s += ','
+        s += str(self._outputs[0])
+        s += ')' 
+        return s
 
 class AddMethod(Method):
     def __init__(self, a, b, c):
