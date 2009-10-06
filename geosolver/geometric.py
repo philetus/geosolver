@@ -416,8 +416,8 @@ class GeometricSolver (Listener):
             if self.fixcluster != None:
                 self.dr.remove(self.fixcluster)
             self.fixvars.append(con.variables()[0])
-            #if len(self.fixvars) >= 1:
-            if len(self.fixvars) >= self.problem.dimension:
+            if len(self.fixvars) >= 1:
+            #if len(self.fixvars) >= self.problem.dimension:
                 self.fixcluster = Rigid(self.fixvars)
                 self.dr.add(self.fixcluster)
                 self.dr.set_root(self.fixcluster)
@@ -434,7 +434,8 @@ class GeometricSolver (Listener):
             var = con.variables()[0]
             if var in self.fixvars:
                 self.fixvars.remove(var)
-            if len(self.fixvars) < self.problem.dimension:
+            #if len(self.fixvars) < self.problem.dimension:
+            if len(self.fixvars) == 0:
                 self.fixcluster = None
             else:
                 self.fixcluster = Rigid(self.fixvars)

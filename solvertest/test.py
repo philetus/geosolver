@@ -10,7 +10,7 @@ from time import time
 
 # ---------- 3D problems -----
 
-def fix_problem_3d():
+def fix3_problem_3d():
     """A problem with a fix constraint"""
     problem = GeometricProblem(dimension=3)
     problem.add_point('v1', vector([0.0, 0.0, 0.0]))
@@ -23,13 +23,46 @@ def fix_problem_3d():
     problem.add_constraint(DistanceConstraint('v1', 'v4', 10.0))
     problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
     problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
-    
     problem.add_constraint(FixConstraint('v1', vector([0.0,0.0,0.0])))
     problem.add_constraint(FixConstraint('v2', vector([10.0,0.0,0.0])))
     problem.add_constraint(FixConstraint('v3', vector([5.0,5.0,0.0])))
-    
     return problem
 
+def fix2_problem_3d():
+    """A problem with a fix constraint"""
+    problem = GeometricProblem(dimension=3)
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([1.0, 0.0, 0.0]))
+    problem.add_point('v3', vector([0.0, 1.0, 0.0]))
+    problem.add_point('v4', vector([0.0, 0.0, 1.0]))
+    #problem.add_constraint(DistanceConstraint('v1', 'v2', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
+    problem.add_constraint(FixConstraint('v1', vector([0.0,0.0,0.0])))
+    problem.add_constraint(FixConstraint('v2', vector([10.0,0.0,0.0])))
+    return problem
+
+def fix1_problem_3d():
+    """A problem with a fix constraint"""
+    problem = GeometricProblem(dimension=3)
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([1.0, 0.0, 0.0]))
+    problem.add_point('v3', vector([0.0, 1.0, 0.0]))
+    problem.add_point('v4', vector([0.0, 0.0, 1.0]))
+    problem.add_constraint(DistanceConstraint('v1', 'v2', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
+    problem.add_constraint(FixConstraint('v1', vector([0.0,0.0,0.0])))
+    return problem
+
+
+    
 def double_banana_problem():
     """The double tetrahedron problem"""
     problem = GeometricProblem(dimension=3)
@@ -778,6 +811,8 @@ def runtests():
     #test(ada_tetrahedron_problem())
     #test(random_triangular_problem_3D(10,10.0,0.0,0.5))
     #test(random_distance_problem_3D(10,1.0,0.0))
-    test(fix_problem_3d())
+    #test(fix1_problem_3d())
+    #test(fix2_problem_3d())
+    test(fix3_problem_3d())
 
 if __name__ == "__main__": runtests()
