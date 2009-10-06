@@ -771,13 +771,13 @@ def runstats():
     stats_parametric() 
 
 def runtests():
+    #diag_select("clsolver3D")
     #test(double_banana_plus_one_problem())
     #test(double_banana_problem())
     #test(double_tetrahedron_problem())
     #test(ada_tetrahedron_problem())
     #test(random_triangular_problem_3D(10,10.0,0.0,0.5))
     #test(random_distance_problem_3D(10,1.0,0.0))
-    #diag_select("clsolver3D")
     test(fix_problem_3d())
 
 if __name__ == "__main__": runtests()

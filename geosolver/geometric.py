@@ -47,16 +47,18 @@ class GeometricProblem (Notifier, Listener):
         self.prototype = {}
         self.cg = ConstraintGraph()
 
-    def add_point(self, variable, position):
+    def add_point(self, variable,pos):
         """add a point variable with a prototype position"""
+        position = vector.vector(pos)
         if variable not in self.prototype:
             self.prototype[variable] = position
             self.cg.add_variable(variable)
         else:
             raise StandardError, "point already in problem"
 
-    def set_point(self, variable, position):
+    def set_point(self, variable, pos):
         """set prototype position of point variable"""
+        position = vector.vector(pos)
         if variable in self.prototype:
             self.prototype[variable] = position
             self.send_notify(("set_point", (variable,position)))
