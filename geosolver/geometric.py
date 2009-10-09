@@ -3,7 +3,7 @@ problems incrementally."""
 
 import vector
 from clsolver import PrototypeMethod
-from clsolver2D import ClusterSolver2D 
+# depricated! from clsolver2D import ClusterSolver2D 
 from clsolver3D import ClusterSolver3D 
 from cluster import Rigid, Hedgehog
 from configuration import Configuration 
@@ -93,6 +93,16 @@ class GeometricProblem (Notifier, Listener):
             if self.get_angle(con.variables()[0],con.variables()[1], con.variables()[2]):
                 raise StandardError, "angle already in problem"
             else: 
+                con.add_listener(self)
+                self.cg.add_constraint(con)
+        elif isinstance(con, RigidConstraint):
+            for var in con.variables():
+                if var not in self.prototype:
+                    raise StandardError, "point variable not in problem"
+            #if self.get_rigid(con.variables())
+            #    raise StandardError, "rigid already in problem"
+            #else:
+            if True:
                 con.add_listener(self)
                 self.cg.add_constraint(con)
         elif isinstance(con, SelectionConstraint):
@@ -212,7 +222,7 @@ class GeometricProblem (Notifier, Listener):
 
 class GeometricSolver (Listener):
     """The GeometricSolver monitors changes in a GeometricProblem and 
-       mappes any changes to corresponding changes in a GeometricCluster
+       maps any changes to corresponding changes in a GeometricCluster
     """
 
     # public methods
@@ -261,26 +271,33 @@ class GeometricSolver (Listener):
                 self._add_constraint(con)
 
     def get_constrainedness(self):
-        toplevel = self.dr.top_level()
-        if len(toplevel) > 1:
-            return "under-constrained"
-        elif len(toplevel) == 1:
-            cluster = toplevel[0]
-            if isinstance(cluster,Rigid):
-                configurations = self.dr.get(cluster)
-                if configurations == None:
-                    return "unsolved"
-                elif len(configurations) > 0:
-                    return "well-constrained"
-                else:
-                    return "over-constrained"
-            else:
-                return "under-constrained"
-        elif len(toplevel) == 0:
-            return "error"
+        """Depricated. Use get_statis instead"""
+        return self.get_status()
+    #    toplevel = self.dr.top_level()
+    #    if len(toplevel) > 1:
+    #        return "under-constrained"
+    #    elif len(toplevel) == 1:
+    #        cluster = toplevel[0]
+    #        if isinstance(cluster,Rigid):
+    #            configurations = self.dr.get(cluster)
+    #            if configurations == None:
+    #                return "unsolved"
+    #            elif len(configurations) > 0:
+    #                return "well-constrained"
+    #            else:
+    #                return "over-constrained"
+    #        else:
+    #            return "under-constrained"
+    #    elif len(toplevel) == 0:
+    #        return "error"
 
     def get_result(self):
-        """returns the result as a GeometricCluster"""
+        """Depricated. Use get_cluster instead."""
+        return self.get_cluster()  
+
+    def get_cluster(self):
+        """Returns a GeometricCluster (the root of a tree of clusters),
+         describing the solutions and the decomposition of the problem."""
         map = {}   
         # map dr clusters
         for drcluster in self.dr.rigids():
@@ -326,7 +343,6 @@ class GeometricSolver (Listener):
                 geoin = map[incluster]
                 geoout = map[outcluster]
                 geoout.subs = list(geoin.subs)
-
         
         # determine top-level result 
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
@@ -338,7 +354,7 @@ class GeometricSolver (Listener):
             result.solutions = []
             result.flags = GeometricCluster.UNSOLVED
         elif len(rigids) == 1:
-            # structurally well constrained
+            # structurally well constrained, or structurally overconstrained
             result = map[rigids[0]]
         else:
             # structurally underconstrained cluster
@@ -348,6 +364,53 @@ class GeometricSolver (Listener):
                 result.subs.append(map[rigid])
         return result 
 
+    def get_solutions(self):
+        """Returns a list of Configurations, which will be empty if the
+           problem is not structurally well-constrained. Note: this method is
+           cheaper but less informative than get_cluster. The
+           list and the configurations should not be changed (since they are
+           references to objects in the solver)."""
+        rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
+        if len(rigids) == 0:   
+            return self.dr.get(rigids[0])
+        else:
+            return []
+
+    def get_status(self):
+        """Returns a symbolic flag, one of:
+            GeometricCluster.S_UNDER, 
+            GeometricCluster.S_OVER,
+            GeometricCluster.OK,
+            GeometricCluster.UNSOLVED,
+            GeometricCluster.EMPTY,
+            GeometricCluster.I_OVER,
+            GeometricCluster.I_UNDER.
+           Note: this method is cheaper but less informative than get_cluster. 
+        """
+        rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
+        if len(rigids) == 0:            
+            return GeometricCluster.EMPTY
+        elif len(rigids) == 1:
+            drcluster = rigids[0]
+            solutions = self.dr.get(drcluster)
+            underconstrained = False
+            if solutions == None:
+                return GeometricCluster.UNSOLVED
+            else:
+                for solution in solutions:
+                    if solution.underconstrained:
+                        underconstrained = True
+            if drcluster.overconstrained:
+                return GeometricCluster.S_OVER
+            elif len(solutions) == 0:
+                return GeometricCluster.I_OVER
+            elif underconstrained:
+                return GeometricCluster.I_UNDER
+            else:
+                return GeometricCluster.OK
+        else:
+            return GeometricCluster.S_UNDER
+    
     def receive_notify(self, object, message):
         """Take notice of changes in constraint graph"""
         if object == self.cg:
@@ -412,6 +475,15 @@ class GeometricSolver (Listener):
             self.dr.add(rig)
             # set configuration
             self._update_constraint(con)
+        elif isinstance(con, RigidConstraint):
+            # map to rigid
+            vars = list(con.variables());
+            rig = Rigid(vars)
+            self._map[con] = rig
+            self._map[rig] = con
+            self.dr.add(rig)
+            # set configuration
+            self._update_constraint(con)
         elif isinstance(con, FixConstraint):
             if self.fixcluster != None:
                 self.dr.remove(self.fixcluster)
@@ -422,6 +494,9 @@ class GeometricSolver (Listener):
                 self.dr.add(self.fixcluster)
                 self.dr.set_root(self.fixcluster)
                 self._update_fix()
+        elif isinstance(con, SelectionConstraint):
+            # add directly to clustersolver
+            self.dr.add(con)
         else:
             ## raise StandardError, "unknown constraint type"
             pass
@@ -482,6 +557,13 @@ class GeometricSolver (Listener):
             conf = Configuration({v0:p0,v1:p1})
             self.dr.set(rig, [conf])
             assert con.satisfied(conf.map)
+        elif isinstance(con, RigidConstraint):
+            # set configuration
+            rig = self._map[con]
+            vars = list(con.variables())
+            conf = con.get_parameter()
+            self.dr.set(rig, [conf])
+            assert con.satisfied(conf.map)
         elif isinstance(con, FixConstraint):
             self._update_fix()
         else:
@@ -529,15 +611,17 @@ class GeometricCluster:
                               I_UNDER               incidental under-constrained
                               S_OVER                structural overconstrained 
                               S_UNDER               structural underconstrained
-                              UNSOLVED              unsolved
+                              UNSOLVED              unsolved (no input values)
+                              EMPTY                 empty (no variables)
        """
 
-    OK = "well constrained"
+    OK = "well-constrained"
     I_OVER = "incidental over-constrained"      
     I_UNDER = "incidental under-constrained" 
     S_OVER = "structral over-constrained"
     S_UNDER = "structural under-constrained"
     UNSOLVED = "unsolved"
+    EMPTY = "empty"
    
     def __init__(self):
         """initialise an empty new cluster"""
@@ -602,7 +686,7 @@ class FixConstraint(ParametricConstraint):
     """A constraint to fix a point relative to the coordinate system"""
 
     def __init__(self, var, pos):
-        """Create a new DistanceConstraint instance
+        """Create a new FixConstraint instance
         
            keyword args:
             var    - a point variable name 
@@ -697,5 +781,37 @@ class AngleConstraint(ParametricConstraint):
             +str(self._variables[1])+","\
             +str(self._variables[2])+","\
             +str(self._value)+")"
+
+class RigidConstraint(ParametricConstraint):
+    """A constraint to set the relative position of a set of points"""
+    
+    def __init__(self, conf):
+        """Create a new DistanceConstraint instance
+        
+           keyword args:
+            conf    - a Configuration 
+        """
+        ParametricConstraint.__init__(self)
+        self._variables = list(conf.vars())
+        self.set_parameter(conf.copy())  
+    
+    def satisfied(self, mapping):
+        """return True iff mapping from variable names to points satisfies constraint""" 
+        result = True
+        conf = self._value
+        for index in range(1,len(self._variables)-1):
+            p1 = mapping[self._variables[index-1]]
+            p2 = mapping[self._variables[index]]
+            p3 = mapping[self._variables[index+1]]
+            c1 = conf.map[self._variables[index-1]]
+            c2 = conf.map[self._variables[index]]
+            c3 = conf.map[self._variables[index+1]]
+            result = tol_eq(distance_2p(p1,p2), distance_2p(c1,c2))
+            result = tol_eq(distance_2p(p1,p3), distance_2p(c1,c3))
+            result = tol_eq(distance_2p(p2,p3), distance_2p(c2,c3))
+        return result
+
+    def __str__(self):
+        return "RigidConstraint("+str(self._variables)+")" 
 
 

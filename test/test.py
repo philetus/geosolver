@@ -1,5 +1,5 @@
-# Geometric constraint solver test
-# See below for simple use of the GeometricSolver API
+"""This module provides some tests for the GeoSolver. 
+The tests are also simple examples of how to use of the GeomSolver API"""
 
 from geosolver.geometric import *
 from geosolver.vector import vector 
@@ -9,6 +9,30 @@ import geosolver.tolerance as tolerance
 from time import time
 
 # ---------- 3D problems -----
+
+def block(name,x,y,z):
+    """A block with variables name+#1...8 and dimensions x,y,z"""
+    problem = GeometricProblem(dimension=3)
+    problem.add_point(name+'#1', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#2', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#3', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#4', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#5', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#6', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#7', vector([0.0, 0.0, 0.0]))
+    problem.add_point(name+'#8', vector([0.0, 0.0, 0.0]))
+    conf = Configuration({
+        name+'#1':vector([-x/2, -y/2, -z/2]),
+        name+'#2':vector([-x/2, -y/2, +z/2]),
+        name+'#3':vector([-x/2, +y/2, -z/2]),
+        name+'#4':vector([-x/2, +y/2, +z/2]),
+        name+'#5':vector([+x/2, -y/2, -z/2]),
+        name+'#6':vector([+x/2, -y/2, +z/2]),
+        name+'#7':vector([+x/2, +y/2, -z/2]),
+        name+'#8':vector([+x/2, +y/2, +z/2])
+    })
+    problem.add_constraint(RigidConstraint(conf))
+    return problem
 
 def fix3_problem_3d():
     """A problem with a fix constraint"""
@@ -737,7 +761,7 @@ def stats_solving():
             problem = random_triangular_problem_3D(size,10.0,0.0,0.0)
             t1 = time()
             solver = GeometricSolver(problem)
-            result = solver.get_constrainedness()
+            result = solver.get_status()
             t2 = time()
             t = t2-t1
             print size,"\t",i,"\t",t,"\t",result
@@ -754,7 +778,7 @@ def stats_incremental():
             constraint = random.choice(problem.cg.constraints())
             problem.rem_constraint(constraint)
             problem.add_constraint(constraint)
-            result = solver.get_constrainedness()
+            result = solver.get_status()
             t2 = time()
             t = t2-t1
             print size,"\t",i,"\t",t,"\t",result
@@ -776,7 +800,7 @@ def stats_parametric_incremental():
             #problem.rem_constraint(constraint)
             #problem.add_constraint(constraint)
             #constraint.set_parameter(constraint.get_parameter())
-            result = solver.get_constrainedness()
+            result = solver.get_status()
             t2 = time()
             t = t2-t1
             print size,"\t",i,"\t",t,"\t",result
@@ -792,7 +816,7 @@ def stats_parametric():
             constraint = random.choice(problem.cg.constraints())
             t1 = time()
             constraint.set_parameter(constraint.get_parameter())
-            result = solver.get_constrainedness()
+            result = solver.get_status()
             t2 = time()
             t = t2-t1
             print size,"\t",i,"\t",t,"\t",result
@@ -813,6 +837,7 @@ def runtests():
     #test(random_distance_problem_3D(10,1.0,0.0))
     #test(fix1_problem_3d())
     #test(fix2_problem_3d())
-    test(fix3_problem_3d())
+    #test(fix3_problem_3d())
+    test(block("BB", 4.0,2.5,5.0))
 
 if __name__ == "__main__": runtests()

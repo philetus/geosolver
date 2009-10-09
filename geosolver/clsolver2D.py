@@ -4,6 +4,10 @@ The solver finds a generic solution
 for problems formulated by Clusters. The generic solution 
 is a directed acyclic graph of Clusters and Methods. Particilar problems
 and solutions are represented by a Configuration for each cluster.
+
+Note: this module is now depricated, and will be removed or replaced
+in the future.
+
 """
 
 from clsolver import *

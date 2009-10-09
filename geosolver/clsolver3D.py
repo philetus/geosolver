@@ -301,8 +301,8 @@ class MergePR(ClusterMethod):
             res = conf1.merge(conf2)
         elif isroot2:
             res = conf2.merge(conf1)
-        else: # cheapest
-            res = conf2.merge(conf1)
+        else: # cheapest - just copy reference
+            res = conf2
         return [res]
 
 class MergeDR(ClusterMethod):
@@ -344,8 +344,8 @@ class MergeDR(ClusterMethod):
             res = conf1.merge(conf2)
         elif isroot2:
             res = conf2.merge(conf1)
-        else: # cheapest
-            res = conf2.merge(conf1)
+        else: # cheapest - just copy reference
+            res = conf2
         return [res]
    
 class MergeRR(ClusterMethod):
@@ -386,7 +386,7 @@ class MergeRR(ClusterMethod):
             res = conf1.merge(conf2)
         elif isroot2 and not isroot1:
             res = conf2.merge(conf1)
-        elif len(c1.vars) < len(c2.vars):  # cheapest
+        elif len(c1.vars) < len(c2.vars):  # cheapest - transform smallest config
             res = conf2.merge(conf1)
         else:
             res = conf1.merge(conf2)
@@ -495,8 +495,8 @@ class DeriveTTD(ClusterMethod):
 
     def prototype_constraints(self):
         constraints = []
-        constraints.append(FunctionConstraint(fnot(is_left_handed),[self.a,self.b,self.c,self.d]))
-        constraints.append(FunctionConstraint(fnot(is_right_handed),[self.a,self.b,self.c,self.d]))
+        constraints.append(SelectionConstraint(fnot(is_left_handed),[self.a,self.b,self.c,self.d]))
+        constraints.append(SelectionConstraint(fnot(is_right_handed),[self.a,self.b,self.c,self.d]))
         return constraints
 
 class DeriveDAD(ClusterMethod):
