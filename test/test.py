@@ -5,6 +5,8 @@ from geosolver.geometric import *
 from geosolver.vector import vector 
 from geosolver.randomproblem import *
 from geosolver.diagnostic import diag_select, diag_print
+from geosolver.selconstr import fnot
+from geosolver.intersections import is_left_handed, is_right_handed
 import geosolver.tolerance as tolerance
 from time import time
 
@@ -458,7 +460,33 @@ def twoscisors():
     problem.add_constraint(DistanceConstraint('D', 'C', 6.0))
     return problem
 
+def selection_problem():
+    """The double tetrahedron problem with selection constraints"""
     
+    problem = GeometricProblem(dimension=3)
+    
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([1.0, 0.0, 0.0]))
+    problem.add_point('v3', vector([0.0, 1.0, 0.0]))
+    problem.add_point('v4', vector([0.5, 0.5, 1.0]))
+    problem.add_point('v5', vector([0.5, 0.5,-1.0]))
+    
+    problem.add_constraint(DistanceConstraint('v1', 'v2', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v5', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v5', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v5', 10.0))
+
+    problem.add_constraint(SelectionConstraint(is_left_handed, ['v1','v2','v3','v4']))
+    problem.add_constraint(SelectionConstraint(is_right_handed, ['v1','v2','v4','v5']))
+    
+    return problem
+
+
 
 # ------ 2D tests -------
 
@@ -707,12 +735,13 @@ def test_ada_3d():
 
 # ------- generic test -------
 
-def test(problem):
+def test(problem, use_prototype=True):
     """Test solver on a given problem"""
     #diag_select(".*")
     print "problem:"
     print problem
-    solver = GeometricSolver(problem)
+    solver = GeometricSolver(problem, use_prototype)
+    #solver.set_prototype_selection(use_prototype)
     print "drplan:"
     print solver.dr
     print "number of top-level rigids:",len(solver.dr.top_level())
@@ -827,6 +856,57 @@ def runstats():
     stats_parametric_incremental() 
     stats_parametric() 
 
+def selection_test():
+    problem = GeometricProblem(dimension=3)
+    
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([1.0, 0.0, 0.0]))
+    problem.add_point('v3', vector([0.0, 1.0, 0.0]))
+    problem.add_point('v4', vector([0.5, 0.5, 1.0]))
+    problem.add_point('v5', vector([0.5, 0.5,-1.0]))
+    
+    problem.add_constraint(DistanceConstraint('v1', 'v2', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v3', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
+    problem.add_constraint(DistanceConstraint('v1', 'v5', 10.0))
+    problem.add_constraint(DistanceConstraint('v2', 'v5', 10.0))
+    problem.add_constraint(DistanceConstraint('v3', 'v5', 10.0))
+
+    s1 = SelectionConstraint(is_right_handed, ['v1','v2','v4','v5'])
+    
+    # add selection con
+    problem.add_constraint(s1)
+    
+    # solve
+    solver = GeometricSolver(problem, False)
+    print len(solver.get_solutions()), "solutions"
+    
+    # remove and add constraint
+    print "removing s1"
+    problem.rem_constraint(s1)
+
+    # solve again
+    print len(solver.get_solutions()), "solutions"
+
+    # remove and add constraint
+    print "adding s1"
+    problem.add_constraint(s1)
+
+    # solve again
+    print len(solver.get_solutions()), "solutions"
+
+    # remove distance
+    print "removing and re-adding d15"
+    problem.rem_constraint(problem.get_distance("v1","v5"))
+    problem.add_constraint(DistanceConstraint('v1', 'v5', 10.0))
+
+    # solve again
+    print len(solver.get_solutions()), "solutions"
+
+
 def runtests():
     #diag_select("clsolver3D")
     #test(double_banana_plus_one_problem())
@@ -838,6 +918,11 @@ def runtests():
     #test(fix1_problem_3d())
     #test(fix2_problem_3d())
     #test(fix3_problem_3d())
-    test(block("BB", 4.0,2.5,5.0))
+    #test(block("BB", 4.0,2.5,5.0))
+    #diag_select("SelectionMethod.*")
+    #selection_test()
+    test(selection_problem(),False)
+
+
 
 if __name__ == "__main__": runtests()

@@ -136,7 +136,9 @@ class Rigid(Cluster):
         return s
 
     def copy(self):
-        return Rigid(self.vars)
+        new = Rigid(self.vars)
+        new.overconstrained = self.overconstrained
+        return new
 
            
 
@@ -165,7 +167,9 @@ class Hedgehog(Cluster):
         return s
 
     def copy(self):
-        return Hedgehog(self.cvar, self.xvars)
+        new = Hedgehog(self.cvar, self.xvars)
+        new.overconstrained = self.overconstrained
+        return new
 
 
 class Balloon(Cluster):
@@ -190,8 +194,9 @@ class Balloon(Cluster):
         return s
 
     def copy(self):
-        return Balloon(self.vars)
-
+        new = Balloon(self.vars)
+        new.overconstrained = self.overconstrained
+        return new
 
 # ----- function to determine overconstraints -----
 

@@ -2,19 +2,17 @@
 problems incrementally."""
 
 import vector
-from clsolver import PrototypeMethod
-# depricated! from clsolver2D import ClusterSolver2D 
+import math
+from clsolver import PrototypeMethod, SelectionMethod
 from clsolver3D import ClusterSolver3D 
 from cluster import Rigid, Hedgehog
 from configuration import Configuration 
-import math
 from diagnostic import diag_print
 from constraint import Constraint, ConstraintGraph
 from notify import Notifier, Listener
 from tolerance import tol_eq
 from intersections import angle_3p, distance_2p
 from selconstr import SelectionConstraint
-from sets import Set
 
 # ----------- GeometricProblem -------------
 
@@ -226,8 +224,7 @@ class GeometricSolver (Listener):
     """
 
     # public methods
-
-    def __init__(self, problem):
+    def __init__(self, problem, use_prototype=True):
         """Create a new GeometricSolver instance
         
            keyword args
@@ -247,6 +244,9 @@ class GeometricSolver (Listener):
         else:
             raise StandardError, "Do not know how to solve problems of dimension > 3."
         self._map = {}
+        
+        # enable prototype based selection by default
+        self.set_prototype_selection(use_prototype)
 
         # register 
         self.cg.add_listener(self)
@@ -256,19 +256,31 @@ class GeometricSolver (Listener):
         self.fixvars = []
         self.fixcluster = None
 
-        # map current cg
+        # add variables
         for var in self.cg.variables():
             self._add_variable(var)
-            
-        # add distances first? Nicer decomposition in Rigids
-        for con in self.cg.constraints():
+       
+        # add constraints
+        toadd = set(self.cg.constraints())
+
+        # add selection constraints first. Prevents re-evaluation 
+        for con in list(toadd):
+            if isinstance(con, SelectionConstraint): 
+                self._add_constraint(con)
+                toadd.remove(con)
+
+        # add distances first. Nicer decomposition in Rigids
+        for con in list(toadd):
             if isinstance(con, DistanceConstraint): 
                 self._add_constraint(con)
+                toadd.remove(con)
 
-        # add angles and other constraints first? Better performance
-        for con in self.cg.constraints():
-            if not isinstance(con, DistanceConstraint): 
-                self._add_constraint(con)
+        # add other constraints. 
+        for con in toadd:
+            self._add_constraint(con)
+
+    def set_prototype_selection(self, enabled):
+        self.dr.set_prototype_selection(enabled)
 
     def get_constrainedness(self):
         """Depricated. Use get_statis instead"""
@@ -336,14 +348,22 @@ class GeometricSolver (Listener):
                                 parent.subs.append(map[inp])
         
         # combine clusters due to selection
-        for method in self.dr.methods():
-            if isinstance(method, PrototypeMethod):
-                incluster = method.inputs()[0]
-                outcluster = method.outputs()[0]
-                geoin = map[incluster]
-                geoout = map[outcluster]
-                geoout.subs = list(geoin.subs)
-        
+        if False:
+            for method in self.dr.methods():
+                if isinstance(method, PrototypeMethod):
+                    incluster = method.inputs()[0]
+                    outcluster = method.outputs()[0]
+                    geoin = map[incluster]
+                    geoout = map[outcluster]
+                    geoout.subs = list(geoin.subs)
+            for method in self.dr.methods():
+                if isinstance(method, SelectionMethod): 
+                    incluster = method.inputs()[0]
+                    outcluster = method.outputs()[0]
+                    geoin = map[incluster]
+                    geoout = map[outcluster]
+                    geoout.subs = list(geoin.subs)
+
         # determine top-level result 
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
         if len(rigids) == 0:            
@@ -366,12 +386,12 @@ class GeometricSolver (Listener):
 
     def get_solutions(self):
         """Returns a list of Configurations, which will be empty if the
-           problem is not structurally well-constrained. Note: this method is
+           problem has no solutions. Note: this method is
            cheaper but less informative than get_cluster. The
            list and the configurations should not be changed (since they are
            references to objects in the solver)."""
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
-        if len(rigids) == 0:   
+        if len(rigids) != 0:   
             return self.dr.get(rigids[0])
         else:
             return []
@@ -496,7 +516,7 @@ class GeometricSolver (Listener):
                 self._update_fix()
         elif isinstance(con, SelectionConstraint):
             # add directly to clustersolver
-            self.dr.add(con)
+            self.dr.add_selection_constraint(con)
         else:
             ## raise StandardError, "unknown constraint type"
             pass
@@ -516,6 +536,9 @@ class GeometricSolver (Listener):
                 self.fixcluster = Rigid(self.fixvars)
                 self.dr.add(self.fixcluster)
                 self.dr.set_root(self.fixcluster)
+        elif isinstance(con, SelectionConstraint):
+            # remove directly from clustersolver
+            self.dr.rem_selection_constraint(con)
         elif con in self._map:
             self.dr.remove(self._map[con])
             del self._map[con]
@@ -641,8 +664,7 @@ class GeometricCluster:
         
         # make done
         if done == None:
-            done = Set()
-        
+            done = set()
        
         # recurse
         s = ""

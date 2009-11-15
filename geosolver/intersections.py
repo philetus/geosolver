@@ -247,7 +247,8 @@ def is_left_handed(p1,p2,p3,p4):
     v = p3-p1
     uv = vector.cross(u,v)
     w = p4-p1
-    return vector.dot(uv,w) < 0 
+    #return vector.dot(uv,w) < 0 
+    return tol_lt(vector.dot(uv,w), 0) 
 
 def is_right_handed(p1,p2,p3,p4):
     """return True if tetrahedron p1 p2 p3 p4 is right handed"""
@@ -255,7 +256,18 @@ def is_right_handed(p1,p2,p3,p4):
     v = p3-p1
     uv = vector.cross(u,v)
     w = p4-p1
-    return vector.dot(uv,w) > 0 
+    #return vector.dot(uv,w) > 0 
+    return tol_gt(vector.dot(uv,w), 0) 
+
+def is_not_handed(p1,p2,p3,p4):
+    """return True if tetrahedron p1 p2 p3 p4 is left handed"""
+    u = p2-p1
+    v = p3-p1
+    uv = vector.cross(u,v)
+    w = p4-p1
+    #return vector.dot(uv,w) == 0 
+    return tol_eq(vector.dot(uv,w), 0) 
+
 
 # --------- coordinate tranformations -------
 

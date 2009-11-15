@@ -76,14 +76,14 @@ class ClusterSolver3D(ClusterSolver):
 
     For each Cluster a set of Configurations can be set using the
     set method. Configurations are propagated via Methods and can
-    be retrieved with the get method (also returning a set). 
+    be retrieved with the get method. 
     """
 
     # ------- PUBLIC METHODS --------
 
     def __init__(self):
         """Instantiate a ClusterSolver3D"""
-        ClusterSolver.__init__(self, dimension=3)
+        ClusterSolver.__init__(self, 3)
         self.rootcluster = None
 
     # overriding ClusterSolver.set_root
@@ -220,14 +220,11 @@ class ClusterSolver3D(ClusterSolver):
                     merge.restore_toplevel.append(cluster)
                 else:
                     diag_print("keep top-level: "+str(cluster),"clsolver3D")
-        # endif
-        # add prototype selection method
-        self._add_prototype_selector(merge)
-        # add solution selection method
-        self._add_solution_selector(merge)
         # add method to determine root-variable
         self._add_root_method(merge.input_clusters(),merge.outputs()[0])
-        # pause
+        # add solution selection methods
+        output2 = self._add_prototype_selector(merge)
+        output3 = self._add_solution_selector(output2)
         return True
 
     def _add_root_method(self,inclusters,outcluster):
