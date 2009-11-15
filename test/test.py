@@ -6,7 +6,6 @@ from geosolver.vector import vector
 from geosolver.randomproblem import *
 from geosolver.diagnostic import diag_select, diag_print
 from geosolver.selconstr import fnot
-from geosolver.intersections import is_left_handed, is_right_handed
 import geosolver.tolerance as tolerance
 from time import time
 
@@ -481,8 +480,8 @@ def selection_problem():
     problem.add_constraint(DistanceConstraint('v2', 'v5', 10.0))
     problem.add_constraint(DistanceConstraint('v3', 'v5', 10.0))
 
-    problem.add_constraint(SelectionConstraint(is_left_handed, ['v1','v2','v3','v4']))
-    problem.add_constraint(SelectionConstraint(is_right_handed, ['v1','v2','v4','v5']))
+    #problem.add_constraint(SelectionConstraint(is_right_handed, ['v1','v2','v4','v5']))
+    problem.add_constraint(RightHandedConstraint('v1','v2','v4','v5'))
     
     return problem
 
@@ -742,9 +741,9 @@ def test(problem, use_prototype=True):
     print problem
     solver = GeometricSolver(problem, use_prototype)
     #solver.set_prototype_selection(use_prototype)
-    print "drplan:"
-    print solver.dr
-    print "number of top-level rigids:",len(solver.dr.top_level())
+    #print "drplan:"
+    #print solver.dr
+    #print "number of top-level rigids:",len(solver.dr.top_level())
     result = solver.get_result()
     print "result:"
     print result
@@ -885,21 +884,21 @@ def selection_test():
     print len(solver.get_solutions()), "solutions"
     
     # remove and add constraint
-    print "removing s1"
+    print "removing selection-constraint"
     problem.rem_constraint(s1)
 
     # solve again
     print len(solver.get_solutions()), "solutions"
 
     # remove and add constraint
-    print "adding s1"
+    print "re-adding selection constraint"
     problem.add_constraint(s1)
 
     # solve again
     print len(solver.get_solutions()), "solutions"
 
     # remove distance
-    print "removing and re-adding d15"
+    print "removing and re-adding distance v1-v5"
     problem.rem_constraint(problem.get_distance("v1","v5"))
     problem.add_constraint(DistanceConstraint('v1', 'v5', 10.0))
 

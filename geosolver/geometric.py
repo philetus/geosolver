@@ -13,6 +13,7 @@ from notify import Notifier, Listener
 from tolerance import tol_eq
 from intersections import angle_3p, distance_2p
 from selconstr import SelectionConstraint
+from geosolver.intersections import is_left_handed, is_right_handed
 
 # ----------- GeometricProblem -------------
 
@@ -348,7 +349,7 @@ class GeometricSolver (Listener):
                                 parent.subs.append(map[inp])
         
         # combine clusters due to selection
-        if False:
+        if True:
             for method in self.dr.methods():
                 if isinstance(method, PrototypeMethod):
                     incluster = method.inputs()[0]
@@ -835,5 +836,28 @@ class RigidConstraint(ParametricConstraint):
 
     def __str__(self):
         return "RigidConstraint("+str(self._variables)+")" 
+
+
+class RightHandedConstraint (SelectionConstraint):
+    """A selection constraint for 4 points to have a right-handed orientation"""
+    def __init__(self, v1, v2, v3, v4):
+        SelectionConstraint.__init__(self, is_right_handed, [v1,v2,v3,v4])
+
+
+class LeftHandedConstraint (SelectionConstraint):
+    """A selection constraint for 4 points to have a left-handed orientation"""
+    def __init__(self, v1, v2, v3, v4):
+        SelectionConstraint.__init__(self, is_left_handed, [v1,v2,v3,v4])
+
+class NotRightHandedConstraint (SelectionConstraint):
+    """A selection constraint for 4 points to not have a left-handed orientation, i.e. right-handed or in-plane"""
+    def __init__(self, v1, v2, v3, v4):
+        SelectionConstraint.__init__(self, fnot(is_right_handed), [v1,v2,v3,v4])
+
+class NotLeftHandedConstraint (SelectionConstraint):
+    """A selection constraint for 4 points to not have a left-handed orientation, i.e. right-handed or in-plane"""
+    def __init__(self, v1, v2, v3, v4):
+        SelectionConstraint.__init__(self, fnot(is_left_handed), [v1,v2,v3,v4])
+
 
 
