@@ -311,16 +311,26 @@ class GeometricSolver (Listener):
     def get_cluster(self):
         """Returns a GeometricCluster (the root of a tree of clusters),
          describing the solutions and the decomposition of the problem."""
+        # several drcluster can maps to a single geoclusters 
         map = {}   
+        geoclusters = []
         # map dr clusters
         for drcluster in self.dr.rigids():
-            # create geo cluster and map to drcluster (and vice versa)
-            geocluster = GeometricCluster()
-            map[drcluster] = geocluster
-            map[geocluster] = drcluster
-            # determine variables
-            for var in drcluster.vars:
-                geocluster.variables.append(var)
+            # create geocluster and map to drcluster (and vice versa)
+            geocluster = GeometricCluster(drcluster.vars)
+            if geocluster not in map:
+                map[drcluster] = geocluster
+                map[geocluster] = [drcluster]
+                geoclusters.append(geocluster)
+            else:
+                geocluster = map[map[geocluster][0]]
+                map[drcluster] = geocluster
+                map[geocluster].append(drcluster)
+            
+        for geocluster in geoclusters:
+            # pick drcluster with fewest solutions
+            drclusters = map[geocluster]
+            drcluster = min(drclusters, key=lambda c: len(self.dr.get(drcluster)))
             # determine solutions
             solutions = self.dr.get(drcluster)
             underconstrained = False
@@ -332,44 +342,33 @@ class GeometricSolver (Listener):
             # determine flag
             if drcluster.overconstrained:
                 geocluster.flag = GeometricCluster.S_OVER
+            elif geocluster.solutions == None:
+                geocluster.flag = GeometricCluster.UNSOLVED
             elif len(geocluster.solutions) == 0:
                 geocluster.flag = GeometricCluster.I_OVER
             elif underconstrained:
                 geocluster.flag = GeometricCluster.I_UNDER
             else:
                 geocluster.flag = GeometricCluster.OK
-                
+
+
         # determine subclusters
         for method in self.dr.methods():
+            if not isinstance(method, PrototypeMethod) and not isinstance(method, SelectionMethod):
                 for out in method.outputs():
                     if isinstance(out, Rigid):
                         parent = map[out]
                         for inp in method.inputs():
                             if isinstance(inp, Rigid):
-                                parent.subs.append(map[inp])
+                                sub = map[inp]
+                                if sub != parent:
+                                    parent.subs.append(sub)
         
-        # combine clusters due to selection
-        if True:
-            for method in self.dr.methods():
-                if isinstance(method, PrototypeMethod):
-                    incluster = method.inputs()[0]
-                    outcluster = method.outputs()[0]
-                    geoin = map[incluster]
-                    geoout = map[outcluster]
-                    geoout.subs = list(geoin.subs)
-            for method in self.dr.methods():
-                if isinstance(method, SelectionMethod): 
-                    incluster = method.inputs()[0]
-                    outcluster = method.outputs()[0]
-                    geoin = map[incluster]
-                    geoout = map[outcluster]
-                    geoout.subs = list(geoin.subs)
-
         # determine top-level result 
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
         if len(rigids) == 0:            
             # no variables in problem?
-            result = GeometricCluster()
+            result = GeometricCluster(self.problem.cg.variables())
             result.variables = []
             result.subs = []
             result.solutions = []
@@ -379,12 +378,13 @@ class GeometricSolver (Listener):
             result = map[rigids[0]]
         else:
             # structurally underconstrained cluster
-            result = GeometricCluster()
+            result = GeometricCluster(self.problem.cg.variables())
             result.flag = GeometricCluster.S_UNDER
             for rigid in rigids:
                 result.subs.append(map[rigid])
         return result 
 
+    
     def get_solutions(self):
         """Returns a list of Configurations, which will be empty if the
            problem has no solutions. Note: this method is
@@ -647,12 +647,21 @@ class GeometricCluster:
     UNSOLVED = "unsolved"
     EMPTY = "empty"
    
-    def __init__(self):
+    def __init__(self, variables):
         """initialise an empty new cluster"""
-        self.variables = []
+        self.variables = frozenset(variables)
         self.solutions = []
         self.subs = []
         self.flag = GeometricCluster.OK
+
+    def __eq__(self, other):
+        if isinstance(other, GeometricCluster): 
+            return self.variables == other.variables
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(self.variables)
 
     def __str__(self):
         return self._str_recursive()
@@ -679,7 +688,7 @@ class GeometricCluster:
             s = s + spaces + "|...\n" 
 
         # pritn cluster
-        s = spaces + "cluster " + str(result.variables) + " " + str(result.flag) + " " + str(len(result.solutions)) + " solutions\n" + s
+        s = spaces + "cluster " + str(list(result.variables)) + " " + str(result.flag) + " " + str(len(result.solutions)) + " solutions\n" + s
         
         return s
     # def

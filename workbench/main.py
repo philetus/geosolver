@@ -1,4 +1,4 @@
-import preferencesDlg, compositionView
+import preferencesDlg, decompositionView
 from includes import *
 from viewportManager import *
 from prototypeObjects import PrototypeManager
@@ -191,7 +191,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.dock)
             
     def createDecompositionView(self):
-        self.compositionView = CompositionView(None, self.viewportManager, ViewportType.DECOMPOSITION ,PrototypeManager())    
+        self.compositionView = DecompositionView(None, self.viewportManager, ViewportType.DECOMPOSITION ,PrototypeManager())    
     
     def createSolutionView(self):
         self.solutionView = SolutionView(self, self.viewportManager, ViewportType.SOLUTION ,PrototypeManager())

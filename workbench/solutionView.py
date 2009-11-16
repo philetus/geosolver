@@ -6,7 +6,7 @@ from parameters import Settings
 class SolutionView(QtGui.QDialog):
 	""" Visualises the solution from the constraint solver. """ 
 	def __init__(self, mainWindow, viewportMngr, vpType, prototypeMngr, isViewport=False, parent=None):
-		""" Initialization of the CompositionView class
+		""" Initialization of the SolutionView class
 			
 		Parameters:
 			mainWindow - main window of the application, necessary for updating

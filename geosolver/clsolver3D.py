@@ -149,7 +149,8 @@ class ClusterSolver3D(ClusterSolver):
             # end for match
         # end for method
         return False
-    
+   
+
     def _add_method_complete(self, merge):
         # diag_print("add_method_complete "+str(merge), "clsolver3D")
         # check that method has one output

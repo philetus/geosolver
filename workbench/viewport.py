@@ -1,5 +1,5 @@
 from includes import *
-from compositionView import CompositionView
+from decompositionView import DecompositionView
 from solutionView import SolutionView
 from prototypeObjects import PrototypeManager
 from glViewer import *
@@ -153,7 +153,7 @@ class Viewport(QtGui.QScrollArea):
 			elif viewportName == "Perspective":
 				self.glViewport = GLViewport(self, ViewportType.PERSPECTIVE, None, QtOpenGL.QGLFormat(QtOpenGL.QGL.SampleBuffers))
 			elif viewportName == "Decomposition":
-				self.glViewport = CompositionView(self,  self.viewportManager, ViewportType.DECOMPOSITION, PrototypeManager()) #self.getMainWindow().compositionView #
+				self.glViewport = DecompositionView(self,  self.viewportManager, ViewportType.DECOMPOSITION, PrototypeManager()) #self.getMainWindow().compositionView #
 			elif viewportName == "Solution":
 				self.solutionView = SolutionView(self.getMainWindow(), self.viewportManager,  ViewportType.SOLUTION, PrototypeManager(), True)
 				self.glViewport = self.solutionView.solutionWidget
