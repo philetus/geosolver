@@ -927,5 +927,18 @@ class ClusterSolver(Notifier):
     ##                raise "cluster determined by more than one method"
     ##    return result
 
+
+    ##def _all_sources_constraint_in_cluster(self, constraint, cluster):
+    ##    if not self._contains_constraint(cluster, constraint):
+    ##        return Set()
+    ##    elif self._is_atomic(cluster):
+    ##        return Set([cluster])
+    ##    else:
+    ##        method = self._determining_method(cluster)
+    ##        sources = Set()
+    ##        for inp in method.input_clusters():
+    ##            sources.union_update(self._all_sources_constraint_in_cluster(constraint, inp))
+    ##        return sources
+     
 # class ClusterSolver
 

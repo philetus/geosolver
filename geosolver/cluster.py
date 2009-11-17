@@ -7,6 +7,7 @@ from multimethod import MultiVariable
 class Distance:
     """A Distance represents a known distance"""
 
+
     def __init__(self, a, b):
         """Create a new Distance
         
@@ -15,7 +16,7 @@ class Distance:
             b - point variable
         """
         self.vars = (a,b)
-
+    
     def __str__(self):
         return "dist("\
             +str(self.vars[0])+","\
@@ -63,6 +64,12 @@ class Angle:
 
 class Cluster(MultiVariable):
     """A set of points, satisfying some constaint"""
+    
+    staticcounter = 0
+
+    def __init__(self):
+        Cluster.staticcounter += 1
+        self.creationtime = Cluster.staticcounter
 
     def intersection(self, other):
         shared = Set(self.vars).intersection(other.vars)
@@ -125,7 +132,8 @@ class Rigid(Cluster):
         
            keyword args:
             vars - list of variables 
-        """ 
+        """
+        Cluster.__init__(self)
         self.vars = ImmutableSet(vars)
         self.overconstrained = False
 
@@ -153,6 +161,7 @@ class Hedgehog(Cluster):
             cvar - center variable 
             xvars - list of variables
         """ 
+        Cluster.__init__(self)
         self.cvar = cvar
         if len(xvars) < 2:
             raise StandardError, "hedgehog must have at least three variables"
@@ -182,6 +191,7 @@ class Balloon(Cluster):
            keyword args:
             vars - collection of PointVar's
         """
+        Cluster.__init__(self)
         if len(variables) < 3:
             raise StandardError, "balloon must have at least three variables"
         self.vars = ImmutableSet(variables)

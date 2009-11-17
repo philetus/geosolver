@@ -328,9 +328,9 @@ class GeometricSolver (Listener):
                 map[geocluster].append(drcluster)
             
         for geocluster in geoclusters:
-            # pick drcluster with fewest solutions
+            # pick newest drcluster 
             drclusters = map[geocluster]
-            drcluster = min(drclusters, key=lambda c: len(self.dr.get(drcluster)))
+            drcluster = max(drclusters, key=lambda c: c.creationtime)
             # determine solutions
             solutions = self.dr.get(drcluster)
             underconstrained = False

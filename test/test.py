@@ -739,11 +739,11 @@ def test(problem, use_prototype=True):
     #diag_select(".*")
     print "problem:"
     print problem
+    print "use_prototype=",use_prototype
     solver = GeometricSolver(problem, use_prototype)
-    #solver.set_prototype_selection(use_prototype)
-    #print "drplan:"
-    #print solver.dr
-    #print "number of top-level rigids:",len(solver.dr.top_level())
+    print "drplan:"
+    print solver.dr
+    print "top-level rigids:",solver.dr.top_level()
     result = solver.get_result()
     print "result:"
     print result
@@ -751,6 +751,7 @@ def test(problem, use_prototype=True):
     check = True
     if len(result.solutions) == 0:
         check = False
+    diag_select("GeometricProblem.verify")
     for sol in result.solutions:
         print "solution:",sol
         check = check and problem.verify(sol)
@@ -758,7 +759,6 @@ def test(problem, use_prototype=True):
         print "all solutions valid"
     else:
         print "INVALID"
-
   
 # ----- what to test today -------
 

@@ -88,6 +88,7 @@ class ClusterSolver3D(ClusterSolver):
 
     # overriding ClusterSolver.set_root
     def set_root(self, cluster):
+        """Set root cluster, used for positionig and orienting the solutions"""
         diag_print("set root "+str(self.rootcluster), "clsolver3D")
         if self.rootcluster != None:
             oldrootvar = rootname(self.rootcluster)
@@ -99,18 +100,7 @@ class ClusterSolver3D(ClusterSolver):
 
     # ------------ INTERNALLY USED METHODS --------
 
-    def _all_sources_constraint_in_cluster(self, constraint, cluster):
-        if not self._contains_constraint(cluster, constraint):
-            return Set()
-        elif self._is_atomic(cluster):
-            return Set([cluster])
-        else:
-            method = self._determining_method(cluster)
-            sources = Set()
-            for inp in method.input_clusters():
-                sources.union_update(self._all_sources_constraint_in_cluster(constraint, inp))
-            return sources
-     
+    
     # --------------
     # search methods
     # --------------
@@ -212,15 +202,19 @@ class ClusterSolver3D(ClusterSolver):
         self._add_cluster(output)
         self._add_method(merge)
         # remove input clusters from top_level
-        if not (hasattr(merge,"noremove") and merge.noremove == True):
-            merge.restore_toplevel = []    # make restore list in method
-            for cluster in merge.input_clusters():
-                if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
-                    diag_print("remove from top-level: "+str(cluster),"clsolver3D")
-                    self._rem_top_level(cluster) 
-                    merge.restore_toplevel.append(cluster)
-                else:
-                    diag_print("keep top-level: "+str(cluster),"clsolver3D")
+        merge.restore_toplevel = []    # make restore list in method
+        for cluster in merge.input_clusters():
+            # do not remove rigids from toplevel if method does not consider root
+            if isinstance(cluster, Rigid):
+                if hasattr(merge,"noremove") and merge.noremove == True:
+                    continue
+            # remove input clusters when all its constraints are in output cluster 
+            if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
+                diag_print("remove from top-level: "+str(cluster),"clsolver3D")
+                self._rem_top_level(cluster) 
+                merge.restore_toplevel.append(cluster)
+            else:
+                diag_print("keep top-level: "+str(cluster),"clsolver3D")
         # add method to determine root-variable
         self._add_root_method(merge.input_clusters(),merge.outputs()[0])
         # add solution selection methods
@@ -544,7 +538,7 @@ class DeriveDAD(ClusterMethod):
         return solutions
 
 class DeriveADD(ClusterMethod):
-    """Represents a merging of one distance and to distances"""
+    """Represents a merging of one angle and two distances"""
     def __init__(self, map):
         # check inputs
         self.a_cab = map["$a_cab"]
@@ -636,7 +630,7 @@ class DeriveAA(ClusterMethod):
         return solutions
 
 class MergeSR(ClusterMethod):
-    """Merge a Rigid from a Scalabe and a Rigid sharing two points"""
+    """Merge a Scalabe and a Rigid sharing two points"""
     def __init__(self, map):
         # check inputs
         in1 = map["$r"]
