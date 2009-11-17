@@ -41,7 +41,7 @@ def gmatch(pattern, reference):
             outmatches = []
             for n in onumbers:
                 outmatches += reference.outfan(n)
-            matches = Set(inmatches).intersection(outmatches)
+            matches = set(inmatches).intersection(outmatches)
         newsolutions = []
         if solutions == None:
             for refvar in matches:

@@ -1,7 +1,6 @@
 """Base classes for multi-valued assignments in methodgraphs"""
 
 from method import Method, MethodGraph
-from sets import Set
 
 class MultiVariable:
     """For representing multi-valued variables
@@ -33,7 +32,9 @@ class MultiMethod(Method):
 
        The 'multi_execute' method must return a list of possible values for the output variable.
        The output values returned by subsequent calls multi-execute are collected and stored in the 
-       output MultiVariable. 
+       output MultiVariable.
+
+       Note that a set of values for the outputvariable is stored, so that equivalent values are only stored once.
     """
     
     def __init__(self):
@@ -65,10 +66,10 @@ class MultiMethod(Method):
         if len(multi_inputs) > 0:
             mvar = multi_inputs[0]
             values = inmap[mvar]
-            output = Set()
+            output = set()
             for value in values:
                 base_inmap[mvar] = value
-                output.union_update(self._recurse_execute(inmap, base_inmap, multi_inputs[1:]))
+                output.update(self._recurse_execute(inmap, base_inmap, multi_inputs[1:]))
             return output
         else:
             return self.multi_execute(base_inmap)

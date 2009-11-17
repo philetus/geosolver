@@ -31,7 +31,6 @@ Copyright Rick van der Meiden - 2003, 2004, 2005
 """
 
 import random
-from sets import Set,ImmutableSet
 from notify import Notifier
 
 class Graph (Notifier):
@@ -199,9 +198,8 @@ class Graph (Notifier):
 
     def adjacent_vertices(self, v):
         """list of adjacent (ingoing or outgoing) vertices"""
-        from sets import Set
-        iset = Set(self.ingoing_vertices(v))
-        oset = Set(self.outgoing_vertices(v))
+        iset = set(self.ingoing_vertices(v))
+        oset = set(self.outgoing_vertices(v))
         vset = iset.union(oset)
         return list(vset)
  
@@ -300,11 +298,11 @@ class Graph (Notifier):
         
     def connected_subsets(self):
             """returns a set of (undirectionally) connected subsets of vertices"""
-            todo = Set(self.vertices())
-            subsets = Set()
+            todo = set(self.vertices())
+            subsets = set()
             while (todo):
                 v = todo.pop()
-                s = Set(self.connected(v))
+                s = set(self.connected(v))
                 for x in s:
                     todo.remove(x)
                 s.add(v)
@@ -324,13 +322,13 @@ class Graph (Notifier):
             graph = Graph()
             for edge in self.edges():
                 (v1,v2) = edge
-                g1 = ImmutableSet([v1])
-                g2 = ImmutableSet([v2])
+                g1 = frozenset([v1])
+                g2 = frozenset([v2])
                 graph.add_edge(g1,g2)
             
             # Stoer/Wagner algorithm
             mincutvalue = None
-            mincut = ImmutableSet()
+            mincut = frozenset()
             while len(graph.vertices()) > 1:
                 (phasecut,phasecutvalue) = self._mincutphase(graph)
                 if mincutvalue == None or phasecutvalue < mincutvalue:
@@ -339,8 +337,8 @@ class Graph (Notifier):
 
             # rewrite output
             g1 = mincut
-            g2 = ImmutableSet(self.vertices()).difference(g1)
-            edges = Set()
+            g2 = frozenset(self.vertices()).difference(g1)
+            edges = set()
             for v in g1:
                 for k in self.adjacent_vertices(v):
                     if k in g2:
@@ -356,7 +354,7 @@ class Graph (Notifier):
                         if self.has_edge(k,v):
                            edges.add((k,v))
 
-            return (mincutvalue, ImmutableSet(edges), g1, g2)
+            return (mincutvalue, frozenset(edges), g1, g2)
         
     def _mincutphase(self, graph):
             # returns the last vertex (group) added and the cut value

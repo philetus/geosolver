@@ -2,7 +2,6 @@
 
 A configuration is a set of named points with coordinates."""
 
-from sets import Set
 from matfunc import Vec, Mat
 from intersections import *
 from tolerance import *
@@ -113,7 +112,7 @@ class Configuration:
 
     def _merge_transform_2D(self, other):
         """returns a new configurations which is this one plus the given other configuration transformed, such that common points will overlap (if possible)."""
-        shared = Set(self.vars()).intersection(other.vars())
+        shared = set(self.vars()).intersection(other.vars())
         underconstrained = self.underconstrained or other.underconstrained
         if len(shared) == 0:
             underconstrained = True
@@ -152,7 +151,7 @@ class Configuration:
     def merge_scale_2D(self, other, vars=[]):
         """returns a new configurations which is this one plus the given other configuration transformed, such that common points will overlap (if possible)."""
         if len(vars) == 0:
-            shared = Set(self.vars()).intersection(other.vars())
+            shared = set(self.vars()).intersection(other.vars())
         else:
             shared = vars
         underconstrained = self.underconstrained or other.underconstrained
@@ -186,7 +185,7 @@ class Configuration:
         """returns a matrix for a rigid transformation 
            such that points in other are mapped onto points in self
         """
-        shared = Set(self.vars()).intersection(other.vars())
+        shared = set(self.vars()).intersection(other.vars())
         underconstrained = self.underconstrained or other.underconstrained
         if len(shared) == 0:
             underconstrained = True
@@ -253,7 +252,7 @@ class Configuration:
         return t
 
     def _merge_scale_transform_3D(self, other):
-        shared = Set(self.vars()).intersection(other.vars())
+        shared = set(self.vars()).intersection(other.vars())
         if len(shared) == 0:
             return self._merge_transform_3D(other)
         elif len(shared) == 1:

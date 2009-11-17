@@ -1,251 +1,21 @@
 """A generic 3D geometric constraint solver"""
 
 from clsolver import *
-from sets import Set
 from diagnostic import diag_print, diag_select
 from selconstr import *
 from intersections import *
 from configuration import Configuration
 from cluster import *
 from map import Map
-from gmatch import gmatch
-from method import OrMethod
-
-def pattern2graph(pattern):
-    """convert pattern to pattern graph"""
-    pgraph = Graph()
-    pgraph.add_vertex("point")
-    pgraph.add_vertex("distance")
-    pgraph.add_vertex("rigid")
-    pgraph.add_vertex("balloon")
-    pgraph.add_vertex("hedgehog")
-    for clpattern in pattern:
-        (pattype, patname, patvars) = clpattern
-        pgraph.add_edge(pattype, patname)
-        for var in patvars:
-            pgraph.add_edge(patname, var)
-        if pattype == "hedgehog":
-            pgraph.add_edge("cvar"+"#"+patname, patvars[0])
-            pgraph.add_edge(patname, "cvar"+"#"+patname)
-    #diag_print("pattern graph:"+str(pgraph),"match");
-    return pgraph
-
-def reference2graph(nlet):
-    """convert nlet to reference graph"""
-    rgraph = Graph()
-    rgraph.add_vertex("point")
-    rgraph.add_vertex("distance")
-    rgraph.add_vertex("rigid")
-    rgraph.add_vertex("balloon")
-    rgraph.add_vertex("hedgehog")
-    for cluster in nlet:
-        for var in cluster.vars:
-            rgraph.add_edge(cluster, var)
-        if isinstance(cluster, Rigid):
-            rgraph.add_edge("rigid", cluster)
-            if len(cluster.vars) == 1:
-                rgraph.add_edge("point", cluster)
-            elif len(cluster.vars) == 2:
-                rgraph.add_edge("distance", cluster)
-        if isinstance(cluster, Balloon):
-            rgraph.add_edge("balloon", cluster)
-        if isinstance(cluster, Hedgehog):
-            rgraph.add_edge("hedgehog", cluster)
-            rgraph.add_edge("cvar"+"#"+str(id(cluster)), cluster.cvar)
-            rgraph.add_edge(cluster, "cvar"+"#"+str(id(cluster)))
-    #diag_print("reference graph:"+str(rgraph),"match");
-    return rgraph
-
-def rootname(cluster):
-    return "root#"+str(id(cluster))
-
 
 class ClusterSolver3D(ClusterSolver):
-    """A generic 3D geometric constraint solver. 
-    
-    Finds a generic solution for problems formulated by cluster-constraints.
-
-    Constraints are Clusers: Rigids, Hedgehogs and Balloons. 
-    Cluster are added and removed using the add and remove methods. 
-    After adding each Cluster, the solver tries to merge it with
-    other clusters, resulting in new Clusters and Methods.
-
-    The generic solution is a directed acyclic graph of Clusters and Methods. 
-    Particilar problems and solutions are represented by a Configuration 
-    for each cluster. 
-
-    For each Cluster a set of Configurations can be set using the
-    set method. Configurations are propagated via Methods and can
-    be retrieved with the get method. 
-    """
-
-    # ------- PUBLIC METHODS --------
+    """A generic 3D geometric constraint solver. See ClusterSolver for details."""  
+       # ------- PUBLIC METHODS --------
 
     def __init__(self):
         """Instantiate a ClusterSolver3D"""
-        ClusterSolver.__init__(self, 3)
-        self.rootcluster = None
-
-    # overriding ClusterSolver.set_root
-    def set_root(self, cluster):
-        """Set root cluster, used for positionig and orienting the solutions"""
-        diag_print("set root "+str(self.rootcluster), "clsolver3D")
-        if self.rootcluster != None:
-            oldrootvar = rootname(self.rootcluster)
-            self._mg.set(oldrootvar, False)
-        newrootvar = rootname(cluster)
-        self._mg.set(newrootvar, True)
-        self.rootcluster = cluster
-
-
-    # ------------ INTERNALLY USED METHODS --------
-
-    
-    # --------------
-    # search methods
-    # --------------
-    
-    def _search(self, newcluster):
-        diag_print("search from: "+str(newcluster),"clsolver3D")
-        # find all toplevel clusters connected to newcluster via one or more variables
-        connected = Set()
-        for var in newcluster.vars:
-            dependend = self.find_dependend(var)
-            dependend = filter(lambda x: self.is_top_level(x), dependend)
-            connected.union_update(dependend)
-        diag_print("search: connected clusters="+str(connected),"clsolver3D")
-        # try applying methods
-        if self._try_method(connected):
-            return True 
-        return False
-
-    def _try_method(self, nlet):
-        """finds a possible rewrite rule applications on given set of clusters, applies it 
-           and returns True iff successfull
-        """
-        refgraph = reference2graph(nlet)
-        for methodclass in [MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA]:
-            matches = gmatch(methodclass.patterngraph, refgraph)
-            if len(matches) > 0:
-                diag_print("number of matches = "+str(len(matches)), "clsolver3D")
-            for s in matches:
-                # diag_print("try match: "+str(s),"clsolver3D")
-                method = apply(methodclass, [s])
-                succes = self._add_method_complete(method)
-                if succes:
-                   #raw_input()
-                   #print "press key"
-                   return True
-            # end for match
-        # end for method
-        return False
-   
-
-    def _add_method_complete(self, merge):
-        # diag_print("add_method_complete "+str(merge), "clsolver3D")
-        # check that method has one output
-        if len(merge.outputs()) != 1:
-            raise StandardError, "merge number of outputs != 1"
-        output = merge.outputs()[0]
+        ClusterSolver.__init__(self, 3, [MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA])
         
-        # check that the method is information increasing (infinc)
-        infinc = True
-        connected = Set()
-        for var in output.vars:
-            dependend = self.find_dependend(var)
-            dependend = filter(lambda x: self.is_top_level(x), dependend)
-            connected.union_update(dependend)
-        #for cluster in merge.input_clusters():
-        #    if cluster in connected:
-        #        connected.remove(cluster)
-
-        # NOTE 07-11-2007 (while writing the paper): this  implementation of information increasing may not be correct. We may need to check that the total sum of the information in the overlapping clusters is equal to the information in the output.
-
-        for cluster in connected:
-            if num_constraints(cluster.intersection(output)) >= num_constraints(output):
-                infinc = False
-                break
-        diag_print("information increasing:"+str(infinc),"clsolver3D")
-
-        # check if method reduces number of clusters (reduc)
-        nremove = 0
-        for cluster in merge.input_clusters():
-            if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
-               # will be removed from toplevel
-               nremove += 1
-        reduc = (nremove > 1)
-        diag_print("reduce # clusters:"+str(reduc),"clsolver3D")
-        
-        # check if the method is redundant
-        if not infinc and not reduc:
-            diag_print("method is redundant","clsolver3D")
-            return False
-
-        # check consistency and local/global overconstrained
-        consistent = True
-        local_oc = False
-        for i1 in range(0, len(merge.input_clusters())):
-            for i2 in range(i1+1, len(merge.input_clusters())):
-                c1 = merge.input_clusters()[i1] 
-                c2 = merge.input_clusters()[i2] 
-                if num_constraints(c1.intersection(c2)) != 0:
-                    local_oc = True
-                consistent = consistent and self._is_consistent_pair(c1, c2)
-        merge.consistent = consistent
-        merge.overconstrained = local_oc
-        # global overconstrained? (store in output cluster)
-        overconstrained = not consistent
-        for cluster in merge.input_clusters():
-            overconstrained = overconstrained or cluster.overconstrained
-        output.overconstrained = overconstrained
-        # add to graph
-        self._add_cluster(output)
-        self._add_method(merge)
-        # remove input clusters from top_level
-        merge.restore_toplevel = []    # make restore list in method
-        for cluster in merge.input_clusters():
-            # do not remove rigids from toplevel if method does not consider root
-            if isinstance(cluster, Rigid):
-                if hasattr(merge,"noremove") and merge.noremove == True:
-                    continue
-            # remove input clusters when all its constraints are in output cluster 
-            if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
-                diag_print("remove from top-level: "+str(cluster),"clsolver3D")
-                self._rem_top_level(cluster) 
-                merge.restore_toplevel.append(cluster)
-            else:
-                diag_print("keep top-level: "+str(cluster),"clsolver3D")
-        # add method to determine root-variable
-        self._add_root_method(merge.input_clusters(),merge.outputs()[0])
-        # add solution selection methods
-        output2 = self._add_prototype_selector(merge)
-        output3 = self._add_solution_selector(output2)
-        return True
-
-    def _add_root_method(self,inclusters,outcluster):
-        inroots = []
-        for cluster in inclusters:
-            inroots.append(rootname(cluster))
-        outroot = rootname(outcluster)
-        method = OrMethod(inroots, outroot)
-        # add method
-        self._add_method(method)
-        # make sure its deleted when cluster is deleted
-        self._add_dependency(outcluster, method) 
-
-    # overriding superclass function
-    def _add_cluster(self, cluster):
-        # call superclass function
-        ClusterSolver._add_cluster(self, cluster)
-        # add root-variable if needed with default value False
-        root = rootname(cluster)
-        if not self._mg.contains(root):
-            self._mg.add_variable(root, False)
-            self._mg.set(root, False)
-            # add root-variable to dependency graph
-            self._add_dependency(cluster, root)
-
-# class ClusterSolver3D
 
 # ----------------------------------------------
 # ---------- Methods for 3D solving -------------
@@ -261,7 +31,7 @@ class MergePR(ClusterMethod):
         in1 = map["$p"]
         in2 = map["$r"]
         # create ouput
-        outvars = Set(in1.vars).union(in2.vars)
+        outvars = set(in1.vars).union(in2.vars)
         out = Rigid(outvars)
         # set method properties
         in1root = rootname(in1)
@@ -304,7 +74,7 @@ class MergeDR(ClusterMethod):
         in1 = map["$d"]
         in2 = map["$r"]
         # create ouput
-        outvars = Set(in1.vars).union(in2.vars)
+        outvars = set(in1.vars).union(in2.vars)
         out = Rigid(outvars)
         # set method properties
         in1root = rootname(in1)
@@ -347,7 +117,7 @@ class MergeRR(ClusterMethod):
         in1 = map["$r1"]
         in2 = map["$r2"]
         # create output
-        out = Rigid(Set(in1.vars).union(in2.vars))
+        out = Rigid(set(in1.vars).union(in2.vars))
         # set method parameters
         in1root = rootname(in1)
         in2root = rootname(in2)
@@ -636,7 +406,7 @@ class MergeSR(ClusterMethod):
         in1 = map["$r"]
         in2 = map["$s"]
         # create output
-        out = Rigid(Set(in2.vars))
+        out = Rigid(set(in2.vars))
         # set method parameters
         self._inputs = [in1, in2]
         self._outputs = [out]
