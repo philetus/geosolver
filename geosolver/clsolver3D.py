@@ -14,15 +14,72 @@ class ClusterSolver3D(ClusterSolver):
 
     def __init__(self):
         """Instantiate a ClusterSolver3D"""
-        ClusterSolver.__init__(self, 3, [MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA])
+        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA])
         
 
 # ----------------------------------------------
 # ---------- Methods for 3D solving -------------
 # ----------------------------------------------
 
-# Merge<X> methods take root-cluster in considerations   
+# Merge<X> methods take root cluster in considerations   
 # Derive<X> methods do not take root cluster in consideration
+
+class CheckAR(ClusterMethod):
+    """Represents the overconstrained merging a hedgehog and a rigid that completely overlaps it."""
+    def __init__(self, map):
+        # get input clusters
+        self.hog = map["$h"]
+        self.rigid = map["$r"]
+        self.sharedx = self.hog.xvars.intersection(self.rigid.vars)
+        # create ouptut cluster
+        outvars = set(self.rigid.vars)
+        self.out = Rigid(outvars)
+        # set method properties
+        self._inputs = [self.hog, self.rigid]
+        self._outputs = [self.out]
+        ClusterMethod.__init__(self)
+
+    def _handcoded_match(self, newcluster, connected):
+        matches = [];
+        if isinstance(newcluster, Rigid) and len(newcluster.vars)>=3:
+            rigids = [newcluster]
+            hogs = filter(lambda hog: isinstance(hog, Hedgehog) and hog.vars.intersection(newcluster.vars) == hog.vars, connected)
+        elif isinstance(newcluster, Hedgehog):
+            hogs = [newcluster]
+            rigids = filter(lambda rigid: isinstance(rigid, Rigid) and newcluster.vars.intersection(rigid.vars) == newcluster.vars, connected)
+        else:
+            return []
+        for h in hogs: 
+            for r in rigids: 
+                m = Map({
+                    "$h": h, 
+                    "$r": r,
+                })
+                matches.append(m)
+        return matches;
+    handcoded_match = staticmethod(_handcoded_match)
+
+    def __str__(self):
+        s =  "CheckAR("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def multi_execute(self, inmap):
+        diag_print("CheckAR.multi_execute called","clmethods")
+        # get configurations
+        hog = inmap[self.hog]
+        rigid = inmap[self.rigid]
+        xvars = list(self.hog.xvars)
+        # test if all angles match
+        for i in range(len(self.sharedx)-1):
+            hangle = angle_3p(hog.get(xvars[i]), hog.get(self.hog.cvar), hog.get(xvars[i+1]))
+            rangle = angle_3p(rigid.get(xvars[i]), rigid.get(self.hog.cvar), rigid.get(xvars[i+1]))
+            # angle check failed, return no configuration
+            if not tol_eq(hangle,rangle):
+                return []
+        # all checks passed, return rigid configuration 
+        return [rigid]
+    
 
 class MergePR(ClusterMethod):
     """Represents a merging of a one-point cluster with any other rigid."""
@@ -39,6 +96,28 @@ class MergePR(ClusterMethod):
         self._inputs = [in1, in2, in1root, in2root]
         self._outputs = [out]
         ClusterMethod.__init__(self)
+
+
+    def _handcoded_match(self, newcluster, connected):
+        matches = [];
+        if isinstance(newcluster, Rigid) and len(newcluster.vars)==1:
+            points = [newcluster]
+            distances = filter(lambda x: isinstance(x, Rigid) and len(x.vars)==2, connected)
+        elif isinstance(newcluster, Rigid) and len(newcluster.vars)==2:
+            distances = [newcluster]
+            points = filter(lambda x: isinstance(x, Rigid) and len(x.vars)==1, connected)
+        else:
+            return []
+        for p in points: 
+            for d in distances: 
+                m = Map({
+                    "$p": p, 
+                    "$r": d,
+                    "$a": list(p.vars)[0]
+                })
+                matches.append(m)
+        return matches;
+    handcoded_match = staticmethod(_handcoded_match)
 
     def _pattern():
         pattern = [["point","$p",["$a"]], ["rigid", "$r", ["$a"]]]

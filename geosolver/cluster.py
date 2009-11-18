@@ -4,7 +4,7 @@ types are Rigids, Hedgehogs and Balloons. """
 from multimethod import MultiVariable
 
 class Distance:
-    """A Distance represents a known distance"""
+    """A Distance represents an unknown distance between two points"""
 
 
     def __init__(self, a, b):
@@ -32,7 +32,7 @@ class Distance:
 
 
 class Angle:
-    """A Angle represents a known angle"""
+    """A Angle represents an unknown angle on three points"""
 
     def __init__(self, a, b, c):
         """Create a new Angle
@@ -62,13 +62,24 @@ class Angle:
 
 
 class Cluster(MultiVariable):
-    """A set of points, satisfying some constaint"""
+    """A cluster represents a set of Configurations on the same set point variables. 
+       Subtypes of Cluster (e.g. Rigid, Balloon and Hedgehog) 
+       define a specific combination of distance and angle constraints on those points. 
+       The configurations specify the values of those distances and angles.
+   
+       Instance attributes:
+        Cluster.vars is a frozenset of point variables     
+        Cluster.creationtime is a uniue integer
+        Cluster.overconstrained is a boolean
+    """
     
     staticcounter = 0
 
-    def __init__(self):
+    def __init__(self, variables):
         Cluster.staticcounter += 1
         self.creationtime = Cluster.staticcounter
+        self.vars = frozenset(variables)
+        self.overconstrained = False
 
     def intersection(self, other):
         shared = set(self.vars).intersection(other.vars)
@@ -123,7 +134,7 @@ class Cluster(MultiVariable):
 
  
 class Rigid(Cluster):
-    """A Rigid (or RigidCluster) represent a cluster of points variables 
+    """A Rigid (or RigidCluster) represent a cluster of point variables 
        that forms a rigid body."""
 
     def __init__(self, vars):
@@ -132,9 +143,7 @@ class Rigid(Cluster):
            keyword args:
             vars - list of variables 
         """
-        Cluster.__init__(self)
-        self.vars = frozenset(vars)
-        self.overconstrained = False
+        Cluster.__init__(self, vars)
 
     def __str__(self):
         s = "rigid#"+str(id(self))+"("+str(map(str, self.vars))+")"
@@ -152,6 +161,10 @@ class Rigid(Cluster):
 class Hedgehog(Cluster):
     """An Hedgehog (or AngleCluster) represents a set of points (M,X1...XN) 
        where all angles a(Xi,M,Xj) are known. 
+    
+       Instance attributes:
+        cvar - center point variable
+        xvars - list of other point variables
     """
     def __init__(self, cvar, xvars):
         """Create a new hedgehog
@@ -160,13 +173,11 @@ class Hedgehog(Cluster):
             cvar - center variable 
             xvars - list of variables
         """ 
-        Cluster.__init__(self)
         self.cvar = cvar
-        if len(xvars) < 2:
-            raise StandardError, "hedgehog must have at least three variables"
         self.xvars = frozenset(xvars)
-        self.vars = self.xvars.union([self.cvar])
-        self.overconstrained = False
+        Cluster.__init__(self, self.xvars.union([self.cvar]))
+        if len(self.vars) < 3:
+            raise StandardError, "hedgehog must have at least three variables"
 
     def __str__(self):
         s = "hedgehog#"+str(id(self))+"("+str(self.cvar)+","+str(map(str, self.xvars))+")"
@@ -188,13 +199,11 @@ class Balloon(Cluster):
         """Create a new balloon
         
            keyword args:
-            vars - collection of PointVar's
+            variables - collection of PointVar's
         """
-        Cluster.__init__(self)
         if len(variables) < 3:
             raise StandardError, "balloon must have at least three variables"
-        self.vars = frozenset(variables)
-        self.overconstrained = False
+        Cluster.__init__(self,variables)
 
     def __str__(self):
         s = "balloon#"+str(id(self))+"("+str(map(str, self.vars))+")"
@@ -211,10 +220,11 @@ class Balloon(Cluster):
 
 def over_constraints(c1, c2):
     """returns the over-constraints (duplicate distances and angles) for
-       a pair of clusters (rigid, angle or scalable)."""
+       a pair of clusters."""
     return over_distances(c1,c2).union(over_angles(c1,c2))    
     
 def over_angles(c1, c2):
+    """determine set of angles in c1 and c2"""
     if isinstance(c1,Rigid) and isinstance(c2,Rigid):
         return over_angles_bb(c1,c2)
     if isinstance(c1,Rigid) and isinstance(c2,Hedgehog):

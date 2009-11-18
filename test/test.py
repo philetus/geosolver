@@ -245,7 +245,8 @@ def overconstrained_tetra():
     problem.add_constraint(DistanceConstraint('v2', 'v4', 10.0))
     problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
     # overconstrain me!
-    problem.add_constraint(AngleConstraint('v1', 'v2', 'v3', math.pi/4.0))
+    problem.add_constraint(AngleConstraint('v1', 'v2', 'v3', math.pi/3))
+    #problem.add_constraint(AngleConstraint('v1', 'v2', 'v3', math.pi/4))
     return problem
 
 # -------- 2D problems
@@ -919,9 +920,9 @@ def runtests():
     #test(fix3_problem_3d())
     #test(block("BB", 4.0,2.5,5.0))
     #diag_select("SelectionMethod.*")
+    #test(selection_problem(),False)
     #selection_test()
-    test(selection_problem(),False)
-
+    test(overconstrained_tetra())
 
 
 if __name__ == "__main__": runtests()

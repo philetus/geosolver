@@ -364,24 +364,26 @@ class GeometricSolver (Listener):
                                 if sub != parent:
                                     parent.subs.append(sub)
         
-        # determine top-level result 
-        rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
-        if len(rigids) == 0:            
-            # no variables in problem?
-            result = GeometricCluster(self.problem.cg.variables())
-            result.variables = []
-            result.subs = []
-            result.solutions = []
-            result.flags = GeometricCluster.UNSOLVED
-        elif len(rigids) == 1:
-            # structurally well constrained, or structurally overconstrained
-            result = map[rigids[0]]
-        else:
+        # determine resutl from top-level clusters 
+        top = self.dr.top_level()
+        rigids = filter(lambda c: isinstance(c, Rigid), top)
+        if len(top) > 1:
             # structurally underconstrained cluster
             result = GeometricCluster(self.problem.cg.variables())
             result.flag = GeometricCluster.S_UNDER
             for rigid in rigids:
                 result.subs.append(map[rigid])
+        else:
+            if len(rigids) == 1:
+                # structurally well constrained, or structurally overconstrained
+                result = map[rigids[0]]
+            else:
+                # no variables in problem?
+                result = GeometricCluster(self.problem.cg.variables())
+                result.variables = []
+                result.subs = []
+                result.solutions = []
+                result.flags = GeometricCluster.UNSOLVED
         return result 
 
     
