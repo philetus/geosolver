@@ -14,7 +14,7 @@ class ClusterSolver3D(ClusterSolver):
 
     def __init__(self):
         """Instantiate a ClusterSolver3D"""
-        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA])
+        ClusterSolver.__init__(self, [MergeGlueable, CheckAR, MergePR, MergeDR, MergeRR, MergeSR, DeriveTTD, DeriveDDD, DeriveADD, DeriveDAD, DeriveAA])
         
 
 # ----------------------------------------------
@@ -23,6 +23,132 @@ class ClusterSolver3D(ClusterSolver):
 
 # Merge<X> methods take root cluster in considerations   
 # Derive<X> methods do not take root cluster in consideration
+
+class MergeGlueable(ClusterMethod):
+    """Represents the overconstrained merging a hedgehog and a rigid that completely overlaps it."""
+    def __init__(self, map):
+        # get input clusters
+        self.glue = map["$o"]
+        self.rigid1 = map["$r1"]
+        self.rigid2 = map["$r2"]
+        # self.shared1 = self.glue.vars.intersection(self.rigid1.vars)
+        # self.shared2 = self.glue.vars.intersection(self.rigid2.vars)
+        # create ouptut cluster
+        outvars = set(self.rigid1.vars).union(self.rigid2.vars)
+        self.out = Rigid(outvars)
+        # get roots
+        self.root1 = rootname(self.rigid1)
+        self.root2 = rootname(self.rigid2)
+        # set method properties
+        self._inputs = [self.glue, self.rigid1, self.rigid2, self.root1, self.root2]
+        self._outputs = [self.out]
+        ClusterMethod.__init__(self)
+
+    def _handcoded_match(problem, newcluster, connected):
+        if isinstance(newcluster, Rigid) and len(newcluster.vars)>=3:
+            matches = []
+            rigid1 = newcluster
+            glues = filter(lambda o: isinstance(o, Glueable) and len(o.vars.intersection(rigid1.vars))>=3 , connected)
+            for o in glues:
+                connected2 = set()
+                for var in o.vars:
+                    dependend = problem.find_dependend(var)
+                    dependend = filter(lambda x: problem.is_top_level(x), dependend)
+                    connected2.update(dependend)
+                rigids2 = filter(lambda r2: isinstance(r2, Rigid) and r2 != rigid1 and len(r2.vars.intersection(o.vars)) >=3, connected2)
+                for rigid2 in rigids2:
+                    m = Map({
+                        "$r1": rigid1, 
+                        "$o": o,
+                        "$r2": rigid2
+                    })
+                    matches.append(m)
+            return matches;
+        elif isinstance(newcluster, Glueable):
+            matches = []
+            glue = newcluster
+            rigids = filter(lambda r: isinstance(r, Rigid) and len(r.vars.intersection(glue.vars)) >=3, connected)
+            for i in range(len(rigids)):
+                for j in range(i+1, len(rigids)):
+                    m = Map({
+                        "$o": glue, 
+                        "$r1": rigids[i],
+                        "$r2": rigids[j],
+                    })
+                    matches.append(m)
+            return matches;
+        else:
+            return []
+    handcoded_match = staticmethod(_handcoded_match)
+
+    def __str__(self):
+        s = "MergeGlueable("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def multi_execute(self, inmap):
+        diag_print("MergeGlueable.multi_execute called","clmethods")
+        # get configurations
+        r1 = inmap[self.rigid1]
+        r2 = inmap[self.rigid2]
+        o = inmap[self.glue]
+        # transform r1
+        # determine shared vars for r1 and o, in the correct order
+        shared = []
+        for var in self.glue.order:
+            if var in r1.map:
+                shared.append(var)
+        v1 = shared[0]
+        v2 = shared[1]
+        v3 = shared[2]
+        # determine coordinate system for shared points in r1
+        p1r = r1.map[v1]
+        p2r = r1.map[v2]
+        p3r = r1.map[v3]
+        csr = make_hcs_3d(p1r, p2r, p3r)
+        # determine coordinate system for shared points in glue cluster
+        p1o = o.map[v1]
+        p2o = o.map[v2]
+        p3o = o.map[v3]
+        cso = make_hcs_3d(p1o, p2o, p3o)
+        # do transform
+        trans1 = cs_transform_matrix(csr, cso)
+
+        # transform r2
+        # determine shared vars for r2 and o, in the correct order
+        shared = []
+        for var in self.glue.order:
+            if var in r2.map:
+                shared.append(var)
+        v1 = shared[0]
+        v2 = shared[1]
+        v3 = shared[2]
+        # determine coordinate system for shared points in r2
+        p1r = r2.map[v1]
+        p2r = r2.map[v2]
+        p3r = r2.map[v3]
+        csr = make_hcs_3d(p1r, p2r, p3r)
+        # determine coordinate system for shared points in glue cluster
+        p1o = o.map[v1]
+        p2o = o.map[v2]
+        p3o = o.map[v3]
+        cso = make_hcs_3d(p1o, p2o, p3o)
+        # do transform 
+        trans2 = cs_transform_matrix(csr, cso)
+
+        # merge r1 and r2
+        isroot1 = inmap[self.root1]
+        isroot2 = inmap[self.root2]
+        if isroot1 and not isroot2:
+            res = r1.add(r2.transform(trans1.inverse().mmul(trans2)))
+        elif isroot2 and not isroot1:
+            res = r2.add(r1.transform(trans2.inverse().mmul(trans1)))
+        elif len(self.rigid1.vars) < len(self.rigid2.vars):  # cheapest - transform smallest config
+            res = r2.add(r1.transform(trans2.inverse().mmul(trans1)))
+        else:
+            res = r1.add(r2.transform(trans1.inverse().mmul(trans2)))
+        
+        return [res]
 
 class CheckAR(ClusterMethod):
     """Represents the overconstrained merging a hedgehog and a rigid that completely overlaps it."""
@@ -39,7 +165,7 @@ class CheckAR(ClusterMethod):
         self._outputs = [self.out]
         ClusterMethod.__init__(self)
 
-    def _handcoded_match(self, newcluster, connected):
+    def _handcoded_match(problem, newcluster, connected):
         matches = [];
         if isinstance(newcluster, Rigid) and len(newcluster.vars)>=3:
             rigids = [newcluster]
@@ -98,7 +224,12 @@ class MergePR(ClusterMethod):
         ClusterMethod.__init__(self)
 
 
-    def _handcoded_match(self, newcluster, connected):
+    def _handcoded_match(problem, newcluster, connected):
+        connected = set()
+        for var in newcluster.vars:
+            dependend = problem.find_dependend(var)
+            dependend = filter(lambda x: problem.is_top_level(x), dependend)
+            connected.update(dependend)
         matches = [];
         if isinstance(newcluster, Rigid) and len(newcluster.vars)==1:
             points = [newcluster]

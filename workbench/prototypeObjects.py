@@ -5,7 +5,7 @@ from parameters import Settings
 from quaternion import *
 from singleton import *
 import geosolver  
-from geosolver import GeometricCluster 
+from geosolver import GeometricDecomposition 
 import delaunay._qhull as qhull
 import delaunay.core as dcore
 from geosolver.matfunc import Vec
@@ -128,12 +128,12 @@ class PrototypeManager( Singleton ):
         if self.result != None:
             collPoints = []
             clusters = []
-            #self.result.flag = GeometricCluster.S_OVER
-            if self.result.flag == GeometricCluster.I_UNDER or self.result.flag == GeometricCluster.S_UNDER:
+            #self.result.flag = GeometricDecomposition.S_OVER
+            if self.result.flag == GeometricDecomposition.I_UNDER or self.result.flag == GeometricDecomposition.S_UNDER:
                 clusters = self.result.subs
                 for cluster in clusters:
                     self.__createCluster(cluster)
-            elif self.result.flag == GeometricCluster.I_OVER or self.result.flag == GeometricCluster.S_OVER:
+            elif self.result.flag == GeometricDecomposition.I_OVER or self.result.flag == GeometricDecomposition.S_OVER:
                 self.__getOverConstrainedClusters(self.result, clusters)
                 wellClusters = []                
                 self.__getWellConstrainedClusters(self.result, wellClusters, 1)
@@ -141,7 +141,7 @@ class PrototypeManager( Singleton ):
                     self.__createCluster(cluster)
                 for wellCluster in wellClusters:
                     self.__createCluster(wellCluster)
-            elif self.result.flag == GeometricCluster.OK:
+            elif self.result.flag == GeometricDecomposition.OK:
                 cluster = self.result
                 self.__createCluster(cluster)
 
@@ -201,7 +201,7 @@ class PrototypeManager( Singleton ):
         """
         overconstrainedFound = False
         for cluster in parent.subs:
-            if cluster.flag == GeometricCluster.I_OVER or cluster.flag == GeometricCluster.S_OVER:
+            if cluster.flag == GeometricDecomposition.I_OVER or cluster.flag == GeometricDecomposition.S_OVER:
                 self.__getOverConstrainedClusters(cluster, ocClusters)
                 overconstrainedFound = True
         
@@ -216,7 +216,7 @@ class PrototypeManager( Singleton ):
         for cluster in parent.subs:
             if currentLevel != level:
                 self.__getWellConstrainedClusters(cluster, wellClusters, level, currentLevel)
-            elif cluster.flag == GeometricCluster.OK:
+            elif cluster.flag == GeometricDecomposition.OK:
                 wellClusters += [cluster]
     
     def getMergedConstraints(self, prtObj, withPrtObj):
@@ -303,15 +303,15 @@ class PrototypeManager( Singleton ):
     
     def getConstraintInfoAsText(self):
         if self.result != None:
-            if self.result.flag == GeometricCluster.I_UNDER:
+            if self.result.flag == GeometricDecomposition.I_UNDER:
                 return "Incidentally Underconstrained (change distance/angle values)"
-            elif self.result.flag == GeometricCluster.S_UNDER:
+            elif self.result.flag == GeometricDecomposition.S_UNDER:
                 return "Structurally Underconstrained (assign more distances/angles)"
-            elif self.result.flag == GeometricCluster.I_OVER:
+            elif self.result.flag == GeometricDecomposition.I_OVER:
                 return "Incidentally Overconstrained (change distance/angle values)"
-            elif self.result.flag == GeometricCluster.S_OVER:
+            elif self.result.flag == GeometricDecomposition.S_OVER:
                 return "Structurally Overconstrained (remove distances/angles)"
-            elif self.result.flag == GeometricCluster.OK:
+            elif self.result.flag == GeometricDecomposition.OK:
                 return "Well Constrained"
             else:
                 return ""
@@ -839,7 +839,7 @@ class PrototypeManager( Singleton ):
        
     def getParameterRange(self, prtObject):
         if self.result != None:
-            if self.result.flag == GeometricCluster.OK  and prtObject.parameterRange == []:
+            if self.result.flag == GeometricDecomposition.OK  and prtObject.parameterRange == []:
                 if prtObject.objType == ObjectType.DISTANCE_CONSTRAINT:
                     dConstraint = self.geoProblem.get_distance(prtObject.pointBegin.key, prtObject.pointEnd.key)
                     prtObject.parameterRange = geosolver.prange.sample_prange(self.geoProblem, dConstraint, 0.0, prtObject.distance+100.0,0.5)
@@ -847,7 +847,7 @@ class PrototypeManager( Singleton ):
                     aConstraint = self.geoProblem.get_angle(prtObject.pointBegin.key, prtObject.pointMiddle.key, prtObject.pointEnd.key)
                     prtObject.parameterRange = geosolver.prange.sample_prange(self.geoProblem, aConstraint, 0.0, 360.0,0.1)
                 return prtObject.parameterRange
-            elif self.result.flag == GeometricCluster.OK and prtObject.parameterRange != []:
+            elif self.result.flag == GeometricDecomposition.OK and prtObject.parameterRange != []:
                 return prtObject.parameterRange
         return []
        
@@ -1796,11 +1796,11 @@ class ClusterI( Object ):
         self.hull = None
         
     def pickColor(self):
-        if self.constrainedness == GeometricCluster.I_UNDER or self.constrainedness == GeometricCluster.S_UNDER:
+        if self.constrainedness == GeometricDecomposition.I_UNDER or self.constrainedness == GeometricDecomposition.S_UNDER:
             self.color = self.underconstrainedClr
-        elif self.constrainedness == GeometricCluster.I_OVER or self.constrainedness == GeometricCluster.S_OVER:
+        elif self.constrainedness == GeometricDecomposition.I_OVER or self.constrainedness == GeometricDecomposition.S_OVER:
             self.color = self.overconstrainedClr
-        elif self.constrainedness == GeometricCluster.OK:
+        elif self.constrainedness == GeometricDecomposition.OK:
             self.color = self.wellconstrainedClr
         
     def draw( self ):

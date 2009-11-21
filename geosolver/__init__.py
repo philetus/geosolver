@@ -24,8 +24,11 @@ __all__ = [
 
 from geometric import GeometricProblem
 from geometric import GeometricSolver
-from geometric import GeometricCluster
-from geometric import ParametricConstraint
+from geometric import GeometricDecomposition
 from geometric import DistanceConstraint
 from geometric import AngleConstraint
+from geometric import RigidConstraint
+from geometric import MateConstraint
 from geometric import FixConstraint
+from geometric import LeftHandedConstraint
+from geometric import RightHandedConstraint

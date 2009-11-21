@@ -5,7 +5,7 @@ import vector
 import math
 from clsolver import PrototypeMethod, SelectionMethod
 from clsolver3D import ClusterSolver3D 
-from cluster import Rigid, Hedgehog
+from cluster import *
 from configuration import Configuration 
 from diagnostic import diag_print
 from constraint import Constraint, ConstraintGraph
@@ -13,7 +13,7 @@ from notify import Notifier, Listener
 from tolerance import tol_eq
 from intersections import angle_3p, distance_2p
 from selconstr import SelectionConstraint
-from geosolver.intersections import is_left_handed, is_right_handed
+from geosolver.intersections import is_left_handed, is_right_handed, transform_point, make_hcs_3d
 
 # ----------- GeometricProblem -------------
 
@@ -79,7 +79,7 @@ class GeometricProblem (Notifier, Listener):
         if isinstance(con, DistanceConstraint):
             for var in con.variables():
                 if var not in self.prototype:
-                    raise StandardError, "point variable not in problem"
+                    raise StandardError, "point variable %s not in problem"%(var)
             if self.get_distance(con.variables()[0],con.variables()[1]):
                 raise StandardError, "distance already in problem"
             else: 
@@ -88,7 +88,7 @@ class GeometricProblem (Notifier, Listener):
         elif isinstance(con, AngleConstraint):
             for var in con.variables():
                 if var not in self.prototype:
-                    raise StandardError, "point variable not in problem"
+                    raise StandardError, "point variable %s not in problem"%(var)
             if self.get_angle(con.variables()[0],con.variables()[1], con.variables()[2]):
                 raise StandardError, "angle already in problem"
             else: 
@@ -97,8 +97,18 @@ class GeometricProblem (Notifier, Listener):
         elif isinstance(con, RigidConstraint):
             for var in con.variables():
                 if var not in self.prototype:
-                    raise StandardError, "point variable not in problem"
+                    raise StandardError, "point variable %s not in problem"%(var)
             #if self.get_rigid(con.variables())
+            #    raise StandardError, "rigid already in problem"
+            #else:
+            if True:
+                con.add_listener(self)
+                self.cg.add_constraint(con)
+        elif isinstance(con, MateConstraint):
+            for var in con.variables():
+                if var not in self.prototype:
+                    raise StandardError, "point variable %s not in problem"%(var)
+            #if self.get_mate(con.variables())
             #    raise StandardError, "rigid already in problem"
             #else:
             if True:
@@ -107,13 +117,12 @@ class GeometricProblem (Notifier, Listener):
         elif isinstance(con, SelectionConstraint):
             for var in con.variables():
                 if var not in self.prototype:
-                    raise StandardError, "point variable not in problem"
+                    raise StandardError, "point variable %s not in problem"%(var)
             self.cg.add_constraint(con)
-            self.send_notify(("add_selection_constraint", con))
         elif isinstance(con, FixConstraint):
             for var in con.variables():
                 if var not in self.prototype:
-                    raise StandardError, "point variable not in problem"
+                    raise StandardError, "point variable %s not in problem"%(var)
             if self.get_fix(con.variables()[0]):
                 raise StandardError, "fix already in problem"
             self.cg.add_constraint(con)
@@ -221,7 +230,7 @@ class GeometricProblem (Notifier, Listener):
 
 class GeometricSolver (Listener):
     """The GeometricSolver monitors changes in a GeometricProblem and 
-       maps any changes to corresponding changes in a GeometricCluster
+       maps any changes to corresponding changes in a GeometricDecomposition
     """
 
     # public methods
@@ -281,43 +290,27 @@ class GeometricSolver (Listener):
             self._add_constraint(con)
 
     def set_prototype_selection(self, enabled):
+        """Enable (True) or disable (False) use of prototype for solution selection"""
         self.dr.set_prototype_selection(enabled)
 
     def get_constrainedness(self):
-        """Depricated. Use get_statis instead"""
+        """Depricated. Use get_status instead"""
         return self.get_status()
-    #    toplevel = self.dr.top_level()
-    #    if len(toplevel) > 1:
-    #        return "under-constrained"
-    #    elif len(toplevel) == 1:
-    #        cluster = toplevel[0]
-    #        if isinstance(cluster,Rigid):
-    #            configurations = self.dr.get(cluster)
-    #            if configurations == None:
-    #                return "unsolved"
-    #            elif len(configurations) > 0:
-    #                return "well-constrained"
-    #            else:
-    #                return "over-constrained"
-    #        else:
-    #            return "under-constrained"
-    #    elif len(toplevel) == 0:
-    #        return "error"
 
     def get_result(self):
         """Depricated. Use get_cluster instead."""
         return self.get_cluster()  
 
     def get_cluster(self):
-        """Returns a GeometricCluster (the root of a tree of clusters),
+        """Returns a GeometricDecomposition (the root of a tree of clusters),
          describing the solutions and the decomposition of the problem."""
         # several drcluster can maps to a single geoclusters 
         map = {}   
         geoclusters = []
         # map dr clusters
-        for drcluster in self.dr.rigids():
+        for drcluster in filter(lambda c: isinstance(c, Rigid), self.dr.clusters()):
             # create geocluster and map to drcluster (and vice versa)
-            geocluster = GeometricCluster(drcluster.vars)
+            geocluster = GeometricDecomposition(drcluster.vars)
             if geocluster not in map:
                 map[drcluster] = geocluster
                 map[geocluster] = [drcluster]
@@ -341,15 +334,15 @@ class GeometricSolver (Listener):
                         underconstrained = True
             # determine flag
             if drcluster.overconstrained:
-                geocluster.flag = GeometricCluster.S_OVER
+                geocluster.flag = GeometricDecomposition.S_OVER
             elif geocluster.solutions == None:
-                geocluster.flag = GeometricCluster.UNSOLVED
+                geocluster.flag = GeometricDecomposition.UNSOLVED
             elif len(geocluster.solutions) == 0:
-                geocluster.flag = GeometricCluster.I_OVER
+                geocluster.flag = GeometricDecomposition.I_OVER
             elif underconstrained:
-                geocluster.flag = GeometricCluster.I_UNDER
+                geocluster.flag = GeometricDecomposition.I_UNDER
             else:
-                geocluster.flag = GeometricCluster.OK
+                geocluster.flag = GeometricDecomposition.OK
 
 
         # determine subclusters
@@ -361,29 +354,29 @@ class GeometricSolver (Listener):
                         for inp in method.inputs():
                             if isinstance(inp, Rigid):
                                 sub = map[inp]
-                                if sub != parent:
+                                if sub != parent and sub not in parent.subs:
                                     parent.subs.append(sub)
         
-        # determine resutl from top-level clusters 
+        # determine result from top-level clusters 
         top = self.dr.top_level()
         rigids = filter(lambda c: isinstance(c, Rigid), top)
         if len(top) > 1:
             # structurally underconstrained cluster
-            result = GeometricCluster(self.problem.cg.variables())
-            result.flag = GeometricCluster.S_UNDER
-            for rigid in rigids:
-                result.subs.append(map[rigid])
+            result = GeometricDecomposition(self.problem.cg.variables())
+            result.flag = GeometricDecomposition.S_UNDER
+            for cluster in rigids:
+                result.subs.append(map[cluster])
         else:
             if len(rigids) == 1:
                 # structurally well constrained, or structurally overconstrained
                 result = map[rigids[0]]
             else:
                 # no variables in problem?
-                result = GeometricCluster(self.problem.cg.variables())
+                result = GeometricDecomposition(self.problem.cg.variables())
                 result.variables = []
                 result.subs = []
                 result.solutions = []
-                result.flags = GeometricCluster.UNSOLVED
+                result.flags = GeometricDecomposition.UNSOLVED
         return result 
 
     
@@ -401,38 +394,38 @@ class GeometricSolver (Listener):
 
     def get_status(self):
         """Returns a symbolic flag, one of:
-            GeometricCluster.S_UNDER, 
-            GeometricCluster.S_OVER,
-            GeometricCluster.OK,
-            GeometricCluster.UNSOLVED,
-            GeometricCluster.EMPTY,
-            GeometricCluster.I_OVER,
-            GeometricCluster.I_UNDER.
+            GeometricDecomposition.S_UNDER, 
+            GeometricDecomposition.S_OVER,
+            GeometricDecomposition.OK,
+            GeometricDecomposition.UNSOLVED,
+            GeometricDecomposition.EMPTY,
+            GeometricDecomposition.I_OVER,
+            GeometricDecomposition.I_UNDER.
            Note: this method is cheaper but less informative than get_cluster. 
         """
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
         if len(rigids) == 0:            
-            return GeometricCluster.EMPTY
+            return GeometricDecomposition.EMPTY
         elif len(rigids) == 1:
             drcluster = rigids[0]
             solutions = self.dr.get(drcluster)
             underconstrained = False
             if solutions == None:
-                return GeometricCluster.UNSOLVED
+                return GeometricDecomposition.UNSOLVED
             else:
                 for solution in solutions:
                     if solution.underconstrained:
                         underconstrained = True
             if drcluster.overconstrained:
-                return GeometricCluster.S_OVER
+                return GeometricDecomposition.S_OVER
             elif len(solutions) == 0:
-                return GeometricCluster.I_OVER
+                return GeometricDecomposition.I_OVER
             elif underconstrained:
-                return GeometricCluster.I_UNDER
+                return GeometricDecomposition.I_UNDER
             else:
-                return GeometricCluster.OK
+                return GeometricDecomposition.OK
         else:
-            return GeometricCluster.S_UNDER
+            return GeometricDecomposition.S_UNDER
     
     def receive_notify(self, object, message):
         """Take notice of changes in constraint graph"""
@@ -507,6 +500,15 @@ class GeometricSolver (Listener):
             self.dr.add(rig)
             # set configuration
             self._update_constraint(con)
+        elif isinstance(con, MateConstraint):
+            # map to glueable cluster
+            vars = list(con.variables());
+            glue = Glueable(vars)
+            self._map[con] = glue
+            self._map[glue] = con
+            self.dr.add(glue)
+            # set configuration
+            self._update_constraint(con)
         elif isinstance(con, FixConstraint):
             if self.fixcluster != None:
                 self.dr.remove(self.fixcluster)
@@ -521,7 +523,7 @@ class GeometricSolver (Listener):
             # add directly to clustersolver
             self.dr.add_selection_constraint(con)
         else:
-            ## raise StandardError, "unknown constraint type"
+            raise StandardError, "unknown constraint type"
             pass
          
     def _rem_constraint(self, con):
@@ -583,6 +585,35 @@ class GeometricSolver (Listener):
             conf = Configuration({v0:p0,v1:p1})
             self.dr.set(rig, [conf])
             assert con.satisfied(conf.map)
+        elif isinstance(con, MateConstraint):
+            # set configuration
+            if self.dimension != 3:
+                raise Exception, "MateConstraint only supported in 3D"
+            glue = self._map[con]
+            vars = list(con.variables())
+            vo1 = vars[0]
+            vx1 = vars[1]
+            vy1 = vars[2]
+            vo2 = vars[3]
+            vx2 = vars[4]
+            vy2 = vars[5]
+            po1 = vector.vector([0.0,0.0,0.0])
+            px1 = vector.vector([1.0,0.0,0.0])
+            py1 = vector.vector([0.0,1.0,0.0])
+            trans = con.get_parameter()
+            po2 = transform_point(po1, trans)
+            px2 = transform_point(px1, trans)
+            py2 = transform_point(py1, trans)
+            conf = Configuration({
+                vo1:po1,
+                vx1:px1,
+                vy1:py1,
+                vo2:po2,
+                vx2:px2,
+                vy2:py2,
+            })
+            self.dr.set(glue, [conf])
+            assert con.satisfied(conf.map)
         elif isinstance(con, RigidConstraint):
             # set configuration
             rig = self._map[con]
@@ -616,13 +647,13 @@ class GeometricSolver (Listener):
 #class GeometricSolver
 
 
-# ------------ GeometricCluster -------------
+# ------------ GeometricDecomposition -------------
 
-class GeometricCluster:
+class GeometricDecomposition:
     """Represents the result of solving a GeometricProblem. A cluster is a list of 
        point variable names and a list of solutions for
        those variables. A solution is a dictionary mapping variable names to
-       points. The cluster also keeps a list of sub-clusters (GeometricCluster)
+       points. The cluster also keeps a list of sub-clusters (GeometricDecomposition)
        and a set of flags, indicating incidental/structural
        under/overconstrained
        
@@ -654,10 +685,10 @@ class GeometricCluster:
         self.variables = frozenset(variables)
         self.solutions = []
         self.subs = []
-        self.flag = GeometricCluster.OK
+        self.flag = GeometricDecomposition.OK
 
     def __eq__(self, other):
-        if isinstance(other, GeometricCluster): 
+        if isinstance(other, GeometricDecomposition): 
             return self.variables == other.variables
         else:
             return False
@@ -728,7 +759,7 @@ class FixConstraint(ParametricConstraint):
         """
         ParametricConstraint.__init__(self)
         self._variables = [var]
-        self.set_parameter(pos)
+        self.set_parameter(vector.vector(pos))
 
     def satisfied(self, mapping):
         """return True iff mapping from variable names to points satisfies constraint""" 
@@ -743,7 +774,7 @@ class FixConstraint(ParametricConstraint):
 
     def __str__(self):
         return "FixConstraint("\
-            +str(self._variables[0])+","\
+            +str(self._variables[0])+"="\
             +str(self._value)+")"
 
 class DistanceConstraint(ParametricConstraint):
@@ -765,13 +796,13 @@ class DistanceConstraint(ParametricConstraint):
         """return True iff mapping from variable names to points satisfies constraint""" 
         a = mapping[self._variables[0]]
         b = mapping[self._variables[1]]
-        result = tol_eq(distance_2p(a,b), self._value)
+        result = tol_eq(distance_2p(a,b), abs(self._value))
         return result
 
     def __str__(self):
         return "DistanceConstraint("\
             +str(self._variables[0])+","\
-            +str(self._variables[1])+","\
+            +str(self._variables[1])+"="\
             +str(self._value)+")"
 
 class AngleConstraint(ParametricConstraint):
@@ -797,9 +828,10 @@ class AngleConstraint(ParametricConstraint):
         c = mapping[self._variables[2]]
         ang = angle_3p(a,b,c)
         if ang == None:
-            result = False
-            cmp = self._value
+            # if the angle is indeterminate, its probably ok. 
+            result = True
         else:
+            # in 3d, ignore the sign of the angle
             if len(a) >= 3:
                 cmp = abs(self._value)
             else:
@@ -813,7 +845,7 @@ class AngleConstraint(ParametricConstraint):
         return "AngleConstraint("\
             +str(self._variables[0])+","\
             +str(self._variables[1])+","\
-            +str(self._variables[2])+","\
+            +str(self._variables[2])+"="\
             +str(self._value)+")"
 
 class RigidConstraint(ParametricConstraint):
@@ -840,9 +872,9 @@ class RigidConstraint(ParametricConstraint):
             c1 = conf.map[self._variables[index-1]]
             c2 = conf.map[self._variables[index]]
             c3 = conf.map[self._variables[index+1]]
-            result = tol_eq(distance_2p(p1,p2), distance_2p(c1,c2))
-            result = tol_eq(distance_2p(p1,p3), distance_2p(c1,c3))
-            result = tol_eq(distance_2p(p2,p3), distance_2p(c2,c3))
+            result &= tol_eq(distance_2p(p1,p2), distance_2p(c1,c2))
+            result &= tol_eq(distance_2p(p1,p3), distance_2p(c1,c3))
+            result &= tol_eq(distance_2p(p2,p3), distance_2p(c2,c3))
         return result
 
     def __str__(self):
@@ -854,21 +886,58 @@ class RightHandedConstraint (SelectionConstraint):
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, is_right_handed, [v1,v2,v3,v4])
 
-
 class LeftHandedConstraint (SelectionConstraint):
     """A selection constraint for 4 points to have a left-handed orientation"""
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, is_left_handed, [v1,v2,v3,v4])
 
 class NotRightHandedConstraint (SelectionConstraint):
-    """A selection constraint for 4 points to not have a left-handed orientation, i.e. right-handed or in-plane"""
+    """A selection constraint for 4 points to not have a rigth-handed orientation, i.e. left-handed or co-planar"""
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, fnot(is_right_handed), [v1,v2,v3,v4])
 
 class NotLeftHandedConstraint (SelectionConstraint):
-    """A selection constraint for 4 points to not have a left-handed orientation, i.e. right-handed or in-plane"""
+    """A selection constraint for 4 points to not have a left-handed orientation, i.e. right-handed or co-planar"""
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, fnot(is_left_handed), [v1,v2,v3,v4])
+
+
+class MateConstraint(ParametricConstraint):
+    """A constraint to mate two (rigid) objects.
+       Defines two coordinate systems. Coordinate system 2 is a transformed version of coordinate system 1, using the the 
+       given 4x4 transformation matrix.
+       o1, x1, y1 are point variables of object1, which is positioned relative to coordinate system 1. 
+       o2, x2, y2 are point variables of object2. which is positioned relative to coordinate system 2.
+       point o1 coincides with the origin of the coordinate system for object 1
+       point x1 is on the x-axis. 
+       point y1 is on the y-axis, or as close as possible 
+       The same for object 2.
+    """
+    
+    def __init__(self, o1, x1, y1,o2, x2, y2, trans):
+        """Create a new DistanceConstraint instance
+        
+           keyword args:
+            conf    - a Configuration 
+        """
+        ParametricConstraint.__init__(self)
+        self._variables = [o1, x1, y1, o2, x2, y2]
+        #assert isinstance(trans, Mat)
+        self.set_parameter(trans)  
+    
+    def satisfied(self, mapping):
+        """return True iff mapping from variable names to points satisfies constraint""" 
+        # determine coordinate system 1
+        vo1, vx1, vy1, vo2, vx2, vy2 = self._variables
+        po1, px1, py1, po2, px2, py2 = map(lambda v: mapping[v], self._variables)
+        trans = self.get_parameter()
+        cs1 = make_hcs_3d(po1, px1, py1)
+        cs2 = make_hcs_3d(po2, px2, py2) 
+        cs1trans = cs1.mmul(trans)
+        return bool(cs1trans == cs2)
+
+    def __str__(self):
+        return "MateConstraint("+str(self._variables)+")" 
 
 
 

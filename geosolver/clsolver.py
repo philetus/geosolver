@@ -108,7 +108,7 @@ class PrototypeMethod(MultiMethod):
         if enabledval == True:
             sat = True
             for con in self._constraints:
-                satcon = con.satisfied(inconf.map) != con.satisfied(selconf.map)
+                satcon = con.satisfied(inconf.map) == con.satisfied(selconf.map)
                 diag_print("constraint = "+str(con), "PrototypeMethod.multi_execute")
                 diag_print("constraint satisfied? "+str(satcon), "PrototypeMethod.multi_execute")
                 sat = sat and satcon
@@ -259,15 +259,10 @@ class ClusterSolver(Notifier):
         self.handcoded_methods = filter(lambda m: hasattr(m,"handcoded_match"),self.methodclasses)
         # init instance vars
         self._graph = Graph()
-        self._graph.add_vertex("_root")
+        #self._graph.add_vertex("_root")
         self._graph.add_vertex("_toplevel")
         self._graph.add_vertex("_variables")
-        self._graph.add_vertex("_distances")
-        self._graph.add_vertex("_angles")
-        self._graph.add_vertex("_rigids")
-        self._graph.add_vertex("_hedgehogs")
-        self._graph.add_vertex("_balloons")
-        self._graph.add_vertex("_methods")
+        self._graph.add_vertex("_clusters")
         self._new = []
         self._mg = MethodGraph()
         # add prototype_selection boolean var to method graph
@@ -345,25 +340,9 @@ class ClusterSolver(Notifier):
         """get list of variables"""
         return self._graph.outgoing_vertices("_variables")
 
-    def distances(self):
-        """get list of distances"""
-        return self._graph.outgoing_vertices("_distances")
-
-    def angles(self):
-        """get list of angles"""
-        return self._graph.outgoing_vertices("_angles")
-
-    def rigids(self):
-        """get list of rigids"""
-        return self._graph.outgoing_vertices("_rigids")
-
-    def hedgehogs(self):
-        """get list of hedgehogs"""
-        return self._graph.outgoing_vertices("_hedgehogs")
-
-    def balloons(self):
-        """get list of balloons"""
-        return self._graph.outgoing_vertices("_balloons")
+    def clusters(self):
+        """get list of clusters"""
+        return self._graph.outgoing_vertices("_clusters")
 
     def methods(self):
         """get list of methods"""
@@ -426,7 +405,7 @@ class ClusterSolver(Notifier):
             self._new.remove(object)
 
     def _find_descendend(self,v):
-        """find all descendend objects of v (dirdctly or indirectly dependend"""
+        """find all descendend objects of v (i.e.. directly or indirectly dependend)"""
         front = [v]
         result = {}
         while len(front) > 0:
@@ -450,35 +429,13 @@ class ClusterSolver(Notifier):
             diag_print("_add_variable "+str(var), "clsolver")
             self._add_to_group("_variables", var)
 
-    def _add_cluster(self, cluster):
-        # add in appriate way for type
-        if isinstance(cluster, Rigid):
-            self._add_rigid(cluster)
-        elif isinstance(cluster, Hedgehog):
-            self._add_hog(cluster)
-        elif isinstance(cluster, Balloon):
-            self._add_balloon(cluster)
-        else:
-            raise StandardError, "unsupported type", type(cluster)
-        # add root-variable if needed with default value False
-        root = rootname(cluster)
-        if not self._mg.contains(root):
-            self._mg.add_variable(root, False)
-            self._mg.set(root, False)
-            # add root-variable to dependency graph
-            self._add_dependency(cluster, root)
-        # if there is no root cluster, this one will be it
-        if self.get_root() == None:
-            self.set_root(cluster)
-
-    def _add_rigid(self, newcluster):
-        """add a rigid cluster if not already in system"""
-        diag_print("_add_rigid "+str(newcluster),"clsolver")
+    def _add_cluster(self, newcluster):
+        diag_print("_add_cluster "+str(newcluster),"clsolver")
         # check if not already exists
         if self._graph.has_vertex(newcluster): 
-            raise StandardError, "rigid already in clsolver"
+            raise StandardError, "cluster %s already in clsolver"%(str(cluster))
         # update graph
-        self._add_to_group("_rigids", newcluster)
+        self._add_to_group("_clusters", newcluster)
         for var in newcluster.vars:
             self._add_variable(var)
             self._add_dependency(var, newcluster)
@@ -486,45 +443,18 @@ class ClusterSolver(Notifier):
         self._add_top_level(newcluster)
         # add to methodgraph
         self._mg.add_variable(newcluster)
-        # notify
+        # add root-variable if needed with default value False
+        root = rootname(newcluster)
+        if not self._mg.contains(root):
+            self._mg.add_variable(root, False)
+            self._mg.set(root, False)
+            # add root-variable to dependency graph
+            self._add_dependency(newcluster, root)
+        # if there is no root cluster, this one will be it
+        if self.get_root() == None:
+            self.set_root(newcluster)
+        # notify listeners
         self.send_notify(("add", newcluster))
-    #end def _add_rigid
-
-    def _add_hog(self, hog):
-        diag_print("_add_hog:"+str(hog), "clsolver")
-        # check if not already exists
-        if self._graph.has_vertex(hog): 
-            raise StandardError, "hedgehog already in clsolver"
-        # update graph
-        self._add_to_group("_hedgehogs",hog)
-        for var in list(hog.xvars)+[hog.cvar]:
-            self._add_variable(var)
-            self._add_dependency(var, hog)
-        # add to top level
-        self._add_top_level(hog)
-        # add to methodgraph
-        self._mg.add_variable(hog)
-        # notify 
-        self.send_notify(("add", hog))
-
-    def _add_balloon(self, newballoon):
-        """add a cluster if not already in system"""
-        diag_print("_add_balloon "+str(newballoon),"clsolver")
-        # check if not already exists
-        if self._graph.has_vertex(newballoon): 
-            raise StandardError, "balloon already in clsolver"
-        # update graph
-        self._add_to_group("_balloons", newballoon)
-        for var in newballoon.vars:
-            self._add_variable(var)
-            self._add_dependency(var, newballoon)
-        # add to top level
-        self._add_top_level(newballoon)
-         # add to methodgraph
-        self._mg.add_variable(newballoon)
-        # notify 
-        self.send_notify(("add", newballoon))
-    #end def _add_balloon
 
     def _add_method(self, method):
         diag_print("new "+str(method),"clsolver")
@@ -633,7 +563,7 @@ class ClusterSolver(Notifier):
     
     def _search(self, newcluster):
         diag_print("search from:"+str(newcluster),"clsolver3D")
-        # first find all toplevel clusters connected to newcluster 
+        # find all toplevel clusters connected to newcluster 
         # via one or more variables
         connected = set()
         for var in newcluster.vars:
@@ -641,12 +571,14 @@ class ClusterSolver(Notifier):
             dependend = filter(lambda x: self.is_top_level(x), dependend)
             connected.update(dependend)
         diag_print("search: connected clusters="+str(connected),"clsolver3D")
-        # first try incremental mathing
+        
+        # first try handcoded matching
         for methodclass in self.handcoded_methods:
             diag_print("trying incremental matching for "+str(methodclass), "clsolver3D")
-            matches = methodclass.handcoded_match(self, newcluster,connected)
+            matches = methodclass.handcoded_match(self, newcluster, connected)
             if self._try_matches(methodclass, matches):
                 return True
+
         # if incremental matching failed, try full pattern matching
         if self._try_methods(connected):
             return True 
@@ -758,9 +690,10 @@ class ClusterSolver(Notifier):
                 diag_print("keep top-level: "+str(cluster),"clsolver")
         # add method to determine root-variable
         self._add_root_method(merge.input_clusters(),merge.outputs()[0])
-        # add solution selection methods
-        output2 = self._add_prototype_selector(merge)
-        output3 = self._add_solution_selector(output2)
+        # add solution selection methods, only if information increasing
+        if infinc:
+            output2 = self._add_prototype_selector(merge)
+            output3 = self._add_solution_selector(output2)
         return True
 
     def _add_root_method(self,inclusters,outcluster):
@@ -967,16 +900,10 @@ class ClusterSolver(Notifier):
 
     def __str__(self):
         s = ""
-        for x in self.distances():
+        s += "Clusters:\n"
+        for x in self.clusters():
             s += str(x) + "\n"
-        for x in self.angles():
-            s += str(x) + "\n"
-        for x in self.rigids():
-            s += str(x) + "\n"
-        for x in self.hedgehogs():
-            s += str(x) + "\n"
-        for x in self.balloons():
-            s += str(x) + "\n"
+        s += "Methods:\n"
         for x in self.methods():
             s += str(x) + "\n"
         return s

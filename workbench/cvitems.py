@@ -1,5 +1,5 @@
 from includes import *
-from geosolver import GeometricCluster
+from geosolver import GeometricDecomposition
 from parameters import Settings
 
 class CVCluster(QtGui.QGraphicsItem): 
@@ -26,13 +26,13 @@ class CVCluster(QtGui.QGraphicsItem):
         painter.setPen(QtGui.QColor(0,155,50))
 
         if self.cluster.flag != None:
-            if self.cluster.flag == GeometricCluster.OK:
+            if self.cluster.flag == GeometricDecomposition.OK:
                 painter.setBrush(QtGui.QBrush(self.compositionView.wellConstrainedColor))
-            elif self.cluster.flag == GeometricCluster.I_UNDER or self.cluster.flag == GeometricCluster.S_UNDER:
+            elif self.cluster.flag == GeometricDecomposition.I_UNDER or self.cluster.flag == GeometricDecomposition.S_UNDER:
                 painter.setBrush(QtGui.QBrush(self.compositionView.underConstrainedColor))
-            elif self.cluster.flag == GeometricCluster.I_OVER or self.cluster.flag == GeometricCluster.S_OVER:
+            elif self.cluster.flag == GeometricDecomposition.I_OVER or self.cluster.flag == GeometricDecomposition.S_OVER:
                 painter.setBrush(QtGui.QBrush(self.compositionView.overConstrainedColor))
-            elif self.cluster.flag == GeometricCluster.UNSOLVED:
+            elif self.cluster.flag == GeometricDecomposition.UNSOLVED:
                 painter.setBrush(QtGui.QBrush(self.compositionView.unsolvedColor))
         painter.drawRect(self.paintRect)
         

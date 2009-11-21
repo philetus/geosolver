@@ -308,7 +308,7 @@ def zeroes(m=1, n=None):
 
 def eye(m=1, n=None):
     'Identity matrix with side length m-by-m or m-by-n'
-    return genmat(m,n, lambda i,j: i==j)
+    return genmat(m,n, lambda i,j: float(i==j))
 
 def hilb(m=1, n=None):
     'Hilbert matrix with side length m-by-m or m-by-n.  Elem[i][j]=1/(i+j+1)'

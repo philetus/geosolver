@@ -129,6 +129,10 @@ class Cluster(MultiVariable):
                     return Hedgehog(self.cvar,xvars)
                 else:
                     return None
+        elif isinstance(self, Glueable):
+            return Glueable([]) 
+        elif isinstance(self, Flexible):
+            return Flexibles([]) 
         # if all fails
         raise Exception("intersection of unknown Cluster types")
 
@@ -216,6 +220,51 @@ class Balloon(Cluster):
         new.overconstrained = self.overconstrained
         return new
 
+class Glueable(Cluster):
+    """Defines an ordered set of points, used for orthogonal transformations""" 
+
+    def __init__(self, vars):
+        """Create a new cluster
+        
+           keyword args:
+            vars - list of variables 
+        """
+        Cluster.__init__(self, vars)
+        self.order = list(vars)
+
+    def __str__(self):
+        s = "glue#"+str(id(self))+"("+str(map(str, self.vars))+")"
+        if self.overconstrained:
+            s = "!" + s
+        return s
+
+    def copy(self):
+        new = Glueable(self.vars)
+        new.overconstrained = self.overconstrained
+        return new
+
+class Flexible(Cluster):
+    """Defines an orderless set of points, used for best-fit transformations""" 
+
+    def __init__(self, vars):
+        """Create a new cluster
+        
+           keyword args:
+            vars - list of variables 
+        """
+        Cluster.__init__(self, vars)
+
+    def __str__(self):
+        s = "orderless#"+str(id(self))+"("+str(map(str, self.vars))+")"
+        if self.overconstrained:
+            s = "!" + s
+        return s
+
+    def copy(self):
+        new = Flexible(self.vars)
+        new.overconstrained = self.overconstrained
+        return new
+
 # ----- function to determine overconstraints -----
 
 def over_constraints(c1, c2):
@@ -243,6 +292,8 @@ def over_angles(c1, c2):
         return over_angles_bh(c1,c2)
     elif isinstance(c1,Hedgehog) and isinstance(c2,Balloon):
         return over_angles_bh(c2,c1)
+    elif isinstance(c1,Glueable) or isinstance(c2,Glueable):
+        return set()
     else:
         raise StandardError, "unexpected case"
     

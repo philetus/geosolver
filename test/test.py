@@ -11,30 +11,6 @@ from time import time
 
 # ---------- 3D problems -----
 
-def block(name,x,y,z):
-    """A block with variables name+#1...8 and dimensions x,y,z"""
-    problem = GeometricProblem(dimension=3)
-    problem.add_point(name+'#1', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#2', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#3', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#4', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#5', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#6', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#7', vector([0.0, 0.0, 0.0]))
-    problem.add_point(name+'#8', vector([0.0, 0.0, 0.0]))
-    conf = Configuration({
-        name+'#1':vector([-x/2, -y/2, -z/2]),
-        name+'#2':vector([-x/2, -y/2, +z/2]),
-        name+'#3':vector([-x/2, +y/2, -z/2]),
-        name+'#4':vector([-x/2, +y/2, +z/2]),
-        name+'#5':vector([+x/2, -y/2, -z/2]),
-        name+'#6':vector([+x/2, -y/2, +z/2]),
-        name+'#7':vector([+x/2, +y/2, -z/2]),
-        name+'#8':vector([+x/2, +y/2, +z/2])
-    })
-    problem.add_constraint(RigidConstraint(conf))
-    return problem
-
 def fix3_problem_3d():
     """A problem with a fix constraint"""
     problem = GeometricProblem(dimension=3)
@@ -909,16 +885,15 @@ def selection_test():
 
 def runtests():
     #diag_select("clsolver3D")
-    #test(double_banana_plus_one_problem())
-    #test(double_banana_problem())
     #test(double_tetrahedron_problem())
     #test(ada_tetrahedron_problem())
+    #test(double_banana_problem())
+    #test(double_banana_plus_one_problem())
     #test(random_triangular_problem_3D(10,10.0,0.0,0.5))
     #test(random_distance_problem_3D(10,1.0,0.0))
     #test(fix1_problem_3d())
     #test(fix2_problem_3d())
     #test(fix3_problem_3d())
-    #test(block("BB", 4.0,2.5,5.0))
     #diag_select("SelectionMethod.*")
     #test(selection_problem(),False)
     #selection_test()

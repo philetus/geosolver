@@ -59,14 +59,14 @@ class Configuration:
             newmap[v] = p
         return Configuration(newmap)
 
-    def add(self, c):
+    def add(self, other):
         """return a new configuration which is this configuration extended with all points in c not in this configuration"""
         newmap = {}
         for v in self.map:
             newmap[v] = self.map[v]
-        for v in c.map:
+        for v in other.map:
             if v not in newmap:
-                newmap[v] = c.map[v]
+                newmap[v] = other.map[v]
         return Configuration(newmap)
 
     def select(self, vars):
@@ -186,18 +186,18 @@ class Configuration:
            such that points in other are mapped onto points in self
         """
         shared = set(self.vars()).intersection(other.vars())
-        underconstrained = self.underconstrained or other.underconstrained
         if len(shared) == 0:
-            underconstrained = True
+            # detemine coordinate systems
             cs1 = make_hcs_3d(vector.vector([0.0,0.0,0.0]),
                               vector.vector([0.0,1.0,0.0]),
                               vector.vector([0.0,0.0,1.0]))
             cs2 = make_hcs_3d(vector.vector([0.0,0.0,0.0]),
                               vector.vector([0.0,1.0,0.0]),
                               vector.vector([0.0,0.0,1.0]))
+            # detemine degeneracies in coordinate systems
+            num_degen = 1
         elif len(shared) == 1:
-            if len(self.vars()) > 1 and len(other.vars()) > 1:
-                underconstrained = True
+            # detemine coordinate systems
             v1 = list(shared)[0]
             p1s = self.map[v1]
             p1o = other.map[v1]
@@ -207,9 +207,10 @@ class Configuration:
             cs2 = make_hcs_3d(p1o,
                               p1o+vector.vector([1.0,0.0,0.0]),
                               p1o+vector.vector([0.0,1.0,0.0]))
+            # detemine degeneracies in coordinate systems
+            num_degen = 0
         elif len(shared) == 2:
-            if len(self.vars()) > 2 and len(other.vars()) > 2:
-                underconstrained = True
+            # detemine coordinate systems
             v1 = list(shared)[0]
             p1s = self.map[v1]
             p1o = other.map[v1]
@@ -218,35 +219,47 @@ class Configuration:
             p2o = other.map[v2]
             p3s = p1s + vector.cross(p2s-p1s, perp2D(p2s-p1s))
             p3o = p1o + vector.cross(p2o-p1o, perp2D(p2s-p1s))
-            if tol_eq(vector.norm(p2s-p1s),0.0):
-                underconstrained = True
             cs1 = make_hcs_3d(p1s, p2s, p3s)
             cs2 = make_hcs_3d(p1o, p2o, p3o)
+            # detemine degeneracies in coordinate systems
+            num_degen = 0
+            if tol_eq(vector.norm(p2s-p1s),0.0):
+                num_degen += 1
+            if tol_eq(vector.norm(p2o-p1o),0.0):
+                num_degen += 1
         else:   # len(shared) >= 3:
             v1 = list(shared)[0]
             v2 = list(shared)[1]
             v3 = list(shared)[2]
+            # determine coordinate system for shared points in config1
             p1s = self.map[v1]
             p2s = self.map[v2]
             p3s = self.map[v3]
             cs1 = make_hcs_3d(p1s, p2s, p3s)
-            if tol_eq(vector.norm(p2s-p1s),0.0):
-                underconstrained = True
-            if tol_eq(vector.norm(p3s-p1s),0.0):
-                underconstrained = True
-            if tol_eq(vector.norm(p3s-p2s),0.0):
-                underconstrained = True
+            # determine coordinate system for shared points in config2
             p1o = other.map[v1]
             p2o = other.map[v2]
             p3o = other.map[v3]
             cs2 = make_hcs_3d(p1o, p2o, p3o)
+            # determine degeneracies in coordinate systems
+            num_degen = 0
+            if tol_eq(vector.norm(p2s-p1s),0.0):
+                num_degen += 1
+            if tol_eq(vector.norm(p3s-p1s),0.0):
+                num_degen += 1
+            if tol_eq(vector.norm(p3s-p2s),0.0):
+                num_degen += 1
             if tol_eq(vector.norm(p2o-p1o),0.0):
-                underconstrained = True
+                num_degen += 1
             if tol_eq(vector.norm(p3o-p1o),0.0):
-                underconstrained = True
+                num_degen += 1
             if tol_eq(vector.norm(p3o-p2o),0.0):
-                underconstrained = True
-        # in any case:
+                num_degen += 1
+        # determine underconstrainedness
+        underconstrained = self.underconstrained or other.underconstrained
+        if num_degen > 0 and len(self.vars()) > len(shared) and len(other.vars()) > len(shared):
+            underconstrained = True
+        # determine transform
         t = cs_transform_matrix(cs2, cs1)
         t.underconstrained = underconstrained
         return t
