@@ -7,6 +7,8 @@ from intersections import *
 from configuration import Configuration
 from cluster import *
 from map import Map
+import incremental
+
 
 class ClusterSolver3D(ClusterSolver):
     """A generic 3D geometric constraint solver. See ClusterSolver for details."""  
@@ -223,6 +225,14 @@ class MergePR(ClusterMethod):
         self._outputs = [out]
         ClusterMethod.__init__(self)
 
+    def _incremental_matcher(solver):
+        toplevel = solver.top_level()
+        rigids = incremental.Filter(lambda c: isinstance(c, Rigid), toplevel)
+        points = incremental.Filter(lambda c: len(c.vars)==1, rigids)
+        connectedpairs = ConnectedPairs(solver, points, rigids)
+        matcher = incremental.Map(lambda (p,r): MergePR({"$p":p, "$r":r}), connectedpairs)
+        return matcher
+    incremental_matcher = staticmethod(_incremental_matcher)
 
     def _handcoded_match(problem, newcluster, connected):
         connected = set()
@@ -766,5 +776,81 @@ def solve_3p3d(v1,v2,v3,v4,p1,p2,p3,d14,d24,d34):
         solution = Configuration({v1:p1, v2:p2, v3:p3, v4:p4})
         solutions.append(solution)
     return solutions
+
+# --------- incremental sets ----------
+
+class Connected(incremental.IncrementalSet):
+    
+    def __init__(self, solver, incrset):
+        """Creates an incremental set of all pairs of connected clusters in incrset, according to solver"""
+        self._solver = solver
+        self._incrset = incrset
+        incremental.IncrementalSet.__init__(self, [incrset])
+        return 
+
+    def _receive_add(self,source, object):
+        connected = set()
+        for var in object.vars:
+            dependend = self._solver.find_dependend(var)
+            dependend = filter(lambda x: x in self._incrset, dependend)
+            connected.update(dependend)
+        connected.remove(object)
+        for object2 in connected:
+            self._add(frozenset((object, object2)))
+
+    def _receive_remove(self,source, object):
+        for frozen in list(self):
+            if object in frozen:
+                self._remove(frozen)
+
+    def __eq__(self, other):
+        if isinstance(other, Connected):
+            return self._solver == other._solver and self._incrset == other._incrset
+        else:
+            return False
+
+    def __hash__(self):
+        return hash((self._solver, self._incrset))
+
+class ConnectedPairs(incremental.IncrementalSet):
+    
+    def __init__(self, solver, incrset1, incrset2):
+        """Creates an incremental set of all pairs (c1, c2) from incrset1 and incrset2 respectively, that are connected according to solver"""
+        self._solver = solver
+        self._incrset1 = incrset1
+        self._incrset2 = incrset2
+        incremental.IncrementalSet.__init__(self, [incrset1, incrset2])
+        return 
+
+    def _receive_add(self,source, object):
+        connected = set()
+        for var in object.vars:
+            dependend = self._solver.find_dependend(var)
+            if source == self._incrset1:
+                dependend = filter(lambda x: x in self._incrset2, dependend)
+            elif source == self._incrset2:
+                dependend = filter(lambda x: x in self._incrset1, dependend)
+            connected.update(dependend)
+        if object in connected:
+            connected.remove(object)
+        for object2 in connected:
+            if source == self._incrset1:
+                self._add((object, object2))
+            elif source == self._incrset2:
+                self._add((object2, object))
+
+    def _receive_remove(self,source, object):
+        for (c1,c2) in list(self):
+            if c1==object or c2==object:
+                self._remove((c1,c2))
+
+    def __eq__(self, other):
+        if isinstance(other, ConnectedPairs):
+            return self._solver == other._solver and self._incrset1 == other._incrset1 and self._incrset2 == other._incrset2
+        else:
+            return False
+
+    def __hash__(self):
+        return hash((self._solver, self._incrset1, self._incrset2))
 
 

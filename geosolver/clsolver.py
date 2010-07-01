@@ -2,11 +2,6 @@
 
 This module provides basic functionality for 
 ClusterSolver2D and ClusterSolver3D.
-
-The solver finds a generic solution
-for problems formulated by Clusters. The generic solution 
-is a directed acyclic graph of Clusters and Methods. Particilar problems
-and solutions are represented by a Configuration for each cluster.
 """
 
 from graph import Graph
@@ -18,213 +13,7 @@ from cluster import *
 from configuration import Configuration
 from gmatch import gmatch
 from method import OrMethod
-
-
-#  -----------------------------------------------------------
-#  ----------Method classes used by ClusterSolver -------------
-#  -----------------------------------------------------------
-
-class ClusterMethod(MultiMethod):
-    """A method that determines a single output cluster from a set of input clusters.
-       
-       Subclasses should provide a static class variable 'patterngraph', which is a graph, 
-       describing the pattern that is matched by the solver and used to instantiate the Method.
-       (see function pattern2graph)
-
-       Alternatively, subclasses may implement the static class method 'handcoded_match', which should
-       return a list of matches (given a new cluster and all connected clusters).   
-
-       Subclasses should implement function _multi_execute such that the output cluster satisfies all 
-       the constraints in the input clusters. 
-
-       instance vars:
-        overconstrained - True iff the merge locally overconstrained
-        consistent - True iff the merge is generically consistent
-        (these variables are automatically set by the solver for debugging purposes )
-    """
-
-    def __init__(self):
-        self.overconstrained = None
-        self.consistent = None
-        MultiMethod.__init__(self)
-
-    def prototype_constraints(self):
-        """Return a list of SelectionConstraint"""
-        return []
-
-    def status_str(self):
-        s = ""
-        if self.consistent == True:
-            s += "consistent "
-        elif self.consistent == False:
-            s += "inconsistent "
-        if self.overconstrained == True:
-            s += "overconstrained"
-        elif self.overconstrained == False:
-            s += "well-constrained"
-        return s
-
-    def input_clusters(self):
-        return filter(lambda var: isinstance(var, Cluster), self.inputs())
-
-class PrototypeMethod(MultiMethod):
-    """A PrototypeMethod selects those solutions of a cluster for which
-       the protoype and the solution satisfy the same constraints.
-    """
-
-    def __init__(self, incluster, selclusters, outcluster, constraints, enabled):
-        self._inputs = [incluster]+selclusters+[enabled]
-        self._outputs = [outcluster]
-        self._constraints = constraints
-        MultiMethod.__init__(self)
-
-    def multi_execute(self, inmap):
-        diag_print("PrototypeMethod.multi_execute called","clmethods")
-        incluster = self._inputs[0] 
-        selclusters = []
-        for i in range(1,len(self._inputs)-1):
-            selclusters.append(self._inputs[i])
-        enabledvar = self._inputs[-1]
-        diag_print("input cluster"+str(incluster), "PrototypeMethod.multi_execute")
-        diag_print("selection clusters"+str(selclusters), "PrototypeMethod.multi_execute")
-        diag_print("enabledvar"+str(enabledvar), "PrototypeMethod.multi_execute")
-        # get confs/values
-        enabledval = inmap[enabledvar] 
-        inconf = inmap[incluster]
-        selmap = {}
-        for cluster in selclusters:
-            conf = inmap[cluster]
-            assert len(conf.vars()) == 1
-            var = conf.vars()[0]
-            selmap[var] = conf.map[var]
-        if len(selmap) == 0:
-            selconf = {}
-        else:
-            selconf = Configuration(selmap)
-        diag_print("input configuration = "+str(inconf), "PrototypeMethod.multi_execute")
-        diag_print("selection configurations = "+str(selconf), "PrototypeMethod.multi_execute")
-        diag_print("enabled value = "+str(enabledval), "PrototypeMethod.multi_execute")
-        # do test
-        if enabledval == True:
-            sat = True
-            for con in self._constraints:
-                satcon = con.satisfied(inconf.map) == con.satisfied(selconf.map)
-                diag_print("constraint = "+str(con), "PrototypeMethod.multi_execute")
-                diag_print("constraint satisfied? "+str(satcon), "PrototypeMethod.multi_execute")
-                sat = sat and satcon
-            diag_print("prototype satisfied? "+str(sat), "PrototypeMethod.multi_execute")
-            if sat:
-                return [inconf]
-            else:
-                return []
-        else:
-            return [inconf]    
-
-    def __str__(self):
-        return "PrototypeMethod#%d(%s->%s)"%(id(self),str(self._inputs[0]), str(self._outputs[0]))
-
-class SelectionMethod(MultiMethod):
-    """A SelectionMethod selects those solutions of a cluster for which
-       all selectionconstraints are satisfied.
-    """
-
-    def __init__(self, incluster, outcluster):
-        self._inputs = [incluster]
-        self._outputs = [outcluster]
-        self._constraints = []
-        MultiMethod.__init__(self)
-
-    def add_constraint(self, con):
-        self._constraints.append(con)
-
-    def rem_constraint(self, con):
-        self._constraints.remove(con)
-
-    def iter_constraints(self):
-        return iter(self._constraints)
-    
-    def multi_execute(self, inmap):
-        diag_print("SelectionMethod.multi_execute called","SelectionMethod.multi_execute")
-        incluster = self._inputs[0] 
-        inconf = inmap[incluster]
-        diag_print("input configuration = "+str(inconf), "SelectionMethod.multi_execute")
-        sat = True
-        for con in self._constraints:
-            diag_print("constraint = "+str(con), "SelectionMethod.multi_execute")
-            satcon = con.satisfied(inconf.map)
-            diag_print("satisfied = "+str(satcon), "SelectionMethod.multi_execute")
-            sat = sat and satcon
-        diag_print("all satisfied = "+str(sat), "SelectionMethod.multi_execute")
-        if sat:
-            return [inconf]
-        else:
-            return []
-
-      
-    def __str__(self):
-        return "SelectionMethod#%d(%s & %s ->%s)"%(id(self),str(self._inputs[0]), str(self._constraints), str(self._outputs[0]))
-
-# --------------------------------------
-# helper functions for pattern matching
-# --------------------------------------
-   
-def pattern2graph(pattern):
-    """Convert a pattern to a pattern graph, used before graph based matching.  
-       The pattern is a list of tuples (pattype, patname, patvars), where
-       pattype is one of "point", "distance", "rigid", "balloon" or "hedgehog"
-       patname is a string, which is the name of a variable which will be associated with a cluster
-       patvars is a list of strings, where each string is a variable to be associated with a point variable
-       If pattype is point or distance, then the length of the cluster is fixed to 1 or 2 points. 
-       Otherwise, clusters with any number of variables are matched. 
-       If pattype is hedgehog, then the first variable in patvars is the center variable. 
-    """
-    pgraph = Graph()
-    pgraph.add_vertex("point")
-    pgraph.add_vertex("distance")
-    pgraph.add_vertex("rigid")
-    pgraph.add_vertex("balloon")
-    pgraph.add_vertex("hedgehog")
-    for clpattern in pattern:
-        (pattype, patname, patvars) = clpattern
-        pgraph.add_edge(pattype, patname)
-        for var in patvars:
-            pgraph.add_edge(patname, var)
-        if pattype == "hedgehog":
-            pgraph.add_edge("cvar"+"#"+patname, patvars[0])
-            pgraph.add_edge(patname, "cvar"+"#"+patname)
-    #diag_print("pattern graph:"+str(pgraph),"match");
-    return pgraph
-
-def reference2graph(nlet):
-    """Convert a set of (supposedly connected) clusters to a reference graph, used before graph-based matching."""
-    rgraph = Graph()
-    rgraph.add_vertex("point")
-    rgraph.add_vertex("distance")
-    rgraph.add_vertex("rigid")
-    rgraph.add_vertex("balloon")
-    rgraph.add_vertex("hedgehog")
-    for cluster in nlet:
-        for var in cluster.vars:
-            rgraph.add_edge(cluster, var)
-        if isinstance(cluster, Rigid):
-            rgraph.add_edge("rigid", cluster)
-            if len(cluster.vars) == 1:
-                rgraph.add_edge("point", cluster)
-            elif len(cluster.vars) == 2:
-                rgraph.add_edge("distance", cluster)
-        if isinstance(cluster, Balloon):
-            rgraph.add_edge("balloon", cluster)
-        if isinstance(cluster, Hedgehog):
-            rgraph.add_edge("hedgehog", cluster)
-            rgraph.add_edge("cvar"+"#"+str(id(cluster)), cluster.cvar)
-            rgraph.add_edge(cluster, "cvar"+"#"+str(id(cluster)))
-    #diag_print("reference graph:"+str(rgraph),"match");
-    return rgraph
-
-def rootname(cluster):
-    """returns the name of the root variable associated with the name of a cluster variable"""
-    return "root#"+str(id(cluster))
-
+from incremental import MutableSet,Union
 
 # --------------------------------------------------
 # ---------- ClusterSolver main class --------------
@@ -254,13 +43,14 @@ class ClusterSolver(Notifier):
         # init superclasses
         Notifier.__init__(self)
         # store arguments
-        self.methodclasses = methodclasses
-        self.pattern_methods = filter(lambda m: hasattr(m,"patterngraph"),self.methodclasses)
-        self.handcoded_methods = filter(lambda m: hasattr(m,"handcoded_match"),self.methodclasses)
+        self._methodclasses = methodclasses
+        self._pattern_methods = filter(lambda m: hasattr(m,"patterngraph"),self._methodclasses)
+        self._handcoded_methods = filter(lambda m: hasattr(m,"handcoded_match"),self._methodclasses)
+        self._incremental_methods = filter(lambda m: hasattr(m,"incremental_matcher"),self._methodclasses)
         # init instance vars
         self._graph = Graph()
         #self._graph.add_vertex("_root")
-        self._graph.add_vertex("_toplevel")
+        # self._graph.add_vertex("_toplevel")
         self._graph.add_vertex("_variables")
         self._graph.add_vertex("_clusters")
         self._new = []
@@ -273,6 +63,12 @@ class ClusterSolver(Notifier):
         self._selection_method = {} 
         # store root cluster (will be assigned when first cluster added)
         self._rootcluster = None
+        # an incrementally updated toplevel set
+        self._toplevel = MutableSet()
+        # incrementally updated set of applicable methods
+        self._incremental_matchers = map(lambda method: method.incremental_matcher(self), self._incremental_methods)
+        print "incremental matchers:",self._incremental_matchers
+        self._applicable_methods = Union(*self._incremental_matchers)
 
     # ------- methods for setting up constraint problems ------------
     
@@ -349,12 +145,14 @@ class ClusterSolver(Notifier):
         return self._graph.outgoing_vertices("_methods")
 
     def top_level(self):
-        """get top-level clusters"""
-        return self._graph.outgoing_vertices("_toplevel")
+        """return IncrementalSet of top-level clusters"""
+        return self._toplevel
+        # return self._graph.outgoing_vertices("_toplevel")
 
     def is_top_level(self, object):
         """Returns True iff given cluster is a top-level cluster""" 
-        return self._graph.has_edge("_toplevel",object)
+        #return self._graph.has_edge("_toplevel",object)
+        return object in self._toplevel
 
     def find_dependend(self, object):
         """Return a list of objects that depend on given object directly."""
@@ -395,14 +193,16 @@ class ClusterSolver(Notifier):
         l = self._graph.ingoing_vertices(needer)
         return filter(lambda x: self._graph.get(x,needer) == "needed_by", l)
    
-    def _add_top_level(self, object):
-        self._graph.add_edge("_toplevel",object)
-        self._new.append(object)
+    def _add_top_level(self, cluster):
+        # self._graph.add_edge("_toplevel",cluster)
+        self._new.append(cluster)
+        self._toplevel.add(cluster)
 
     def _rem_top_level(self, object):
-        self._graph.rem_edge("_toplevel",object)
+        # self._graph.rem_edge("_toplevel",object)
         if object in self._new:
             self._new.remove(object)
+        self._toplevel.remove(object)
 
     def _find_descendend(self,v):
         """find all descendend objects of v (i.e.. directly or indirectly dependend)"""
@@ -433,7 +233,7 @@ class ClusterSolver(Notifier):
         diag_print("_add_cluster "+str(newcluster),"clsolver")
         # check if not already exists
         if self._graph.has_vertex(newcluster): 
-            raise StandardError, "cluster %s already in clsolver"%(str(cluster))
+            raise StandardError, "cluster %s already in clsolver"%(str(newcluster))
         # update graph
         self._add_to_group("_clusters", newcluster)
         for var in newcluster.vars:
@@ -551,6 +351,14 @@ class ClusterSolver(Notifier):
     # --------------
  
     def _process_new(self):
+        # try incremental matchers
+        while len(self._applicable_methods) > 0: 
+            method = iter(self._applicable_methods).next()
+            print "applicable methods:", map(str, self._applicable_methods)
+            print "found applicable method:", method
+            self._add_method_complete(method)
+
+        # try old style matching
         while len(self._new) > 0:
             newobject = self._new.pop()
             diag_print("search from "+str(newobject), "clsolver")
@@ -573,7 +381,7 @@ class ClusterSolver(Notifier):
         diag_print("search: connected clusters="+str(connected),"clsolver3D")
         
         # first try handcoded matching
-        for methodclass in self.handcoded_methods:
+        for methodclass in self._handcoded_methods:
             diag_print("trying incremental matching for "+str(methodclass), "clsolver3D")
             matches = methodclass.handcoded_match(self, newcluster, connected)
             if self._try_matches(methodclass, matches):
@@ -590,7 +398,7 @@ class ClusterSolver(Notifier):
            and returns True iff successfull
         """
         refgraph = reference2graph(nlet)
-        for methodclass in self.pattern_methods:
+        for methodclass in self._pattern_methods:
             diag_print("trying generic pattern matching for "+str(methodclass), "clsolver3D")
             matches = gmatch(methodclass.patterngraph, refgraph)
             if self._try_matches(methodclass,matches):
@@ -726,6 +534,8 @@ class ClusterSolver(Notifier):
             # remove from _new list
             if item in self._new:
                 self._new.remove(item)
+            # remove from incremental top_level
+            self._toplevel.remove(item)
             # remove from methodgraph
             if isinstance(item, Method):
                 # note: method may have been removed because variable removed
@@ -745,8 +555,6 @@ class ClusterSolver(Notifier):
         for cluster in torestore:
             if self._graph.has_vertex(cluster): 
                 self._add_top_level(cluster)
-        # re-solve
-        self._process_new()
 
 
     ##def _contains_root(self, input_cluster):
@@ -910,4 +718,220 @@ class ClusterSolver(Notifier):
 
   
 # class ClusterSolver
+
+#  -----------------------------------------------------------
+#  ----------Method classes used by ClusterSolver -------------
+#  -----------------------------------------------------------
+
+class ClusterMethod(MultiMethod):
+    """A method that determines a single output cluster from a set of input clusters.
+       
+       Subclasses should provide a static class variable 'patterngraph', which is a graph, 
+       describing the pattern that is matched by the solver and used to instantiate the Method.
+       (see function pattern2graph)
+
+       Alternatively, subclasses may implement the static class method 'handcoded_match', which should
+       return a list of matches (given a new cluster and all connected clusters).   
+
+       Subclasses should implement function _multi_execute such that the output cluster satisfies all 
+       the constraints in the input clusters. 
+
+       instance vars:
+        overconstrained - True iff the merge locally overconstrained
+        consistent - True iff the merge is generically consistent
+        (these variables are automatically set by the solver for debugging purposes )
+    """
+
+    def __init__(self):
+        self.overconstrained = None
+        self.consistent = None
+        MultiMethod.__init__(self)
+
+    def prototype_constraints(self):
+        """Return a list of SelectionConstraint"""
+        return []
+
+    def status_str(self):
+        s = ""
+        if self.consistent == True:
+            s += "consistent "
+        elif self.consistent == False:
+            s += "inconsistent "
+        if self.overconstrained == True:
+            s += "overconstrained"
+        elif self.overconstrained == False:
+            s += "well-constrained"
+        return s
+
+    def input_clusters(self):
+        return filter(lambda var: isinstance(var, Cluster), self.inputs())
+
+    def __eq__(self, other):
+        if self.__class__ == other.__class__:
+            return self._inputs == other._inputs
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(tuple(self._inputs)+tuple([self.__class__]))
+
+
+class PrototypeMethod(MultiMethod):
+    """A PrototypeMethod selects those solutions of a cluster for which
+       the protoype and the solution satisfy the same constraints.
+    """
+
+    def __init__(self, incluster, selclusters, outcluster, constraints, enabled):
+        self._inputs = [incluster]+selclusters+[enabled]
+        self._outputs = [outcluster]
+        self._constraints = constraints
+        MultiMethod.__init__(self)
+
+    def multi_execute(self, inmap):
+        diag_print("PrototypeMethod.multi_execute called","clmethods")
+        incluster = self._inputs[0] 
+        selclusters = []
+        for i in range(1,len(self._inputs)-1):
+            selclusters.append(self._inputs[i])
+        enabledvar = self._inputs[-1]
+        diag_print("input cluster"+str(incluster), "PrototypeMethod.multi_execute")
+        diag_print("selection clusters"+str(selclusters), "PrototypeMethod.multi_execute")
+        diag_print("enabledvar"+str(enabledvar), "PrototypeMethod.multi_execute")
+        # get confs/values
+        enabledval = inmap[enabledvar] 
+        inconf = inmap[incluster]
+        selmap = {}
+        for cluster in selclusters:
+            conf = inmap[cluster]
+            assert len(conf.vars()) == 1
+            var = conf.vars()[0]
+            selmap[var] = conf.map[var]
+        if len(selmap) == 0:
+            selconf = {}
+        else:
+            selconf = Configuration(selmap)
+        diag_print("input configuration = "+str(inconf), "PrototypeMethod.multi_execute")
+        diag_print("selection configurations = "+str(selconf), "PrototypeMethod.multi_execute")
+        diag_print("enabled value = "+str(enabledval), "PrototypeMethod.multi_execute")
+        # do test
+        if enabledval == True:
+            sat = True
+            for con in self._constraints:
+                satcon = con.satisfied(inconf.map) == con.satisfied(selconf.map)
+                diag_print("constraint = "+str(con), "PrototypeMethod.multi_execute")
+                diag_print("constraint satisfied? "+str(satcon), "PrototypeMethod.multi_execute")
+                sat = sat and satcon
+            diag_print("prototype satisfied? "+str(sat), "PrototypeMethod.multi_execute")
+            if sat:
+                return [inconf]
+            else:
+                return []
+        else:
+            return [inconf]    
+
+    def __str__(self):
+        return "PrototypeMethod#%d(%s->%s)"%(id(self),str(self._inputs[0]), str(self._outputs[0]))
+
+class SelectionMethod(MultiMethod):
+    """A SelectionMethod selects those solutions of a cluster for which
+       all selectionconstraints are satisfied.
+    """
+
+    def __init__(self, incluster, outcluster):
+        self._inputs = [incluster]
+        self._outputs = [outcluster]
+        self._constraints = []
+        MultiMethod.__init__(self)
+
+    def add_constraint(self, con):
+        self._constraints.append(con)
+
+    def rem_constraint(self, con):
+        self._constraints.remove(con)
+
+    def iter_constraints(self):
+        return iter(self._constraints)
+    
+    def multi_execute(self, inmap):
+        diag_print("SelectionMethod.multi_execute called","SelectionMethod.multi_execute")
+        incluster = self._inputs[0] 
+        inconf = inmap[incluster]
+        diag_print("input configuration = "+str(inconf), "SelectionMethod.multi_execute")
+        sat = True
+        for con in self._constraints:
+            diag_print("constraint = "+str(con), "SelectionMethod.multi_execute")
+            satcon = con.satisfied(inconf.map)
+            diag_print("satisfied = "+str(satcon), "SelectionMethod.multi_execute")
+            sat = sat and satcon
+        diag_print("all satisfied = "+str(sat), "SelectionMethod.multi_execute")
+        if sat:
+            return [inconf]
+        else:
+            return []
+
+      
+    def __str__(self):
+        return "SelectionMethod#%d(%s & %s ->%s)"%(id(self),str(self._inputs[0]), str(self._constraints), str(self._outputs[0]))
+
+# --------------------------------------
+# helper functions for pattern matching
+# --------------------------------------
+   
+def pattern2graph(pattern):
+    """Convert a pattern to a pattern graph, used before graph based matching.  
+       The pattern is a list of tuples (pattype, patname, patvars), where
+       pattype is one of "point", "distance", "rigid", "balloon" or "hedgehog"
+       patname is a string, which is the name of a variable which will be associated with a cluster
+       patvars is a list of strings, where each string is a variable to be associated with a point variable
+       If pattype is point or distance, then the length of the cluster is fixed to 1 or 2 points. 
+       Otherwise, clusters with any number of variables are matched. 
+       If pattype is hedgehog, then the first variable in patvars is the center variable. 
+    """
+    pgraph = Graph()
+    pgraph.add_vertex("point")
+    pgraph.add_vertex("distance")
+    pgraph.add_vertex("rigid")
+    pgraph.add_vertex("balloon")
+    pgraph.add_vertex("hedgehog")
+    for clpattern in pattern:
+        (pattype, patname, patvars) = clpattern
+        pgraph.add_edge(pattype, patname)
+        for var in patvars:
+            pgraph.add_edge(patname, var)
+        if pattype == "hedgehog":
+            pgraph.add_edge("cvar"+"#"+patname, patvars[0])
+            pgraph.add_edge(patname, "cvar"+"#"+patname)
+    #diag_print("pattern graph:"+str(pgraph),"match");
+    return pgraph
+
+def reference2graph(nlet):
+    """Convert a set of (supposedly connected) clusters to a reference graph, used before graph-based matching."""
+    rgraph = Graph()
+    rgraph.add_vertex("point")
+    rgraph.add_vertex("distance")
+    rgraph.add_vertex("rigid")
+    rgraph.add_vertex("balloon")
+    rgraph.add_vertex("hedgehog")
+    for cluster in nlet:
+        for var in cluster.vars:
+            rgraph.add_edge(cluster, var)
+        if isinstance(cluster, Rigid):
+            rgraph.add_edge("rigid", cluster)
+            if len(cluster.vars) == 1:
+                rgraph.add_edge("point", cluster)
+            elif len(cluster.vars) == 2:
+                rgraph.add_edge("distance", cluster)
+        if isinstance(cluster, Balloon):
+            rgraph.add_edge("balloon", cluster)
+        if isinstance(cluster, Hedgehog):
+            rgraph.add_edge("hedgehog", cluster)
+            rgraph.add_edge("cvar"+"#"+str(id(cluster)), cluster.cvar)
+            rgraph.add_edge(cluster, "cvar"+"#"+str(id(cluster)))
+    #diag_print("reference graph:"+str(rgraph),"match");
+    return rgraph
+
+def rootname(cluster):
+    """returns the name of the root variable associated with the name of a cluster variable"""
+    return "root#"+str(id(cluster))
+
 

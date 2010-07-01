@@ -720,7 +720,7 @@ def test(problem, use_prototype=True):
     solver = GeometricSolver(problem, use_prototype)
     print "drplan:"
     print solver.dr
-    print "top-level rigids:",solver.dr.top_level()
+    print "top-level rigids:",list(solver.dr.top_level())
     result = solver.get_result()
     print "result:"
     print result
@@ -885,7 +885,7 @@ def selection_test():
 
 def runtests():
     #diag_select("clsolver3D")
-    #test(double_tetrahedron_problem())
+    test(double_tetrahedron_problem())
     #test(ada_tetrahedron_problem())
     #test(double_banana_problem())
     #test(double_banana_plus_one_problem())
@@ -897,7 +897,7 @@ def runtests():
     #diag_select("SelectionMethod.*")
     #test(selection_problem(),False)
     #selection_test()
-    test(overconstrained_tetra())
+    #test(overconstrained_tetra())
 
 
 if __name__ == "__main__": runtests()
