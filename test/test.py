@@ -374,6 +374,43 @@ def double_triangle():
     problem.add_constraint(DistanceConstraint('v3', 'v4', 10.0))
     return problem
 
+def triple_double_triangle():
+    problem = GeometricProblem(dimension=2)
+    problem.add_point('QX', vector([0.0, 0.0]))
+    problem.add_point('QA2', vector([1.0, 0.0]))
+    problem.add_point('QA3', vector([0.0, 1.0]))
+    problem.add_point('QY', vector([1.0, 1.0]))
+    problem.add_constraint(DistanceConstraint('QX', 'QA2', 10.0))
+    problem.add_constraint(DistanceConstraint('QX', 'QA3', 10.0))
+    problem.add_constraint(DistanceConstraint('QA2', 'QA3', 10.0))
+    problem.add_constraint(DistanceConstraint('QA2', 'QY', 10.0))
+    problem.add_constraint(DistanceConstraint('QA3', 'QY', 10.0))
+    
+    #problem.add_point('QX', vector([0.0, 0.0]))
+    problem.add_point('QB2', vector([1.0, 0.0]))
+    problem.add_point('QZ', vector([0.0, 1.0]))
+    problem.add_point('QB4', vector([1.0, 1.0]))
+    problem.add_constraint(DistanceConstraint('QX', 'QB2', 10.0))
+    problem.add_constraint(DistanceConstraint('QX', 'QZ', 10.0))
+    problem.add_constraint(DistanceConstraint('QB2', 'QZ', 10.0))
+    problem.add_constraint(DistanceConstraint('QB2', 'QB4', 10.0))
+    problem.add_constraint(DistanceConstraint('QZ', 'QB4', 10.0))
+    
+    #problem.add_point('QY', vector([0.0, 0.0]))
+    problem.add_point('QC2', vector([1.0, 0.0]))
+    #problem.add_point('QZ', vector([0.0, 1.0]))
+    problem.add_point('QC4', vector([1.0, 1.0]))
+    problem.add_constraint(DistanceConstraint('QY', 'QC2', 10.0))
+    problem.add_constraint(DistanceConstraint('QY', 'QZ', 10.0))
+    problem.add_constraint(DistanceConstraint('QC2', 'QZ', 10.0))
+    problem.add_constraint(DistanceConstraint('QC2', 'QC4', 10.0))
+    problem.add_constraint(DistanceConstraint('QZ', 'QC4', 10.0))
+    
+    return problem
+
+
+
+
 def hog1():
     # double triangle with inter-angle (needs angle propagation)
     problem = GeometricProblem(dimension=2)
@@ -717,7 +754,9 @@ def test(problem, use_prototype=True):
     print "problem:"
     print problem
     print "use_prototype=",use_prototype
+    print "Solving..."
     solver = GeometricSolver(problem, use_prototype)
+    print "...done"
     print "drplan:"
     print solver.dr
     print "top-level rigids:",list(solver.dr.top_level())
@@ -883,8 +922,8 @@ def selection_test():
     print len(solver.get_solutions()), "solutions"
 
 
-def runtests():
-    #diag_select("clsolver3D")
+def test3d():
+    #diag_select("clsolver")
     test(double_tetrahedron_problem())
     #test(ada_tetrahedron_problem())
     #test(double_banana_problem())
@@ -899,5 +938,9 @@ def runtests():
     #selection_test()
     #test(overconstrained_tetra())
 
+def test2d():
+    #test(ddd_problem())
+    #test(double_triangle())
+    test(triple_double_triangle())
 
-if __name__ == "__main__": runtests()
+if __name__ == "__main__": test2d()

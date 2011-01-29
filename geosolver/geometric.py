@@ -5,6 +5,7 @@ import vector
 import math
 from clsolver import PrototypeMethod, SelectionMethod
 from clsolver3D import ClusterSolver3D 
+from clsolver2D import ClusterSolver2D 
 from cluster import *
 from configuration import Configuration 
 from diagnostic import diag_print

@@ -41,6 +41,9 @@ class IncrementalSet(notify.Notifier, notify.Listener):
             (self._ref, count) = self._all[self]
             count += 1
             self._all[self] = (self._ref, count)
+
+            self.listeners = self._ref().listeners
+            self.notifiers = self._ref().notifiers
         else:
             # set self._ref and update self._all
             self._ref = None
@@ -378,6 +381,32 @@ def combinations(listofiters):
                     z.add(tuple(frozenset([e]).union(y)))
         return z
 
+class Debugger(IncrementalSet):
+    """A set-like container that incrementally determines all combinations of its inputs (IncrementalSets)"""
+    def __init__(self, watch_iset):
+        self._watch = watch_iset
+        IncrementalSet.__init__(self, [self._watch])
+ 
+    def _receive_add(self, source, obj):
+        print "add", obj, "to", source         
+
+    def _receive_remove(self, source, obj):
+        print "remove", obj, "to", source         
+
+    def __eq__(self, other):
+        if isinstance(other, Debugger):
+            return self._watch == other.watch
+        else:
+            return False 
+
+    def __hash__(self):
+        return hash((self.__class__, self._watch))
+
+    def __repr__(self):
+        return "Debugger(%s)"%str(self._watch)
+
+
+
 
 def test1():
     s = MutableSet([5,-3])
@@ -433,6 +462,7 @@ def test3():
     print set(union)
     print set(intersection)
     print set(difference)
+
 
 if __name__ == '__main__': 
     test1()

@@ -67,7 +67,7 @@ class ClusterSolver(Notifier):
         self._toplevel = MutableSet()
         # incrementally updated set of applicable methods
         self._incremental_matchers = map(lambda method: method.incremental_matcher(self), self._incremental_methods)
-        print "incremental matchers:",self._incremental_matchers
+        #print "incremental matchers:",self._incremental_matchers
         self._applicable_methods = Union(*self._incremental_matchers)
 
     # ------- methods for setting up constraint problems ------------
@@ -347,26 +347,28 @@ class ClusterSolver(Notifier):
 
         
     # --------------
-    # search methods
+    # isearch methods
     # --------------
  
     def _process_new(self):
-        # try incremental matchers
-        while len(self._applicable_methods) > 0: 
-            method = iter(self._applicable_methods).next()
-            print "applicable methods:", map(str, self._applicable_methods)
-            print "found applicable method:", method
-            self._add_method_complete(method)
-
-        # try old style matching
-        while len(self._new) > 0:
-            newobject = self._new.pop()
-            diag_print("search from "+str(newobject), "clsolver")
-            succes = self._search(newobject)
-            if succes and self.is_top_level(newobject): 
-                # maybe more rules applicable.... push back on stack
-                self._new.append(newobject)
-        # while
+        # try incremental matchers and old style matching alternatingly
+        while len(self._applicable_methods) > 0 or len(self._new) > 0:
+            # check incremental matches
+            if len(self._applicable_methods) > 0:  
+                method = iter(self._applicable_methods).next()
+                #print "applicable methods:", map(str, self._applicable_methods)
+                print "incremental search found:", method
+                self._add_method_complete(method)
+            else:
+                newobject = self._new.pop()
+                diag_print("search from "+str(newobject), "clsolver")
+                succes = self._search(newobject)
+                if succes and self.is_top_level(newobject): 
+                    # maybe more rules applicable.... push back on stack
+                    self._new.append(newobject)
+                #endif
+            # endif
+        # endwhile
     #end def
     
     def _search(self, newcluster):
@@ -382,7 +384,7 @@ class ClusterSolver(Notifier):
         
         # first try handcoded matching
         for methodclass in self._handcoded_methods:
-            diag_print("trying incremental matching for "+str(methodclass), "clsolver3D")
+            diag_print("trying handcoded match for "+str(methodclass), "clsolver3D")
             matches = methodclass.handcoded_match(self, newcluster, connected)
             if self._try_matches(methodclass, matches):
                 return True
@@ -423,7 +425,7 @@ class ClusterSolver(Notifier):
         return False
 
     def _add_method_complete(self, merge):
-        # diag_print("add_method_complete "+str(merge), "clsolver")
+        diag_print("add_method_complete "+str(merge), "clsolver")
         # check that method has one output
         if len(merge.outputs()) != 1:
             raise StandardError, "merge number of outputs != 1"
@@ -488,7 +490,8 @@ class ClusterSolver(Notifier):
             # do not remove rigids from toplevel if method does not consider root
             if isinstance(cluster, Rigid):
                 if hasattr(merge,"noremove") and merge.noremove == True:
-                    continue
+                    diag_print("block top-level", "clsolver")
+                    break
             # remove input clusters when all its constraints are in output cluster 
             if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
                 diag_print("remove from top-level: "+str(cluster),"clsolver")

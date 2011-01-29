@@ -5,8 +5,8 @@
 #   This also implies that there is no order of notifications sent, and objects can only register as listener/notifier once!
 
 # Notes: 
-# - member variables "listeners" and "notifiers" are not hidden, but should never be modified independently, so be careful! 
-# - subclasses will need to override the receive_notify class.
+# - member variables "listeners" and "notifiers" are not hidden, but should never be modified directly, so be careful! 
+# - subclasses of Listener will want to override the receive_notify class.
 # - Notifier/Listener subclasses __init__ method  must call Notifier/Listener.__init__(self) 
 
 import weakref
@@ -19,20 +19,15 @@ class Notifier:
     """
 
     def __init__(self):
-        #self.listeners = []
         self.listeners = weakref.WeakKeyDictionary()
 
     def add_listener(self, listener):
         """add a listener to the list (and self to listers' list)"""
-        #self.listeners.add(listener)
-        #listener.notifiers.add(self)
         self.listeners[listener] = True
         listener.notifiers[self] = True
 
     def rem_listener(self, listener):
         """remove a listener from the list (and self from listers' list)"""
-        #self.listeners.remove(listener)
-        #listener.notifiers.remove(self)
         del self.listeners[listener] 
         del listener.notifiers[self] 
 
@@ -41,6 +36,16 @@ class Notifier:
         for dest in self.listeners:
             dest.receive_notify(self, message)
 
+    def __getstate__(self):
+        """when pickling... do not save self.listeners"""
+        dict = self.__dict__.copy()
+        del dict['listeners']
+        return dict
+
+    def __setstate__(self, dict):
+        """when unpickling... create new self.listeners"""
+        self.__dict__ = dict
+        self.listeners = weakref.WeakKeyDictionary()
 
 class Listener:
     """A listener is notified by one or more Notifiers.
@@ -50,26 +55,31 @@ class Listener:
     """
 
     def __init__(self):
-        # 20090521 - replaced list by weakKeyDict, do when listerner deleted, it is removed from list
-        #self.notifiers = []
         self.notifiers = weakref.WeakKeyDictionary();
 
     def add_notifier(self, notifier):
         """add a notifier to the list (and self to notifiers' list)"""
-        #self.notifiers.add(notifier)
-        #notifier.listeners.add(self)
         self.notifiers[notifier] = True
         notifier.listeners[self] = True
 
     def rem_notifier(self, notifier):
         """remove a notifier from the list (and self from notifiers' list)"""
-        #self.notifiers.remove(notifier)
-        #notifier.listeners.remove(self)
         del self.notifiers[notifier]
         del notifier.listeners[self]
 
     def receive_notify(self, source, message):
         """receive a message from a notifier. Implementing classes should override this."""
-        print self,"receive_notify",source,message
+        print "receive_notify", self, source,message
 
-       
+    def __getstate__(self):
+        """when pickling... do not save self.notifiers"""
+        dict = self.__dict__.copy()
+        del dict['notifiers']
+        return dict
+
+    def __setstate__(self, dict):
+        """when unpickling... create new self.notifiers"""
+        self.__dict__ = dict
+        self.notifiers = weakref.WeakKeyDictionary()
+
+

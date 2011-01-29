@@ -11,7 +11,7 @@ import incremental
 
 
 class ClusterSolver3D(ClusterSolver):
-    """A generic 3D geometric constraint solver. See ClusterSolver for details."""  
+    """A 3D geometric constraint solver. See ClusterSolver for details."""  
        # ------- PUBLIC METHODS --------
 
     def __init__(self):
@@ -227,44 +227,44 @@ class MergePR(ClusterMethod):
 
     def _incremental_matcher(solver):
         toplevel = solver.top_level()
-        rigids = incremental.Filter(lambda c: isinstance(c, Rigid), toplevel)
-        points = incremental.Filter(lambda c: len(c.vars)==1, rigids)
+        rigids = Rigids(solver)
+        points = Points(solver)
         connectedpairs = ConnectedPairs(solver, points, rigids)
         matcher = incremental.Map(lambda (p,r): MergePR({"$p":p, "$r":r}), connectedpairs)
         return matcher
     incremental_matcher = staticmethod(_incremental_matcher)
 
-    def _handcoded_match(problem, newcluster, connected):
-        connected = set()
-        for var in newcluster.vars:
-            dependend = problem.find_dependend(var)
-            dependend = filter(lambda x: problem.is_top_level(x), dependend)
-            connected.update(dependend)
-        matches = [];
-        if isinstance(newcluster, Rigid) and len(newcluster.vars)==1:
-            points = [newcluster]
-            distances = filter(lambda x: isinstance(x, Rigid) and len(x.vars)==2, connected)
-        elif isinstance(newcluster, Rigid) and len(newcluster.vars)==2:
-            distances = [newcluster]
-            points = filter(lambda x: isinstance(x, Rigid) and len(x.vars)==1, connected)
-        else:
-            return []
-        for p in points: 
-            for d in distances: 
-                m = Map({
-                    "$p": p, 
-                    "$r": d,
-                    "$a": list(p.vars)[0]
-                })
-                matches.append(m)
-        return matches;
-    handcoded_match = staticmethod(_handcoded_match)
+    #def _handcoded_match(problem, newcluster, connected):
+    #    connected = set()
+    #    for var in newcluster.vars:
+    #        dependend = problem.find_dependend(var)
+    #        dependend = filter(lambda x: problem.is_top_level(x), dependend)
+    #        connected.update(dependend)
+    #    matches = [];
+    #    if isinstance(newcluster, Rigid) and len(newcluster.vars)==1:
+    #        points = [newcluster]
+    #        distances = filter(lambda x: isinstance(x, Rigid) and len(x.vars)==2, connected)
+    #    elif isinstance(newcluster, Rigid) and len(newcluster.vars)==2:
+    #        distances = [newcluster]
+    #        points = filter(lambda x: isinstance(x, Rigid) and len(x.vars)==1, connected)
+    #    else:
+    #        return []
+    #    for p in points: 
+    #        for d in distances: 
+    #            m = Map({
+    #                "$p": p, 
+    #                "$r": d,
+    #                "$a": list(p.vars)[0]
+    #            })
+    #            matches.append(m)
+    #    return matches;
+    #handcoded_match = staticmethod(_handcoded_match)
 
-    def _pattern():
-        pattern = [["point","$p",["$a"]], ["rigid", "$r", ["$a"]]]
-        return pattern2graph(pattern)
-    pattern = staticmethod(_pattern)
-    patterngraph = _pattern()
+    #def _pattern():
+    #    pattern = [["point","$p",["$a"]], ["rigid", "$r", ["$a"]]]
+    #    return pattern2graph(pattern)
+    #pattern = staticmethod(_pattern)
+    #patterngraph = _pattern()
 
     def __str__(self):
         s =  "MergePR("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
@@ -303,11 +303,28 @@ class MergeDR(ClusterMethod):
         self._outputs = [out]
         ClusterMethod.__init__(self)
 
-    def _pattern():
-        pattern = [["distance","$d",["$a","$b"]], ["rigid", "$r",["$a", "$b"]]]
-        return pattern2graph(pattern)
-    pattern = staticmethod(_pattern)
-    patterngraph = _pattern()
+
+    def _incremental_matcher(solver):
+        toplevel = solver.top_level()
+        rigids = Rigids(solver)
+        distances = Distances(solver)
+        connectedpairs = ConnectedPairs(solver, distances, rigids)
+        twoconnectedpairs = incremental.Filter(lambda (d,r): len(d.vars.intersection(r.vars))==2, connectedpairs);
+        matcher = incremental.Map(lambda (d,r): MergeDR({"$d":d, "$r":r}), twoconnectedpairs)
+        #
+        #global debugger
+        #debugger = incremental.Debugger(connectedpairs)
+        #
+        return matcher
+    
+    incremental_matcher = staticmethod(_incremental_matcher)
+
+
+    #def _pattern():
+    #    pattern = [["distance","$d",["$a","$b"]], ["rigid", "$r",["$a", "$b"]]]
+    #    return pattern2graph(pattern)
+    #pattern = staticmethod(_pattern)
+    #patterngraph = _pattern()
 
     def __str__(self):
         s =  "MergeDR("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
@@ -788,19 +805,19 @@ class Connected(incremental.IncrementalSet):
         incremental.IncrementalSet.__init__(self, [incrset])
         return 
 
-    def _receive_add(self,source, object):
+    def _receive_add(self,source, obj):
         connected = set()
-        for var in object.vars:
+        for var in obj.vars:
             dependend = self._solver.find_dependend(var)
             dependend = filter(lambda x: x in self._incrset, dependend)
             connected.update(dependend)
-        connected.remove(object)
-        for object2 in connected:
-            self._add(frozenset((object, object2)))
+        connected.remove(obj)
+        for obj2 in connected:
+            self._add(frozenset((obj, obj2)))
 
-    def _receive_remove(self,source, object):
+    def _receive_remove(self,source, obj):
         for frozen in list(self):
-            if object in frozen:
+            if obj in frozen:
                 self._remove(frozen)
 
     def __eq__(self, other):
@@ -822,26 +839,26 @@ class ConnectedPairs(incremental.IncrementalSet):
         incremental.IncrementalSet.__init__(self, [incrset1, incrset2])
         return 
 
-    def _receive_add(self,source, object):
+    def _receive_add(self,source, obj):
         connected = set()
-        for var in object.vars:
+        for var in obj.vars:
             dependend = self._solver.find_dependend(var)
             if source == self._incrset1:
                 dependend = filter(lambda x: x in self._incrset2, dependend)
             elif source == self._incrset2:
                 dependend = filter(lambda x: x in self._incrset1, dependend)
             connected.update(dependend)
-        if object in connected:
-            connected.remove(object)
-        for object2 in connected:
+        if obj in connected:
+            connected.remove(obj)
+        for obj2 in connected:
             if source == self._incrset1:
-                self._add((object, object2))
+                self._add((obj, obj2))
             elif source == self._incrset2:
-                self._add((object2, object))
+                self._add((obj2, obj))
 
-    def _receive_remove(self,source, object):
+    def _receive_remove(self,source, obj):
         for (c1,c2) in list(self):
-            if c1==object or c2==object:
+            if c1==obj or c2==obj:
                 self._remove((c1,c2))
 
     def __eq__(self, other):
@@ -852,5 +869,65 @@ class ConnectedPairs(incremental.IncrementalSet):
 
     def __hash__(self):
         return hash((self._solver, self._incrset1, self._incrset2))
+
+
+class Rigids(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        incremental.Filter.__init__(self, lambda c: isinstance(c, Rigid), self._solver.top_level())
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Rigids("+repr(self._solver)+")"
+
+
+
+class Points(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        rigids = Rigids(solver)
+        incremental.Filter.__init__(self, lambda c: len(c.vars)==1, rigids)
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Points("+repr(self._solver)+")"
+
+class Distances(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        rigids = Rigids(solver)
+        incremental.Filter.__init__(self, lambda c: len(c.vars)==2, rigids)
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Distances("+repr(self._solver)+")"
+
 
 
