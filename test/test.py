@@ -225,6 +225,27 @@ def overconstrained_tetra():
     #problem.add_constraint(AngleConstraint('v1', 'v2', 'v3', math.pi/4))
     return problem
 
+def diamond_3d():
+    """creates a diamond shape with point 'v1'...'v4' in 3D with one solution"""
+    # Following should be well-constraint, gives underconstrained (need extra rule/pattern) 
+    L=10.0
+    problem = GeometricProblem(dimension=3)
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([-5.0, 5.0, 0.0]))
+    problem.add_point('v3', vector([5.0, 5.0, 0.0]))
+    problem.add_point('v4', vector([0.0, 10.0, 0.0]))
+    problem.add_constraint(DistanceConstraint('v1', 'v2', L))
+    problem.add_constraint(DistanceConstraint('v1', 'v3', L))
+    problem.add_constraint(DistanceConstraint('v2', 'v3', L))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', L))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', L))
+    # this bit of code constrains the points v1...v4 in a plane with point p above it
+    problem.add_point('p', vector([0.0, 0.0, 1.0]))
+    problem.add_constraint(DistanceConstraint('v1', 'p', 1.0))
+    problem.add_constraint(AngleConstraint('v2','v1','p', math.pi/2))
+    problem.add_constraint(AngleConstraint('v3','v1','p', math.pi/2))
+    problem.add_constraint(AngleConstraint('v4','v1','p', math.pi/2))
+
 # -------- 2D problems
 
 def ddd_problem():

@@ -2,23 +2,59 @@ TODO/WISH LIST
 --------------
 
 Code: Some bits of the code are ugly:
- 	- vector module, matpy module and Numpy package, all offer similar functionality. 
-	  Use only one, get rid of two. 
-	- more documentation!
+    - vector module, matpy module and Numpy package, all offer similar
+      functionality. Use only one, get rid of two. 
+    - more documentation!
 
-Speed: The solver is currently much too slow. The problem is the pattern matching algorithms that is used to find 
-combinations of clusters that can be rewritten/merged. Solutions:
-	- hand-coded matching algorithms per merge rule (labourous and error prone)
-	- incremental pattern matching system (work in progress)
-	- compliled implementation (Psycho/C++/Haskell/???)
+Speed: The solver is currently much too slow. The problem is the pattern
+   matching algorithms that is used to find combinations of clusters that 
+   can be rewritten/merged. Solutions:
+    - incremental pattern matching system (work in progress)
+    - compliled implementation (Psycho/C++/Haskell/???)
 
 Rules: More rewrite rules to increase the problem domain:
-	- larger subproblems (octahedron, variable radius spheres/cylinders)
-	- new clusters types (N degrees of freedom)
+    - larger subproblems (octahedron, variable radius spheres/cylinders)
+    - new clusters types (N degrees of freedom)
 
 Extentions:
-	- implement geometry: lines, planes, spheres, cylinders, tori (mappings to cluster)
-	- constraints on parameters (equality, algebraic constraints)
-	- different variable domains (integers, reals, n-dimensional points, surfaces, volumes, logic variables, lists)
+    - implement geometry: lines, planes, spheres, cylinders, tori (mappings to
+      cluster)
+    - constraints on parameters (equality, algebraic constraints)
+    - different variable domains (integers, reals, n-dimensional points,
+      surfaces, volumes, logic variables, lists)
+
+Easy of use:
+    - move use_prototype flag to GeometricProblem (instead of in
+      GeometricSolver)
+    - check dimension of prototype points when adding to problem
 
 
+BUGS:
+
+- following should be well-constraint, gives underconstrained (need extra rule/pattern) 
+def diamond_3d():
+    """creates a diamond shape with point 'v1'...'v4' in 3D with one solution"""
+    L=10.0
+    problem = GeometricProblem(dimension=3)
+    problem.add_point('v1', vector([0.0, 0.0, 0.0]))
+    problem.add_point('v2', vector([-5.0, 5.0, 0.0]))
+    problem.add_point('v3', vector([5.0, 5.0, 0.0]))
+    problem.add_point('v4', vector([0.0, 10.0, 0.0]))
+    problem.add_constraint(DistanceConstraint('v1', 'v2', L))
+    problem.add_constraint(DistanceConstraint('v1', 'v3', L))
+    problem.add_constraint(DistanceConstraint('v2', 'v3', L))
+    problem.add_constraint(DistanceConstraint('v2', 'v4', L))
+    problem.add_constraint(DistanceConstraint('v3', 'v4', L))
+    # this bit of code constrains the points v1...v4 in a plane with point p above v1 
+    problem.add_point('p', vector([0.0, 0.0, 1.0]))
+    problem.add_constraint(DistanceConstraint('v1', 'p', 1.0))
+    problem.add_constraint(AngleConstraint('v2','v1','p', math.pi/2))
+    problem.add_constraint(AngleConstraint('v3','v1','p', math.pi/2))
+    problem.add_constraint(AngleConstraint('v4','v1','p', math.pi/2))
+
+- when fixed (by swapping v1 and v3 in last bit of code)
+  sometimes raises: 
+       StandardError: more than one candidate prototype cluster for variable v2
+  or: 
+       FixConstraint(v2=[-5.0, 5.0, 0.0]) not satisfied
+       FixConstraint(v1=[0.0, 0.0, 0.0]) not satisfied

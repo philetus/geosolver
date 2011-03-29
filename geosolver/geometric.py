@@ -14,7 +14,9 @@ from notify import Notifier, Listener
 from tolerance import tol_eq
 from intersections import angle_3p, distance_2p
 from selconstr import SelectionConstraint
-from geosolver.intersections import is_left_handed, is_right_handed, transform_point, make_hcs_3d
+from geosolver.intersections import is_left_handed, is_right_handed
+from geosolver.intersections import is_clockwise, is_counterclockwise 
+from geosolver.intersections import transform_point, make_hcs_3d
 
 # ----------- GeometricProblem -------------
 
@@ -50,6 +52,7 @@ class GeometricProblem (Notifier, Listener):
     def add_point(self, variable,pos):
         """add a point variable with a prototype position"""
         position = vector.vector(pos)
+        assert len(position) == self.dimension
         if variable not in self.prototype:
             self.prototype[variable] = position
             self.cg.add_variable(variable)
@@ -881,19 +884,28 @@ class RigidConstraint(ParametricConstraint):
     def __str__(self):
         return "RigidConstraint("+str(self._variables)+")" 
 
+class ClockwiseConstraint (SelectionConstraint):
+    """A selection constraint for 3 points to have a clockwise orientation (not co-linear!)"""
+    def __init__(self, v1, v2, v3):
+        SelectionConstraint.__init__(self, is_clockwise, [v1,v2,v3])
+
+class CounterClockwiseConstraint (SelectionConstraint):
+    """A selection constraint for 3 points to have a counter-clockwise orientation (not co-linear!)"""
+    def __init__(self, v1, v2, v3):
+        SelectionConstraint.__init__(self, is_counterclockwise, [v1,v2,v3])
 
 class RightHandedConstraint (SelectionConstraint):
-    """A selection constraint for 4 points to have a right-handed orientation"""
+    """A selection constraint for 4 points to have a right-handed orientation (not co-planar!)"""
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, is_right_handed, [v1,v2,v3,v4])
 
 class LeftHandedConstraint (SelectionConstraint):
-    """A selection constraint for 4 points to have a left-handed orientation"""
+    """A selection constraint for 4 points to have a left-handed orientation (not co-planar!)"""
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, is_left_handed, [v1,v2,v3,v4])
 
 class NotRightHandedConstraint (SelectionConstraint):
-    """A selection constraint for 4 points to not have a rigth-handed orientation, i.e. left-handed or co-planar"""
+    """A selection constraint for 4 points to not have a right-handed orientation, i.e. left-handed or co-planar"""
     def __init__(self, v1, v2, v3, v4):
         SelectionConstraint.__init__(self, fnot(is_right_handed), [v1,v2,v3,v4])
 

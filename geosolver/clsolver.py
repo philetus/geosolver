@@ -280,8 +280,10 @@ class ClusterSolver(Notifier):
             clusters = self._graph.outgoing_vertices(var)
             clusters = filter(lambda c: isinstance(c, Rigid), clusters)
             clusters = filter(lambda c: len(c.vars) == 1, clusters)
-            if len(clusters) != 1:
-                raise StandardError, "no prototype cluster for variable "+str(v)
+            if len(clusters) < 1:
+                raise StandardError, "no prototype cluster for variable "+str(var)
+            elif len(clusters) > 1:
+                raise StandardError, "more than one candidate prototype cluster for variable "+str(var)
             selclusters.append(clusters[0])
         outcluster = incluster.copy()
         selector = PrototypeMethod(incluster, selclusters, outcluster, constraints, self._prototype_selection_var)
@@ -357,7 +359,7 @@ class ClusterSolver(Notifier):
             if len(self._applicable_methods) > 0:  
                 method = iter(self._applicable_methods).next()
                 #print "applicable methods:", map(str, self._applicable_methods)
-                print "incremental search found:", method
+                diag_print("incremental search found:"+str(method),"clsolver._process_new")
                 self._add_method_complete(method)
             else:
                 newobject = self._new.pop()

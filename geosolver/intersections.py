@@ -227,13 +227,19 @@ def distance_2p(p1, p2):
 
 def is_clockwise(p1,p2,p3):
     """ returns True iff triangle p1,p2,p3 is clockwise oriented"""
+    assert len(p1)==2
+    assert len(p1)==len(p2)
+    assert len(p2)==len(p3)   
     u = p2 - p1
-    v = p3 - p2;
+    v = p3 - p2
     perp_u = vector.vector([-u[1], u[0]])
     return tol_lt(vector.dot(perp_u,v),0)
 
 def is_counterclockwise(p1,p2,p3):
     """ returns True iff triangle p1,p2,p3 is counterclockwise oriented"""
+    assert len(p1)==2
+    assert len(p1)==len(p2)
+    assert len(p2)==len(p3)   
     u = p2 - p1
     v = p3 - p2;
     perp_u = vector.vector([-u[1], u[0]])
@@ -241,6 +247,10 @@ def is_counterclockwise(p1,p2,p3):
 
 def is_colinear(p1,p2,p3):
     """ returns True iff triangle p1,p2,p3 is colinear (neither clockwise of counterclockwise oriented)"""
+    assert len(p1)==2
+    assert len(p1)==len(p2)
+    assert len(p2)==len(p3)   
+ 
     u = p2 - p1
     v = p3 - p2;
     perp_u = vector.vector([-u[1], u[0]])
