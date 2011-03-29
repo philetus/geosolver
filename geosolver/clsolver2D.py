@@ -247,7 +247,8 @@ class Connected(incremental.IncrementalSet):
             dependend = self._solver.find_dependend(var)
             dependend = filter(lambda x: x in self._incrset, dependend)
             connected.update(dependend)
-        connected.remove(obj)
+        if obj in connected:
+            connected.remove(obj)
         for obj2 in connected:
             self._add(frozenset((obj, obj2)))
 
