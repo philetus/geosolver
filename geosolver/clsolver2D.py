@@ -16,7 +16,7 @@ class ClusterSolver2D(ClusterSolver):
 
     def __init__(self):
         """Instantiate a ClusterSolver2D"""
-        ClusterSolver.__init__(self, [MergePR, MergeRR, DeriveDDD])
+        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeRR, DeriveDDD, DeriveDAD])
         
 
 # ----------------------------------------------
@@ -46,7 +46,7 @@ class MergePR(ClusterMethod):
         toplevel = solver.top_level()
         rigids = Rigids(solver)
         points = Points(solver)
-        connectedpairs = ConnectedPairs(solver, points, rigids)
+        connectedpairs = ConnectedPairs2(solver, points, rigids)
         matcher = incremental.Map(lambda (p,r): MergePR({"$p":p, "$r":r}), connectedpairs)
         return matcher
     
@@ -97,7 +97,7 @@ class MergeRR(ClusterMethod):
     def _incremental_matcher(solver):
         toplevel = solver.top_level()
         rigids = Rigids(solver)
-        connectedpairs = Connected(solver, rigids)
+        connectedpairs = ConnectedPairs1(solver, rigids)
         twoconnectedpairs = incremental.Filter(lambda (r1,r2): len(r1.vars.intersection(r2.vars))==2, connectedpairs);
         matcher = incremental.Map(lambda (r1,r2): MergeRR({"$r1":r1, "$r2":r2}), twoconnectedpairs)
         return matcher
@@ -214,6 +214,109 @@ class DeriveDDD(ClusterMethod):
         return constraints
 
 
+class DeriveDAD(ClusterMethod):
+    """Represents a merging of two distances and an angle"""
+    def __init__(self, map):
+        # check inputs
+        self.d_ab = map["$d_ab"]
+        self.a_abc = map["$a_abc"]
+        self.d_bc = map["$d_bc"]
+        self.a = map["$a"]
+        self.b = map["$b"]
+        self.c = map["$c"]
+        # create output
+        out = Rigid([self.a,self.b,self.c])
+        # set method parameters
+        self._inputs = [self.d_ab, self.a_abc, self.d_bc]
+        self._outputs = [out]
+        ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
+
+    def _pattern():
+        pattern = [["rigid","$d_ab",["$a", "$b"]], 
+            ["hedgehog", "$a_abc",["$b", "$a", "$c"]], 
+            ["rigid", "$d_bc",["$b","$c"]]]
+        return pattern2graph(pattern)
+    pattern = staticmethod(_pattern)
+    patterngraph = _pattern()
+
+    def __str__(self):
+        s =  "DeriveDAD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def multi_execute(self, inmap):
+        diag_print("DeriveDAD.multi_execute called","clmethods")
+        c12 = inmap[self.d_ab]
+        c123 = inmap[self.a_abc]
+        c23 = inmap[self.d_bc]
+        v1 = self.a
+        v2 = self.b
+        v3 = self.c
+        d12 = distance_2p(c12.get(v1),c12.get(v2))
+        a123 = angle_3p(c123.get(v1),c123.get(v2),c123.get(v3))
+        d23 = distance_2p(c23.get(v2),c23.get(v3))
+        solutions = solve_dad(v1,v2,v3,d12,a123,d23)
+        return solutions
+
+class CheckAR(ClusterMethod):
+    """Represents the overconstrained merging a hedgehog and a rigid that completely overlaps it."""
+    def __init__(self, map):
+        # get input clusters
+        self.hog = map["$h"]
+        self.rigid = map["$r"]
+        self.sharedx = self.hog.xvars.intersection(self.rigid.vars)
+        # create ouptut cluster
+        outvars = set(self.rigid.vars)
+        self.out = Rigid(outvars)
+        # set method properties
+        self._inputs = [self.hog, self.rigid]
+        self._outputs = [self.out]
+        ClusterMethod.__init__(self)
+
+    def _handcoded_match(problem, newcluster, connected):
+        matches = [];
+        if isinstance(newcluster, Rigid) and len(newcluster.vars)>=3:
+            rigids = [newcluster]
+            hogs = filter(lambda hog: isinstance(hog, Hedgehog) and hog.vars.intersection(newcluster.vars) == hog.vars, connected)
+        elif isinstance(newcluster, Hedgehog):
+            hogs = [newcluster]
+            rigids = filter(lambda rigid: isinstance(rigid, Rigid) and newcluster.vars.intersection(rigid.vars) == newcluster.vars, connected)
+        else:
+            return []
+        for h in hogs: 
+            for r in rigids: 
+                m = Map({
+                    "$h": h, 
+                    "$r": r,
+                })
+                matches.append(m)
+        return matches;
+    handcoded_match = staticmethod(_handcoded_match)
+
+    def __str__(self):
+        s =  "CheckAR("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def multi_execute(self, inmap):
+        diag_print("CheckAR.multi_execute called","clmethods")
+        # get configurations
+        hog = inmap[self.hog]
+        rigid = inmap[self.rigid]
+        xvars = list(self.hog.xvars)
+        # test if all angles match
+        for i in range(len(self.sharedx)-1):
+            hangle = angle_3p(hog.get(xvars[i]), hog.get(self.hog.cvar), hog.get(xvars[i+1]))
+            rangle = angle_3p(rigid.get(xvars[i]), rigid.get(self.hog.cvar), rigid.get(xvars[i+1]))
+            # angle check failed, return no configuration
+            if not tol_eq(hangle,rangle):
+                return []
+        # all checks passed, return rigid configuration 
+        return [rigid]
+    
+
 # ---------------------------------------------------------
 # ------- functions to determine configurations  ----------
 # ---------------------------------------------------------
@@ -230,9 +333,29 @@ def solve_ddd(v1,v2,v3,d12,d23,d31):
     diag_print("solve_ddd solutions"+str(solutions),"clmethods")
     return solutions
 
-# --------- incremental sets ----------
+def solve_dad(v1,v2,v3,d12,a123,d23):
+    """returns a list of Configurations of v1,v2,v3 such that distance v1-v2=d12 etc.
+        v<x>: name of point variables
+        d<xy>: numeric distance values
+        a<xyz>: numeric angle in radians
+    """
+    diag_print("solve_dad: %s %s %s %f %f %f"%(v1,v2,v3,d12,a123,d23),"clmethods")
+    p2 = vector.vector([0.0, 0.0])
+    p1 = vector.vector([d12, 0.0])
+    p3s = [ vector.vector([d23*math.cos(a123), d23*math.sin(a123)]) ]
+    solutions = []
+    for p3 in p3s:
+        solution = Configuration({v1:p1, v2:p2, v3:p3})
+        solutions.append(solution)
+    return solutions
 
-class Connected(incremental.IncrementalSet):
+
+# -------------------------------------
+# --------- incremental sets ----------
+# -------------------------------------
+
+class ConnectedPairs1(incremental.IncrementalSet):
+    """Incremental set of all pairs of connected clusters in 1 incremental set"""
     
     def __init__(self, solver, incrset):
         """Creates an incremental set of all pairs of connected clusters in incrset, according to solver"""
@@ -258,7 +381,7 @@ class Connected(incremental.IncrementalSet):
                 self._remove(frozen)
 
     def __eq__(self, other):
-        if isinstance(other, Connected):
+        if isinstance(other, ConnectedPairs1):
             return self._solver == other._solver and self._incrset == other._incrset
         else:
             return False
@@ -266,8 +389,9 @@ class Connected(incremental.IncrementalSet):
     def __hash__(self):
         return hash((self._solver, self._incrset))
 
-class ConnectedPairs(incremental.IncrementalSet):
-    
+class ConnectedPairs2(incremental.IncrementalSet):
+    """Iincremental set of all pairs of connected clusters in 2 incremental sets."""
+ 
     def __init__(self, solver, incrset1, incrset2):
         """Creates an incremental set of all pairs (c1, c2) from incrset1 and incrset2 respectively, that are connected according to solver"""
         self._solver = solver
@@ -299,7 +423,7 @@ class ConnectedPairs(incremental.IncrementalSet):
                 self._remove((c1,c2))
 
     def __eq__(self, other):
-        if isinstance(other, ConnectedPairs):
+        if isinstance(other, ConnectedPairs2):
             return self._solver == other._solver and self._incrset1 == other._incrset1 and self._incrset2 == other._incrset2
         else:
             return False

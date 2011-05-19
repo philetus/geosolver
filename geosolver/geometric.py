@@ -894,6 +894,16 @@ class CounterClockwiseConstraint (SelectionConstraint):
     def __init__(self, v1, v2, v3):
         SelectionConstraint.__init__(self, is_counterclockwise, [v1,v2,v3])
 
+class NotClockwiseConstraint (SelectionConstraint):
+    """A selection constraint for 3 points to not have a clockwise orientation (i.e. counter-clockwise or co-linear!)"""
+    def __init__(self, v1, v2, v3):
+        SelectionConstraint.__init__(self, fnot(is_clockwise), [v1,v2,v3])
+
+class NotCounterClockwiseConstraint (SelectionConstraint):
+    """A selection constraint for 3 points to not have a counter-clockwise orientation (i.e. clockwise or co-linear!)"""
+    def __init__(self, v1, v2, v3):
+        SelectionConstraint.__init__(self, fnot(is_counterclockwise), [v1,v2,v3])
+
 class RightHandedConstraint (SelectionConstraint):
     """A selection constraint for 4 points to have a right-handed orientation (not co-planar!)"""
     def __init__(self, v1, v2, v3, v4):

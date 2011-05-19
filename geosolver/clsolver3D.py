@@ -283,8 +283,8 @@ class MergePR(ClusterMethod):
             res = conf1.merge(conf2)
         elif isroot2:
             res = conf2.merge(conf1)
-        else: # cheapest - just copy reference
-            res = conf2
+        else: # cheapest - merge single point with rigid
+            res = conf2.merge(conf1)
         return [res]
 
 class MergeDR(ClusterMethod):
@@ -343,8 +343,8 @@ class MergeDR(ClusterMethod):
             res = conf1.merge(conf2)
         elif isroot2:
             res = conf2.merge(conf1)
-        else: # cheapest - just copy reference
-            res = conf2
+        else: # cheapest - merge distance with rigid
+            res = conf2.merge(conf1)
         return [res]
    
 class MergeRR(ClusterMethod):

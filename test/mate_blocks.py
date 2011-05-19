@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-"""This module provides some tests for the GeoSolver. 
-The tests are also simple examples of how to use of the GeoSolver API"""
+"""This module provides an example of how to use GeoSolver to define 3D blocks 
+and how to mate them using the Mate constraint.""" 
 
 from geosolver.geometric import *
 from geosolver.vector import vector, norm 

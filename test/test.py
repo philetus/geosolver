@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """This module provides some tests for the GeoSolver. 
 The tests are also simple examples of how to use of the GeomSolver API"""
 
@@ -5,7 +6,6 @@ from geosolver.geometric import *
 from geosolver.vector import vector 
 from geosolver.randomproblem import *
 from geosolver.diagnostic import diag_select, diag_print
-from geosolver.selconstr import fnot
 import geosolver.tolerance as tolerance
 from time import time
 
@@ -65,7 +65,7 @@ def fix1_problem_3d():
 
     
 def double_banana_problem():
-    """The double tetrahedron problem"""
+    """The double banana problem"""
     problem = GeometricProblem(dimension=3)
     problem.add_point('v1', vector([0.0, 0.0, 0.0]))
     problem.add_point('v2', vector([1.0, 0.0, 0.0]))
@@ -154,7 +154,7 @@ def double_tetrahedron_problem():
 
 
 def dad_tetrahedron_problem():
-    """The double tetrahedron problem"""
+    """The double tetrahedron problem with an angle"""
     problem = GeometricProblem(dimension=3)
     problem.add_point('v1', vector([0.0, 0.0, 0.0]))
     problem.add_point('v2', vector([1.0, 0.0, 0.0]))
@@ -173,7 +173,7 @@ def dad_tetrahedron_problem():
     return problem
 
 def ada_tetrahedron_problem():
-    """The double tetrahedron problem"""
+    """The double tetrahedron problem with an angle"""
     problem = GeometricProblem(dimension=3)
     problem.add_point('v1', vector([0.0, 0.0, 0.0]))
     problem.add_point('v2', vector([1.0, 0.0, 0.0]))
@@ -245,6 +245,7 @@ def diamond_3d():
     problem.add_constraint(AngleConstraint('v2','v1','p', math.pi/2))
     problem.add_constraint(AngleConstraint('v3','v1','p', math.pi/2))
     problem.add_constraint(AngleConstraint('v4','v1','p', math.pi/2))
+    return problem
 
 # -------- 2D problems
 
@@ -945,23 +946,26 @@ def selection_test():
 
 def test3d():
     #diag_select("clsolver")
-    test(double_tetrahedron_problem())
+    #test(double_tetrahedron_problem())
     #test(ada_tetrahedron_problem())
     #test(double_banana_problem())
     #test(double_banana_plus_one_problem())
     #test(random_triangular_problem_3D(10,10.0,0.0,0.5))
     #test(random_distance_problem_3D(10,1.0,0.0))
     #test(fix1_problem_3d())
-    #test(fix2_problem_3d())
+    test(fix2_problem_3d())
     #test(fix3_problem_3d())
     #diag_select("SelectionMethod.*")
     #test(selection_problem(),False)
     #selection_test()
     #test(overconstrained_tetra())
+    #test(diamond_3d(),False)
 
 def test2d():
     #test(ddd_problem())
     #test(double_triangle())
-    test(triple_double_triangle())
+    #test(triple_double_triangle())
+    test(dad_problem())
 
-if __name__ == "__main__": test2d()
+if __name__ == "__main__": 
+    test2d()

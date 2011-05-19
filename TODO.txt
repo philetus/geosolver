@@ -13,6 +13,7 @@ Speed: The solver is currently much too slow. The problem is the pattern
     - compliled implementation (Psycho/C++/Haskell/???)
 
 Rules: More rewrite rules to increase the problem domain:
+    - need 3d rule: merge of 2 ridids with 2 shared points (hinge) + hog with angle not on hinge points  
     - larger subproblems (octahedron, variable radius spheres/cylinders)
     - new clusters types (N degrees of freedom)
 
