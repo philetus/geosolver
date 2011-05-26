@@ -171,7 +171,6 @@ class DeriveDDD(ClusterMethod):
     def _incremental_matcher(solver):
         triplets = Triplets(solver, Rigids(solver))
         matcher = incremental.Map(triplet2ddd, triplets)
-
         return matcher
     
     incremental_matcher = staticmethod(_incremental_matcher)
@@ -233,13 +232,50 @@ class DeriveDAD(ClusterMethod):
         # do not remove input clusters (because root not considered here)
         self.noremove = True
 
-    def _pattern():
-        pattern = [["rigid","$d_ab",["$a", "$b"]], 
-            ["hedgehog", "$a_abc",["$b", "$a", "$c"]], 
-            ["rigid", "$d_bc",["$b","$c"]]]
-        return pattern2graph(pattern)
-    pattern = staticmethod(_pattern)
-    patterngraph = _pattern()
+    #def _pattern():
+    #    pattern = [["rigid","$d_ab",["$a", "$b"]], 
+    #        ["hedgehog", "$a_abc",["$b", "$a", "$c"]], 
+    #        ["rigid", "$d_bc",["$b","$c"]]]
+    #    return pattern2graph(pattern)
+    #pattern = staticmethod(_pattern)
+    #patterngraph = _pattern()
+
+    def _incremental_matcher(solver):
+        
+        def isdad(triplet):
+            dad = triplet2dad(triplet)
+            return isinstance(DeriveDAD, dad)
+    
+        def triplet2dad(triplet):
+            print "triplet2dad: start"
+            hogs = filter(lambda c: isinstance(Hog, c), triplet)
+            rigids= filter(lambda c: isinstance(Rigid, c), triplet)
+            if not(len(hogs)==1 and len(rigids)==2): return None
+            hog = hogs[0]
+            r1 = rigids[0]
+            r2 = rigids[2]
+            b = hog.apex;
+            print "triplet2dad: b = ", b    
+            if not(b in r1.vars): return None
+            if not(b in r2.vars): return None
+            print "triplet2dad: b in rigids"
+            p1s = r1.vars.intersection(hog.vars) 
+            p2s = r2.vars.intersection(hog.vars)
+            if not(len(p1s) == 1): return None
+            if not(len(p2s) == 1): return None
+            a = p1s[0]
+            b = p1s[1]
+            print "triplet2dad: a =  ", a
+            print "triplet2dad: c =  ", c
+            return DeriveDAD( {"$d_ab":r1, "$a_abc":hog, "$d_bc":r2, "$a":a, "$b":b, "$c":c })
+        # end def
+        triplets = Triplets(solver, solver.top_level())
+        matchtriplets = incremental.Filter(lambda triplet: isdad(triplet), triplets)
+        matcher = incremental.Map(triplet2dad, matchtriplets)
+        return matcher
+    
+    incremental_matcher = staticmethod(_incremental_matcher)
+
 
     def __str__(self):
         s =  "DeriveDAD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
