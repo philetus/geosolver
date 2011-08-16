@@ -5,6 +5,7 @@
 Version = 'File MATFUNC.PY, Ver 183, Date 12-Dec-2002,14:33:42'
 # Modified by Rick van der Meiden 25-1-2007: included a makehash() and __hash__ in Table. 
 # Modified by Rick van der Meiden 20090311: added normSquared
+# Modified by Rick van der Meiden 20101102: added Vec2 and Vec3 constructor functions
 
 import operator, math, random
 NPRE, NPOST = 0, 0                    # Disables pre and post condition checks
@@ -259,6 +260,8 @@ class LowerTri(Triangular):
             x.append( (b[i] - x.dot(self[i][:i])) / self[i][i] )
         return x
 
+# ---------- class like constructor functions --------
+
 def Mat( elems ):
     'Factory function to create a new matrix.'
     m, n = len(elems), len(elems[0])
@@ -273,6 +276,13 @@ def Mat( elems ):
             return Square(elems)
     return LowerTri(elems)
 
+def Vec2( x, y ):
+    return Vec([x,y])
+
+def Vec3( x, y, z ):
+    return Vec([x,y,z])
+
+# -------------- computing functions -----------
 
 def funToVec( tgtfun, low=-1, high=1, steps=40, EqualSpacing=0 ):
     '''Compute x,y points from evaluating a target function over an interval (low to high)
@@ -298,6 +308,8 @@ def ratfit( (xvec, yvec), degree=2 ):
     'Solves design matrix for approximating rational polynomial coefficients (a*x**2 + b*x + c)/(d*x**2 + e*x + 1)'
     return Mat([[x**n for n in range(degree,-1,-1)]+[-y*x**n for n in range(degree,0,-1)] for x,y in zip(xvec,yvec)]).solve(Vec(yvec))
 
+# ----------- matrix generators -------------
+
 def genmat(m, n, func):
     if not n: n=m
     return Mat([ [func(i,j) for i in range(n)] for j in range(m) ])
@@ -308,7 +320,7 @@ def zeroes(m=1, n=None):
 
 def eye(m=1, n=None):
     'Identity matrix with side length m-by-m or m-by-n'
-    return genmat(m,n, lambda i,j: float(i==j))
+    return genmat(m,n, lambda i,j: i==j)
 
 def hilb(m=1, n=None):
     'Hilbert matrix with side length m-by-m or m-by-n.  Elem[i][j]=1/(i+j+1)'
@@ -317,6 +329,8 @@ def hilb(m=1, n=None):
 def rand(m=1, n=None):
     'Random matrix with side length m-by-m or m-by-n'
     return genmat(m,n, lambda i,j: random.random())
+
+# ------------ unit test ----------
 
 if __name__ == '__main__':
     import cmath

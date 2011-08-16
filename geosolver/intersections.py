@@ -1,5 +1,6 @@
 import vector
 import math
+import random
 from matfunc import Mat,Vec,eye
 from tolerance import *
 from diagnostic import *
@@ -14,6 +15,14 @@ def sign(x):
         return -1.0
     else:
         return 0.0
+
+def sign2(x):
+    """Returns 1 if x>0, else -1 (even if x=0)"""
+    if tol_gt(x,0.0):
+        return 1.0
+    else:
+        return -1.0
+
 
 # -------- 3D intersections ---------------
 
@@ -118,15 +127,14 @@ def cl_int(p1,r,p2,v):
     E = r*r*d2 - D*D
     if tol_gt(d2, 0) and tol_gt(E, 0):
         sE = math.sqrt(E) 
-        x1 = p1[0] + (D * v[1] + sign(v[1])*v[0]*sE) / d2
-        x2 = p1[0] + (D * v[1] - sign(v[1])*v[0]*sE) / d2
+        x1 = p1[0] + (D * v[1] + sign2(v[1])*v[0]*sE) / d2
+        x2 = p1[0] + (D * v[1] - sign2(v[1])*v[0]*sE) / d2
         y1 = p1[1] + (-D * v[0] + abs(v[1])*sE) / d2
         y2 = p1[1] + (-D * v[0] - abs(v[1])*sE) / d2
         return [vector.vector([x1,y1]), vector.vector([x2,y2])]
     elif tol_eq(E, 0):
         x1 = p1[0] + D * v[1] / d2
         y1 = p1[1] + -D * v[0] / d2
-        # return [vector.vector([x1,y1]), vector.vector([x1,y1])]
         return [vector.vector([x1,y1])]
     else:
         return []
@@ -608,8 +616,118 @@ def test_sss_int():
         # print sat
     return sat
 
-def test1():
-    #diag_select(".*")
+def test_cc_int():
+    """Generates two random circles, computes the intersection,
+       and verifies that the number of intersections and the 
+       positions of the intersections are correct. 
+       Returns True or False"""
+    # gen two random circles p1,r2 and p2, r2
+    p1 = vector.randvec(2, 0.0, 10.0,1.0)
+    r1 = random.uniform(0, 10.0)
+    p2 = vector.randvec(2, 0.0, 10.0,1.0)
+    r2 = random.uniform(0, 10.0)
+    # 33% change that r2=abs(r1-|p1-p2|)
+    if random.random() < 0.33:
+        r2 = abs(r1-vector.norm(p1-p2))
+    # do interesection 
+    diag_print("problem:"+str(p1)+","+str(r1)+","+str(p2)+","+str(r2),"test_cc_int")
+    sols = cc_int(p1, r1, p2, r2)
+    diag_print("solutions:"+str(map(str, sols)),"test_cc_int")
+    # test number of intersections
+    if len(sols) == 0:
+        if not tol_gt(vector.norm(p2-p1),r1 + r2) and not tol_lt(vector.norm(p2-p1),abs(r1 - r2)) and not tol_eq(vector.norm(p1-p2),0):
+            diag_print("number of solutions 0 is wrong","test_cc_int")
+            return False
+    elif len(sols) == 1: 
+        if not tol_eq(vector.norm(p2-p1),r1 + r2) and not tol_eq(vector.norm(p2-p1),abs(r1-r2)):
+            diag_print("number of solutions 1 is wrong","test_cc_int")
+            return False
+    elif len(sols) == 2:
+        if not tol_lt(vector.norm(p2-p1),r1 + r2) and not tol_gt(vector.norm(p2-p1),abs(r1 - r2)):
+            diag_prin("number of solutions 2 is wrong")
+            return False
+    else:
+        diag_print("number of solutions > 2 is wrong","test_cc_int")
+        return False
+
+    # test intersection coords
+    for p3 in sols:
+        if not tol_eq(vector.norm(p3-p1), r1):
+            diag_print("solution not on circle 1","test_cc_int")
+            return False
+        if not tol_eq(vector.norm(p3-p2), r2):
+            diag_print("solution not on circle 2","test_cc_int")
+            return False
+
+    diag_print("OK","test_cc_int")
+    return True
+
+def test_cl_int():
+    """Generates random circle and line, computes the intersection,
+       and verifies that the number of intersections and the 
+       positions of the intersections are correct. 
+       Returns True or False"""
+    # 3 random points
+    p1 = vector.randvec(2, 0.0, 10.0,1.0)
+    p2 = vector.randvec(2, 0.0, 10.0,1.0)
+    p3 = vector.randvec(2, 0.0, 10.0,1.0)
+    # prevent div by zero / no line direction
+    if tol_eq(vector.norm(p1-p2),0):
+        p2 = p1 + p3 * 0.1
+    # line (o,v): origin p1, direction p1-p2
+    o = p1
+    v = (p2 - p1) / vector.norm(p2 - p1)
+    # cirlce (c, r): centered in p3, radius p3-p2 + rx
+    c = p3
+    r0 = vector.norm(p3-p2)
+    # cases rx = 0, rx > 0, rx < 0
+    case = random.choice([1,2,3])
+    if case==1:
+        r = r0      #should have one intersection (unles r0 = 0)
+    elif case==2:
+        r = random.random() * r0   # should have no ints (unless r0=0)
+    elif case==3:
+        r = r0 + random.random() * r0 # should have 2 ints (unless r0=0) 
+    # do interesection 
+    diag_print("problem:"+str(c)+","+str(r)+","+str(o)+","+str(v),"test_cl_int")
+    sols = cl_int(c,r,o,v)
+    diag_print("solutions:"+str(map(str, sols)),"test_cl_int")
+    # distance from point on line closest to circle center
+    l = vector.dot(c-o, v) / vector.norm(v)
+    p = o + v * l / vector.norm(v)  
+    d = vector.norm(p-c)
+    diag_print("distance center to line="+str(d),"test_cl_int")
+    # test number of intersections 
+    if len(sols) == 0:
+        if not tol_gt(d, r):
+            diag_print("wrong number of solutions: 0", "test_cl_int")
+            return False
+    elif len(sols) == 1:
+        if not tol_eq(d, r):
+            diag_print("wrong number of solutions: 1", "test_cl_int")
+            return False
+    elif len(sols) == 2:
+        if not tol_lt(d, r):
+            diag_print("wrong number of solutions: 2", "test_cl_int")
+            return False
+    else:
+            diag_print("wrong number of solutions: >2", "test_cl_int")
+
+    # test coordinates of intersection 
+    for s in sols:
+        # s on line (o,v)
+        if not is_colinear(s, o, o+v):
+            diag_print("solution not on line", "test_cl_int")
+            return False
+        # s on circle c, r
+        if not tol_eq(vector.norm(s-c), r):
+            diag_print("solution not on circle", "test_cl_int")
+            return False
+
+    return True
+
+
+def test_intersections():
     sat = True
     for i in range(0,100):
         sat = sat and test_ll_int()
@@ -619,7 +737,7 @@ def test1():
     if sat:
         print "ll_int() passed"
     else:
-        print "ll_int() failed"
+        print "ll_int() FAILED"
 
     sat = True
     for i in range(0,100):
@@ -627,27 +745,26 @@ def test1():
         if not sat: 
             print "rr_int() failed"
             return 
-
     if sat:
         print "rr_int() passed"
     else:
-        print "rr_int() failed"
+        print "rr_int() FAILED"
 
-    #sat = True
-    #for i in range(0,100):
-    #    sat = sat and test_cc_int()
-    #if sat:
-    #    print "cc_int() passed"
-    #else:
-    #    print "cc_int() failed"
+    sat = True
+    for i in range(0,100):
+        sat = sat and test_cc_int()
+    if sat:
+        print "cc_int() passed"
+    else:
+        print "cc_int() FAILED"
 
-    #sat = True
-    #for i in range(0,100):
-    #    sat = sat and test_cl_int()
-    #if sat:
-    #    print "cl_int() passed"
-    #else:
-    #    print "cl_int() failed"
+    sat = True
+    for i in range(0,100):
+        sat = sat and test_cl_int()
+    if sat:
+        print "cl_int() passed"
+    else:
+        print "cl_int() FAILED"
 
     sat = True
     for i in range(0,100):
@@ -655,8 +772,10 @@ def test1():
     if sat:
         print "sss_int() passed"
     else:
-        print "sss_int() failed"
+        print "sss_int() FAILED"
+    print "Note: did not test degenerate cases for sss_int"
 
+def test_angles():
     print "2D angles" 
     for i in xrange(9):
         a = i * 45 * math.pi / 180
@@ -701,7 +820,11 @@ def test_hcs_degen():
     print make_hcs_3d(p1,p2,p3)
         
 if __name__ == '__main__': 
-    #test1()
+    #diag_select("test_cc_int")
+    #diag_select("test_cl_int")
+    #diag_select(".*")
+    test_intersections()
+    #test_angles()
     #test_perp_3d()
     #test_sss_degen()
-    test_hcs_degen()
+    #test_hcs_degen()

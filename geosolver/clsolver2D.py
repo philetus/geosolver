@@ -16,7 +16,7 @@ class ClusterSolver2D(ClusterSolver):
 
     def __init__(self):
         """Instantiate a ClusterSolver2D"""
-        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeRR, DeriveDDD, DeriveDAD])
+        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeRR, DeriveDDD, DeriveDAD, DeriveADD, DeriveHH2S])
         
 
 # ----------------------------------------------
@@ -169,7 +169,7 @@ class DeriveDDD(ClusterMethod):
     #patterngraph = _pattern()
 
     def _incremental_matcher(solver):
-        triplets = Triplets(solver, Rigids(solver))
+        triplets = DistanceTriplets(solver, Rigids(solver))
         matcher = incremental.Map(triplet2ddd, triplets)
         return matcher
     
@@ -244,32 +244,33 @@ class DeriveDAD(ClusterMethod):
         
         def isdad(triplet):
             dad = triplet2dad(triplet)
-            return isinstance(DeriveDAD, dad)
+            return isinstance(dad, DeriveDAD)
     
         def triplet2dad(triplet):
             print "triplet2dad: start"
-            hogs = filter(lambda c: isinstance(Hog, c), triplet)
-            rigids= filter(lambda c: isinstance(Rigid, c), triplet)
+            hogs = filter(lambda c: isinstance(c, Hedgehog), triplet)
+            rigids= filter(lambda c: isinstance(c, Rigid), triplet)
             if not(len(hogs)==1 and len(rigids)==2): return None
             hog = hogs[0]
             r1 = rigids[0]
-            r2 = rigids[2]
-            b = hog.apex;
+            r2 = rigids[1]
+            b = hog.cvar;
             print "triplet2dad: b = ", b    
             if not(b in r1.vars): return None
             if not(b in r2.vars): return None
             print "triplet2dad: b in rigids"
-            p1s = r1.vars.intersection(hog.vars) 
-            p2s = r2.vars.intersection(hog.vars)
+            p1s = r1.vars.intersection(hog.xvars) 
+            p2s = r2.vars.intersection(hog.xvars)
             if not(len(p1s) == 1): return None
             if not(len(p2s) == 1): return None
-            a = p1s[0]
-            b = p1s[1]
+            a = list(p1s)[0]
+            c = list(p2s)[0]
             print "triplet2dad: a =  ", a
             print "triplet2dad: c =  ", c
+            if a==c: return None
             return DeriveDAD( {"$d_ab":r1, "$a_abc":hog, "$d_bc":r2, "$a":a, "$b":b, "$c":c })
         # end def
-        triplets = Triplets(solver, solver.top_level())
+        triplets = ConnectedTriplets(solver, solver.top_level())
         matchtriplets = incremental.Filter(lambda triplet: isdad(triplet), triplets)
         matcher = incremental.Map(triplet2dad, matchtriplets)
         return matcher
@@ -295,6 +296,107 @@ class DeriveDAD(ClusterMethod):
         d23 = distance_2p(c23.get(v2),c23.get(v3))
         solutions = solve_dad(v1,v2,v3,d12,a123,d23)
         return solutions
+
+
+
+
+class DeriveADD(ClusterMethod):
+    """Represents a merging of two distances and an angle"""
+    def __init__(self, map):
+        # check inputs
+        self.a_cab = map["$a_cab"]
+        self.d_ab = map["$d_ab"]
+        self.d_bc = map["$d_bc"]
+        self.a = map["$a"]
+        self.b = map["$b"]
+        self.c = map["$c"]
+        # create output
+        out = Rigid([self.a,self.b,self.c])
+        # set method parameters
+        self._inputs = [self.a_cab, self.d_ab, self.d_bc]
+        self._outputs = [out]
+        ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
+
+    #def _pattern():
+    #    pattern = [["rigid","$d_ab",["$a", "$b"]], 
+    #        ["hedgehog", "$a_abc",["$b", "$a", "$c"]], 
+    #        ["rigid", "$d_bc",["$b","$c"]]]
+    #    return pattern2graph(pattern)
+    #pattern = staticmethod(_pattern)
+    #patterngraph = _pattern()
+
+    def _incremental_matcher(solver):
+        
+        def isadd(triplet):
+            dad = triplet2add(triplet)
+            return isinstance(dad, DeriveADD)
+    
+        def triplet2add(triplet):
+            print "triplet2add: start"
+            hogs = filter(lambda c: isinstance(c, Hedgehog), triplet)
+            rigids= filter(lambda c: isinstance(c, Rigid), triplet)
+            if not(len(hogs)==1 and len(rigids)==2): return None
+            hog = hogs[0]
+            print "triplet2add: hog = ",hog
+            r1 = rigids[0]
+            r2 = rigids[1]
+            a = hog.cvar;
+            print "triplet2add: a = ", a   
+            if a in r1.vars and not(a in r2.vars): 
+                d_ab = r1
+                d_bc = r2
+            elif a in r2.vars and not(a in r1.vars):
+                d_ab = r2
+                d_bc = r1
+            else:
+                return None
+            print "d_ab:",d_ab 
+            print "d_bc:",d_bc 
+            pbs = d_ab.vars.intersection(hog.xvars)
+            if not(len(pbs) == 1): return None
+            b = list(pbs)[0]
+            print "triplet2add: b =  ", b
+            pcs = d_bc.vars.intersection(hog.xvars).difference([b])
+            if not(len(pcs) == 1): return None
+            c = list(pcs)[0]
+            print "triplet2add: c =  ", c
+            return DeriveADD( {"$a_cab":hog, "$d_ab":d_ab, "$d_bc":d_bc, "$a":a, "$b":b, "$c":c })
+        # end def
+        triplets = ConnectedTriplets(solver, solver.top_level())
+        matchtriplets = incremental.Filter(lambda triplet: isadd(triplet), triplets)
+        matcher = incremental.Map(triplet2add, matchtriplets)
+        return matcher
+    
+    incremental_matcher = staticmethod(_incremental_matcher)
+
+
+    def __str__(self):
+        s =  "DeriveADD("+str(self._inputs[0])+"+"+str(self._inputs[1])+"+"+str(self._inputs[2])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def multi_execute(self, inmap):
+        diag_print("DeriveADD.multi_execute called","clmethods")
+        c312 = inmap[self.a_cab]
+        c12 = inmap[self.d_ab]
+        c23 = inmap[self.d_bc]
+        v1 = self.a
+        v2 = self.b
+        v3 = self.c
+        a312 = angle_3p(c312.get(v3),c312.get(v1),c312.get(v2))
+        d12 = distance_2p(c12.get(v1),c12.get(v2))
+        d23 = distance_2p(c23.get(v2),c23.get(v3))
+        solutions = solve_add(v1,v2,v3,a312,d12,d23)
+        return solutions
+
+    def prototype_constraints(self):
+        constraints = []
+        constraints.append(SelectionConstraint(fnot(is_obtuse),[self.a,self.c,self.b]))
+        constraints.append(SelectionConstraint(fnot(is_acute),[self.a,self.c,self.b]))
+        return constraints
+
 
 class CheckAR(ClusterMethod):
     """Represents the overconstrained merging a hedgehog and a rigid that completely overlaps it."""
@@ -352,6 +454,63 @@ class CheckAR(ClusterMethod):
         # all checks passed, return rigid configuration 
         return [rigid]
     
+class DeriveHH2S(ClusterMethod):
+    """Derive a scalable from two angles"""
+    def __init__(self, map):
+        # check inputs
+        self.a_cab = map["$a_cab"]
+        self.a_abc = map["$a_abc"]
+        self.a = map["$a"]
+        self.b = map["$b"]
+        self.c = map["$c"]
+        # create output
+        out = Balloon([self.a,self.b,self.c])
+        # set method parameters
+        self._inputs = [self.a_cab, self.a_abc]
+        self._outputs = [out]
+        ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
+
+    def __str__(self):
+        s =  "DeriveHH2S("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def _incremental_matcher(solver): 
+        def pair_is_hh2s(pair):
+            method = pair_to_hh2s(pair)
+            return isinstance(method, DeriveHH2S)
+    
+        def pair_to_hh2s(pair):
+            print "pair_to_hhs2s: start"
+            print "not implemented!"
+            return None
+            #return DeriveHH2S( {"$a_cab":a_cab, "$a_abc":a_abc, "$a":a, "$b":b, "$c":c })
+        # end def
+        
+        hogs = Hogs(solver)
+        pairs = ConnectedPairs1(solver, hogs)
+        matchingpairs = incremental.Filter(lambda pair: pair_is_hh2s(pair), pairs)
+        matcher = incremental.Map(pair_to_hh2s, matchingpairs)
+        return matcher
+    
+    incremental_matcher = staticmethod(_incremental_matcher)
+
+
+    def multi_execute(self, inmap):
+        diag_print("DeriveHH2S.multi_execute called","clmethods")
+        c312 = inmap[self.a_cab]
+        c123 = inmap[self.a_abc]
+        v1 = self.a
+        v2 = self.b
+        v3 = self.c
+        a312 = angle_3p(c312.get(v3),c312.get(v1),c312.get(v2))
+        d12 = 1.0
+        a123 = angle_3p(c123.get(v1),c123.get(v2),c123.get(v3))
+        solutions = solve_ada_3D(v1,v2,v3,a312,d12,a123)
+        return solutions
+
 
 # ---------------------------------------------------------
 # ------- functions to determine configurations  ----------
@@ -385,10 +544,122 @@ def solve_dad(v1,v2,v3,d12,a123,d23):
         solutions.append(solution)
     return solutions
 
+def solve_add(a,b,c, a_cab, d_ab, d_bc):
+    """returns a list of Configurations of v1,v2,v3 such that distance v1-v2=d12 etc.
+        v<x>: name of point variables
+        d<xy>: numeric distance values
+        a<xyz>: numeric angle in radians
+    """
+
+    diag_print("solve_dad: %s %s %s %f %f %f"%(a,b,c,a_cab,d_ab,d_bc),"clmethods")
+    p_a = vector.vector([0.0,0.0])
+    p_b = vector.vector([d_ab,0.0])
+    dir = vector.vector([math.cos(-a_cab),math.sin(-a_cab)])
+    solutions = cr_int(p_b, d_bc, p_a, dir)
+    rval = []
+    for p_c in solutions:
+        map = {a:p_a, b:p_b, c:p_c}
+        rval.append(Configuration(map))
+    return rval
+
 
 # -------------------------------------
 # --------- incremental sets ----------
 # -------------------------------------
+
+class Rigids(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        incremental.Filter.__init__(self, lambda c: isinstance(c, Rigid), self._solver.top_level())
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Rigids("+repr(self._solver)+")"
+
+class Hogs(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        incremental.Filter.__init__(self, lambda c: isinstance(c, Hedgehog), self._solver.top_level())
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Hogs("+repr(self._solver)+")"
+
+class Balloons(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        incremental.Filter.__init__(self, lambda c: isinstance(c, Balloon), self._solver.top_level())
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Balloons("+repr(self._solver)+")"
+
+
+class Points(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        rigids = Rigids(solver)
+        incremental.Filter.__init__(self, lambda c: len(c.vars)==1, rigids)
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Points("+repr(self._solver)+")"
+
+class Distances(incremental.Filter):
+    
+    def __init__(self, solver): 
+        self._solver = solver
+        rigids = Rigids(solver)
+        incremental.Filter.__init__(self, lambda c: len(c.vars)==2, rigids)
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver))
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver
+        else:
+            return False
+
+    def __repr__(self):
+        return "Distances("+repr(self._solver)+")"
+
 
 class ConnectedPairs1(incremental.IncrementalSet):
     """Incremental set of all pairs of connected clusters in 1 incremental set"""
@@ -467,69 +738,10 @@ class ConnectedPairs2(incremental.IncrementalSet):
     def __hash__(self):
         return hash((self._solver, self._incrset1, self._incrset2))
 
-
-class Rigids(incremental.Filter):
-    
-    def __init__(self, solver): 
-        self._solver = solver
-        incremental.Filter.__init__(self, lambda c: isinstance(c, Rigid), self._solver.top_level())
-
-    def __hash__(self):
-        return hash((self.__class__, self._solver))
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self._solver == other._solver
-        else:
-            return False
-
-    def __repr__(self):
-        return "Rigids("+repr(self._solver)+")"
-
-
-
-class Points(incremental.Filter):
-    
-    def __init__(self, solver): 
-        self._solver = solver
-        rigids = Rigids(solver)
-        incremental.Filter.__init__(self, lambda c: len(c.vars)==1, rigids)
-
-    def __hash__(self):
-        return hash((self.__class__, self._solver))
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self._solver == other._solver
-        else:
-            return False
-
-    def __repr__(self):
-        return "Points("+repr(self._solver)+")"
-
-class Distances(incremental.Filter):
-    
-    def __init__(self, solver): 
-        self._solver = solver
-        rigids = Rigids(solver)
-        incremental.Filter.__init__(self, lambda c: len(c.vars)==2, rigids)
-
-    def __hash__(self):
-        return hash((self.__class__, self._solver))
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self._solver == other._solver
-        else:
-            return False
-
-    def __repr__(self):
-        return "Distances("+repr(self._solver)+")"
-
-class Triplets(incremental.IncrementalSet):
+class DistanceTriplets(incremental.IncrementalSet):
     
     def __init__(self, solver, incrset):
-        """Creates an incremental set of all tripltes of connected clusters in incrset, according to solver"""
+        """Creates an incremental set of all tripltes of 1-connected clusters in incrset, according to solver"""
         self._solver = solver
         self._incrset = incrset
         incremental.IncrementalSet.__init__(self, [incrset])
@@ -574,6 +786,56 @@ class Triplets(incremental.IncrementalSet):
         return hash((self.__class__, self._solver, self._incrset))
 
     def __repr__(self):
-        return "Triplets("+repr(self._solver)+","+repr(self._incset)+")"
+        return "DistanceTriplets("+repr(self._solver)+","+repr(self._incset)+")"
 
-       
+
+class ConnectedTriplets(incremental.IncrementalSet):
+    
+    def __init__(self, solver, incrset):
+        """Creates an incremental set of all triplets of connected clusters in incrset, according to solver"""
+        self._solver = solver
+        self._incrset = incrset
+        incremental.IncrementalSet.__init__(self, [incrset])
+        return 
+
+    def _receive_add(self,source, obj):
+        connected = set()
+        for var in obj.vars:
+            dependend = self._solver.find_dependend(var)
+            dependend = filter(lambda x: x in self._incrset, dependend)
+            dependend = filter(lambda x: len(x.vars.intersection(obj.vars))>=1, dependend)
+            connected.update(dependend)
+        if obj in connected:
+            connected.remove(obj)
+        obj1 = obj
+        if len(connected) >= 2:
+            l = list(connected)
+            for i in range(len(l)):
+                obj2 = l[i]
+                shared12 = obj1.vars.intersection(obj2.vars)
+                for j in range(i):
+                    obj3 = l[j]
+                    shared23 = obj2.vars.intersection(obj3.vars)
+                    if len(shared23)>=1:
+                        shared13 = obj1.vars.intersection(obj3.vars)
+                        if len(shared13)>=1: 
+                            self._add(frozenset((obj1,obj2,obj3)))
+
+    def _receive_remove(self,source, obj):
+        for frozen in list(self):
+            if obj in frozen:
+                self._remove(frozen)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._solver == other._solver and self._incrset == other._incrset
+        else:
+            return False
+
+    def __hash__(self):
+        return hash((self.__class__, self._solver, self._incrset))
+
+    def __repr__(self):
+        return "ConnectedTriplets("+repr(self._solver)+","+repr(self._incset)+")"
+
+

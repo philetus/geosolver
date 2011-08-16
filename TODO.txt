@@ -63,3 +63,105 @@ def diamond_3d():
   or: 
        FixConstraint(v2=[-5.0, 5.0, 0.0]) not satisfied
        FixConstraint(v1=[0.0, 0.0, 0.0]) not satisfied
+
+- when solvin DAD type clusters, sometimes raises:
+StandardError: cluster rigid#157388428(['v1', 'v2', 'v3']) already in clsolver
+
+Debug output:
+
+Solving....
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: a =   v3
+triplet2dad: c =   v1
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: a =   v3
+triplet2dad: c =   v1
+triplet2dad: start
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: start
+triplet2dad: b =  v2
+triplet2dad: b in rigids
+Traceback (most recent call last):
+  File "test.py", line 971, in <module>
+   t2d()
+  File "test.py", line 968, in test2d
+    test(dad_problem())
+  File "test.py", line 780, in test
+    solver = GeometricSolver(problem, use_prototype)
+  File "/home/rick/lib/python/geosolver/geometric.py", line 294, in __init__
+    self._add_constraint(con)
+  File "/home/rick/lib/python/geosolver/geometric.py", line 486, in _add_constraint
+    self.dr.add(hog)
+  File "/home/rick/lib/python/geosolver/clsolver.py", line 79, in add
+    self._process_new()
+  File "/home/rick/lib/python/geosolver/clsolver.py", line 363, in _process_new
+    self._add_method_complete(method)
+  File "/home/rick/lib/python/geosolver/clsolver.py", line 487, in _add_method_complete
+    self._add_cluster(output)
+  File "/home/rick/lib/python/geosolver/clsolver.py", line 236, in _add_cluster
+    raise StandardError, "cluster %s already in clsolver"%(str(newcluster))
+StandardError: cluster rigid#157388428(['v1', 'v2', 'v3']) already in clsolver
