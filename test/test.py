@@ -962,11 +962,11 @@ def test3d():
     #test(diamond_3d(),False)
 
 def test2d():
+    #diag_select("clsolver")
     #test(ddd_problem())
     #test(double_triangle())
-    #test(triple_double_triangle())
-    diag_select("clsolver")
-    test(dad_problem())
+    test(triple_double_triangle())
+    #test(dad_problem())
     #test(add_problem())
     #test(ada_problem())
     #test(aad_problem())

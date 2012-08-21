@@ -471,6 +471,8 @@ class ClusterSolver(Notifier):
 
     def _add_method_complete(self, merge):
         diag_print("add_method_complete "+str(merge), "clsolver")
+        
+        # do not add if method is redundant
         if self._is_redundant_method(merge):
             return False
 
@@ -494,6 +496,9 @@ class ClusterSolver(Notifier):
         for cluster in merge.input_clusters():
             overconstrained = overconstrained or cluster.overconstrained
         output.overconstrained = overconstrained
+        
+        # determine infinc before adding (used later)
+        infinc = self._is_information_increasing(merge)
         
         # add to graph
         self._add_cluster(output)
@@ -519,9 +524,11 @@ class ClusterSolver(Notifier):
         self._add_root_method(merge.input_clusters(),merge.outputs()[0])
         
         # add solution selection methods, only if information increasing
-        if self._is_information_increasing(merge):
+        if infinc:
             output2 = self._add_prototype_selector(merge)
             output3 = self._add_solution_selector(output2)
+        
+        # success
         return True
 
     def _add_root_method(self,inclusters,outcluster):
