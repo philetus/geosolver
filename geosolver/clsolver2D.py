@@ -16,12 +16,45 @@ class ClusterSolver2D(ClusterSolver):
 
     def __init__(self):
         """Instantiate a ClusterSolver2D"""
-        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeRR, DeriveDDD, DeriveDAD, DeriveADD, DeriveHH2S])
+        ClusterSolver.__init__(self, [CheckAR, MergePR, MergeRR, DeriveDDD, DeriveDAD, DeriveADD, DeriveHH2S, MergeSR])
         
 
 # ----------------------------------------------
 # ---------- Methods for 2D solving -------------
 # ----------------------------------------------
+
+class MergeSR(ClusterMethod):
+    """Merge a Scalabe and a Rigid sharing two points"""
+    def __init__(self, map):
+        # check inputs
+        in1 = map["$r"]
+        in2 = map["$s"]
+        # create output
+        out = Rigid(set(in2.vars))
+        # set method parameters
+        self._inputs = [in1, in2]
+        self._outputs = [out]
+        ClusterMethod.__init__(self)
+
+    def _pattern():
+        pattern = [["rigid","$r",["$a","$b"]], ["balloon", "$s", ["$a", "$b"]]]
+        return pattern2graph(pattern)
+    pattern = staticmethod(_pattern)
+    patterngraph = _pattern()
+
+    def __str__(self):
+        s =  "MergeSR("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def multi_execute(self, inmap):
+        diag_print("MergeSR.multi_execute called","clmethods")
+        c1 = self._inputs[0]
+        c2 = self._inputs[1]
+        conf1 = inmap[c1]
+        conf2 = inmap[c2]
+        return [conf1.merge_scale(conf2)]
+
 
 # Merge<X> methods take root cluster in considerations   
 # Derive<X> methods do not take root cluster in consideration
@@ -247,7 +280,7 @@ class DeriveDAD(ClusterMethod):
             return isinstance(dad, DeriveDAD)
     
         def triplet2dad(triplet):
-            print "triplet2dad: start"
+            #print "triplet2dad: start"
             hogs = filter(lambda c: isinstance(c, Hedgehog), triplet)
             rigids= filter(lambda c: isinstance(c, Rigid), triplet)
             if not(len(hogs)==1 and len(rigids)==2): return None
@@ -255,18 +288,18 @@ class DeriveDAD(ClusterMethod):
             r1 = rigids[0]
             r2 = rigids[1]
             b = hog.cvar;
-            print "triplet2dad: b = ", b    
+            #print "triplet2dad: b = ", b    
             if not(b in r1.vars): return None
             if not(b in r2.vars): return None
-            print "triplet2dad: b in rigids"
+            #print "triplet2dad: b in rigids"
             p1s = r1.vars.intersection(hog.xvars) 
             p2s = r2.vars.intersection(hog.xvars)
             if not(len(p1s) == 1): return None
             if not(len(p2s) == 1): return None
             a = list(p1s)[0]
             c = list(p2s)[0]
-            print "triplet2dad: a =  ", a
-            print "triplet2dad: c =  ", c
+            #print "triplet2dad: a =  ", a
+            #print "triplet2dad: c =  ", c
             if a==c: return None
             return DeriveDAD( {"$d_ab":r1, "$a_abc":hog, "$d_bc":r2, "$a":a, "$b":b, "$c":c })
         # end def
@@ -334,16 +367,16 @@ class DeriveADD(ClusterMethod):
             return isinstance(dad, DeriveADD)
     
         def triplet2add(triplet):
-            print "triplet2add: start"
+            #print "triplet2add: start"
             hogs = filter(lambda c: isinstance(c, Hedgehog), triplet)
             rigids= filter(lambda c: isinstance(c, Rigid), triplet)
             if not(len(hogs)==1 and len(rigids)==2): return None
             hog = hogs[0]
-            print "triplet2add: hog = ",hog
+            #print "triplet2add: hog = ",hog
             r1 = rigids[0]
             r2 = rigids[1]
             a = hog.cvar;
-            print "triplet2add: a = ", a   
+            #print "triplet2add: a = ", a   
             if a in r1.vars and not(a in r2.vars): 
                 d_ab = r1
                 d_bc = r2
@@ -352,16 +385,16 @@ class DeriveADD(ClusterMethod):
                 d_bc = r1
             else:
                 return None
-            print "d_ab:",d_ab 
-            print "d_bc:",d_bc 
+            #print "d_ab:",d_ab 
+            #print "d_bc:",d_bc 
             pbs = d_ab.vars.intersection(hog.xvars)
             if not(len(pbs) == 1): return None
             b = list(pbs)[0]
-            print "triplet2add: b =  ", b
+            #print "triplet2add: b =  ", b
             pcs = d_bc.vars.intersection(hog.xvars).difference([b])
             if not(len(pcs) == 1): return None
             c = list(pcs)[0]
-            print "triplet2add: c =  ", c
+            #print "triplet2add: c =  ", c
             return DeriveADD( {"$a_cab":hog, "$d_ab":d_ab, "$d_bc":d_bc, "$a":a, "$b":b, "$c":c })
         # end def
         triplets = ConnectedTriplets(solver, solver.top_level())
@@ -396,6 +429,81 @@ class DeriveADD(ClusterMethod):
         constraints.append(SelectionConstraint(fnot(is_obtuse),[self.a,self.c,self.b]))
         constraints.append(SelectionConstraint(fnot(is_acute),[self.a,self.c,self.b]))
         return constraints
+
+class DeriveHH2S(ClusterMethod):
+    """Derive a scalable from two angles"""
+    def __init__(self, map):
+        # check inputs
+        self.a_cab = map["$a_cab"]
+        self.a_abc = map["$a_abc"]
+        self.a = map["$a"]
+        self.b = map["$b"]
+        self.c = map["$c"]
+        # create output
+        out = Balloon([self.a,self.b,self.c])
+        # set method parameters
+        self._inputs = [self.a_cab, self.a_abc]
+        self._outputs = [out]
+        ClusterMethod.__init__(self)
+        # do not remove input clusters (because root not considered here)
+        self.noremove = True
+
+    def __str__(self):
+        s =  "DeriveHH2S("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
+        s += "[" + self.status_str()+"]"
+        return s
+
+    def _incremental_matcher(solver): 
+        def pair_is_hh2s(pair):
+            method = pair_to_hh2s(pair)
+            return isinstance(method, DeriveHH2S)
+    
+        def pair_to_hh2s(pair):
+            print "pair_to_hhs2s: start"
+            assert len(pair)==2
+            a_cab = list(pair)[0]
+            a_abc = list(pair)[1]
+            a = a_cab.cvar
+            b = a_abc.cvar
+            print "a",a
+            print "b",b
+            if a == b: 
+                return None
+            if a not in a_abc.xvars:
+                return None
+            if b not in a_cab.xvars:
+                return None
+            cs = a_cab.xvars.intersection(a_abc.xvars).difference([a,b])
+            print "#cs",len(cs)
+            if len(cs) != 1:
+                return None
+            c = list(cs)[0]
+            print "c",c
+            print "hh2s triangle confirmed"
+            return DeriveHH2S( {"$a_cab":a_cab, "$a_abc":a_abc, "$a":a, "$b":b, "$c":c })
+        # end def
+        
+        hogs = Hogs(solver)
+        pairs = ConnectedPairs1(solver, hogs)
+        matchingpairs = incremental.Filter(lambda pair: pair_is_hh2s(pair), pairs)
+        matcher = incremental.Map(pair_to_hh2s, matchingpairs)
+        return matcher
+    
+    incremental_matcher = staticmethod(_incremental_matcher)
+
+
+    def multi_execute(self, inmap):
+        diag_print("DeriveHH2S.multi_execute called","clmethods")
+        c312 = inmap[self.a_cab]
+        c123 = inmap[self.a_abc]
+        v1 = self.a
+        v2 = self.b
+        v3 = self.c
+        a312 = angle_3p(c312.get(v3),c312.get(v1),c312.get(v2))
+        d12 = 1.0
+        a123 = angle_3p(c123.get(v1),c123.get(v2),c123.get(v3))
+        solutions = solve_ada(v1,v2,v3,a312,d12,a123)
+        return solutions
 
 
 class CheckAR(ClusterMethod):
@@ -454,64 +562,6 @@ class CheckAR(ClusterMethod):
         # all checks passed, return rigid configuration 
         return [rigid]
     
-class DeriveHH2S(ClusterMethod):
-    """Derive a scalable from two angles"""
-    def __init__(self, map):
-        # check inputs
-        self.a_cab = map["$a_cab"]
-        self.a_abc = map["$a_abc"]
-        self.a = map["$a"]
-        self.b = map["$b"]
-        self.c = map["$c"]
-        # create output
-        out = Balloon([self.a,self.b,self.c])
-        # set method parameters
-        self._inputs = [self.a_cab, self.a_abc]
-        self._outputs = [out]
-        ClusterMethod.__init__(self)
-        # do not remove input clusters (because root not considered here)
-        self.noremove = True
-
-    def __str__(self):
-        s =  "DeriveHH2S("+str(self._inputs[0])+"+"+str(self._inputs[1])+"->"+str(self._outputs[0])+")"
-        s += "[" + self.status_str()+"]"
-        return s
-
-    def _incremental_matcher(solver): 
-        def pair_is_hh2s(pair):
-            method = pair_to_hh2s(pair)
-            return isinstance(method, DeriveHH2S)
-    
-        def pair_to_hh2s(pair):
-            print "pair_to_hhs2s: start"
-            print "not implemented!"
-            return None
-            #return DeriveHH2S( {"$a_cab":a_cab, "$a_abc":a_abc, "$a":a, "$b":b, "$c":c })
-        # end def
-        
-        hogs = Hogs(solver)
-        pairs = ConnectedPairs1(solver, hogs)
-        matchingpairs = incremental.Filter(lambda pair: pair_is_hh2s(pair), pairs)
-        matcher = incremental.Map(pair_to_hh2s, matchingpairs)
-        return matcher
-    
-    incremental_matcher = staticmethod(_incremental_matcher)
-
-
-    def multi_execute(self, inmap):
-        diag_print("DeriveHH2S.multi_execute called","clmethods")
-        c312 = inmap[self.a_cab]
-        c123 = inmap[self.a_abc]
-        v1 = self.a
-        v2 = self.b
-        v3 = self.c
-        a312 = angle_3p(c312.get(v3),c312.get(v1),c312.get(v2))
-        d12 = 1.0
-        a123 = angle_3p(c123.get(v1),c123.get(v2),c123.get(v3))
-        solutions = solve_ada_3D(v1,v2,v3,a312,d12,a123)
-        return solutions
-
-
 # ---------------------------------------------------------
 # ------- functions to determine configurations  ----------
 # ---------------------------------------------------------
@@ -562,6 +612,40 @@ def solve_add(a,b,c, a_cab, d_ab, d_bc):
         rval.append(Configuration(map))
     return rval
 
+def solve_ada(a, b, c, a_cab, d_ab, a_abc):
+    """returns a list of Configurations of v1,v2,v3 such that distance v1-v2=d12 etc.
+        v<x>: name of point variables
+        d<xy>: numeric distance values
+        a<xyz>: numeric angle in radians
+    """
+    diag_print("solve_ada: %s %s %s %f %f %f"%(a,b,c,a_cab,d_ab,a_abc),"clmethods")
+    p_a = vector.vector([0.0,0.0])
+    p_b = vector.vector([d_ab, 0.0])
+    dir_ac = vector.vector([math.cos(-a_cab),math.sin(-a_cab)])
+    dir_bc = vector.vector([math.cos(math.pi-a_abc),math.sin(math.pi-a_abc)])
+    dir_ac[1] = math.fabs(dir_ac[1]) 
+    dir_bc[1] = math.fabs(dir_bc[1]) 
+    if tol_eq(math.sin(a_cab), 0.0) and tol_eq(math.sin(a_abc),0.0):
+                m = d_ab/2 + math.cos(-a_cab)*d_ab - math.cos(-a_abc)*d_ab
+                p_c = vector.vector([m,0.0]) 
+                # p_c = (p_a + p_b) / 2
+                #p_a.append(0.0)
+                #p_b.append(0.0)        
+                #p_c.append(0.0)
+                map = {a:p_a, b:p_b, c:p_c}
+                cluster = _Configuration(map)
+                cluster.underconstrained = True
+                rval = [cluster]
+    else:
+                solutions = rr_int(p_a,dir_ac,p_b,dir_bc)
+                #p_a.append(0.0)
+                #p_b.append(0.0)
+                rval = []
+                for p_c in solutions:
+                        #p_c.append(0.0)
+                        map = {a:p_a, b:p_b, c:p_c}
+                        rval.append(Configuration(map))
+    return rval
 
 # -------------------------------------
 # --------- incremental sets ----------

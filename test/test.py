@@ -967,6 +967,7 @@ def test2d():
     #test(triple_double_triangle())
     #test(dad_problem())
     #test(add_problem())
+    #test(ada_problem())
     test(aad_problem())
 
 if __name__ == "__main__": 

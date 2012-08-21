@@ -148,38 +148,35 @@ class Configuration:
         t.underconstrained = underconstrained
         return t
 
-    def merge_scale_2D(self, other, vars=[]):
-        """returns a new configurations which is this one plus the given other configuration transformed, such that common points will overlap (if possible)."""
-        if len(vars) == 0:
-            shared = set(self.vars()).intersection(other.vars())
-        else:
-            shared = vars
-        underconstrained = self.underconstrained or other.underconstrained
-        if len(shared) < 2:
-            raise StandardError, "must have >=2 shared point vars"
-
-        v1 = list(shared)[0]
-        v2 = list(shared)[1]
-        p11 = self.map[v1]
-        p12 = self.map[v2]
-        if tol_eq(vector.norm(p12-p11),0.0):
-            underconstrained = True
-            cs1 = make_hcs_2d_scaled(p11, p11+vector.vector([1.0,0.0]))
-        else:
-            cs1 = make_hcs_2d_scaled(p11, p12)
-        p21 = other.map[v1]
-        p22 = other.map[v2]
-        if tol_eq(vector.norm(p22-p21),0.0):
-            underconstrained = True
-            cs2 = make_hcs_2d_scaled(p21, p21+vector.vector([1.0,0.0]))
-        else:
-            cs2 = make_hcs_2d_scaled(p21, p22)
-        print cs1, cs2
-        t = cs_transform_matrix(cs2, cs1)
-        othert = other.transform(t)
-        result = self.add(othert)
-        result.underconstrained = underconstrained
-        return result
+    def _merge_scale_transform_2D(self, other):
+        """returns a transformation for 'other' to scale, rotate and translate such that its points will overlap with 'this'(if possible)."""
+        shared = set(self.vars()).intersection(other.vars())
+        if len(shared) == 0:
+            return self._merge_transform_3D(other)
+        elif len(shared) == 1:
+            return self._merge_transform_3D(other)
+        elif len(shared) >= 2:
+            underconstrained = False
+            v1 = list(shared)[0]
+            v2 = list(shared)[1]
+            p11 = self.map[v1]
+            p12 = self.map[v2]
+            if tol_eq(vector.norm(p12-p11),0.0):
+                underconstrained = True
+                cs1 = make_hcs_2d_scaled(p11, p11+vector.vector([1.0,0.0]))
+            else:
+                cs1 = make_hcs_2d_scaled(p11, p12)
+            p21 = other.map[v1]
+            p22 = other.map[v2]
+            if tol_eq(vector.norm(p22-p21),0.0):
+                underconstrained = True
+                cs2 = make_hcs_2d_scaled(p21, p21+vector.vector([1.0,0.0]))
+            else:
+                cs2 = make_hcs_2d_scaled(p21, p22)
+            print cs1, cs2
+            t = cs_transform_matrix(cs2, cs1)
+            t.underconstrained = underconstrained
+            return t
 
     def _merge_transform_3D(self, other):
         """returns a matrix for a rigid transformation 
