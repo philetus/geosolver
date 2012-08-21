@@ -965,9 +965,10 @@ def test2d():
     #test(ddd_problem())
     #test(double_triangle())
     #test(triple_double_triangle())
-    #test(dad_problem())
+    diag_select("clsolver")
+    test(dad_problem())
     #test(add_problem())
-    test(ada_problem())
+    #test(ada_problem())
     #test(aad_problem())
 
 if __name__ == "__main__": 

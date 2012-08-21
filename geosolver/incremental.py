@@ -106,13 +106,9 @@ class IncrementalSet(notify.Notifier, notify.Listener):
             # remove object from ref, if given
             self._ref()._remove(object)
         else:
-            # else add object to self
-            if object not in self._objects:
-                self._objects.add(object)
-                self.send_notify(("add", object))
-        if object in self._objects:
-            self._objects.remove(object)
-            self.send_notify(("remove", object))
+            if object in self._objects:
+                self._objects.remove(object)
+                self.send_notify(("remove", object))
 
     def __iter__(self):
         """Returns an iterator for the objects contained here. 
@@ -217,8 +213,7 @@ class Filter(IncrementalSet):
             self._add(object)        
                 
     def _receive_remove(self, source, object):        
-        if self._testfunction(object):
-            self._remove(object)        
+        self._remove(object)        
     
     def __eq__(self, other):
         if isinstance(other, Filter):
@@ -240,13 +235,18 @@ class Map(IncrementalSet):
     def __init__(self, mapfunction, incrset):
         self._incrset = incrset
         self._mapfunction = mapfunction
+        self._localmap = {}     # ensure we don't have to evalute mapfunction on removal
         IncrementalSet.__init__(self, [incrset])
 
     def _receive_add(self, source, object):
-        self._add(self._mapfunction(object))        
+        if object not in self._localmap:
+            mapped = self._mapfunction(object)        
+            self._add(mapped)        
+            self._localmap[object] = mapped
 
     def _receive_remove(self, source, object):
-        self._remove(self._mapfunction(object))        
+        if object in self._localmap:
+            self._remove(self._localmap[object])        
 
     def __eq__(self, other):
         if isinstance(other, Map):

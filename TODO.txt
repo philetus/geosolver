@@ -35,8 +35,9 @@ BUGS:
 - solver sometimes does not terminate - keeps adding merges where the result
   cluster and one of the original clusters merge again and again. Problem 
   likely that a source cluster should be removed (reducdant) but isn't. 
+  Often happens with test(triple_double_triangle_problem) 
 
-- following should be well-constraint, gives underconstrained (need extra rule/pattern) 
+- following should be well-constrained, but gives underconstrained (need extra rule/pattern) 
 def diamond_3d():
     """creates a diamond shape with point 'v1'...'v4' in 3D with one solution"""
     L=10.0

@@ -363,8 +363,8 @@ class DeriveADD(ClusterMethod):
     def _incremental_matcher(solver):
         
         def isadd(triplet):
-            dad = triplet2add(triplet)
-            return isinstance(dad, DeriveADD)
+            add = triplet2add(triplet)
+            return isinstance(add, DeriveADD)
     
         def triplet2add(triplet):
             #print "triplet2add: start"
@@ -515,10 +515,10 @@ class CheckAR(ClusterMethod):
         self.sharedx = self.hog.xvars.intersection(self.rigid.vars)
         # create ouptut cluster
         outvars = set(self.rigid.vars)
-        self.out = Rigid(outvars)
+        out = Rigid(outvars)
         # set method properties
         self._inputs = [self.hog, self.rigid]
-        self._outputs = [self.out]
+        self._outputs = [out]
         ClusterMethod.__init__(self)
 
     def _handcoded_match(problem, newcluster, connected):

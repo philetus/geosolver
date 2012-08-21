@@ -13,7 +13,7 @@ from cluster import *
 from configuration import Configuration
 from gmatch import gmatch
 from method import OrMethod
-from incremental import MutableSet,Union
+from incremental import MutableSet,Union,Filter
 
 # --------------------------------------------------
 # ---------- ClusterSolver main class --------------
@@ -53,6 +53,7 @@ class ClusterSolver(Notifier):
         # self._graph.add_vertex("_toplevel")
         self._graph.add_vertex("_variables")
         self._graph.add_vertex("_clusters")
+        self._graph.add_vertex("_methods")
         self._new = []
         self._mg = MethodGraph()
         # add prototype_selection boolean var to method graph
@@ -119,7 +120,8 @@ class ClusterSolver(Notifier):
                 selector.add_constraint(con)
                 self._selection_method[con] = selector
                 self._mg.execute(selector)                
-            self._selection_method[con] = None
+            #self._selection_method[con] = None     # this line wrong?
+            self._selection_method[con] = selector     # this line better?
 
     def rem_selection_constraint(self, con):
         """Remove a SelectionConstraint"""
@@ -220,11 +222,6 @@ class ClusterSolver(Notifier):
     # -- add object types
    
     def _add_variable(self, var):
-        """Add a variable if not already in system
-        
-           arguments:
-              var: any hashable object
-        """
         if not self._graph.has_vertex(var):
             diag_print("_add_variable "+str(var), "clsolver")
             self._add_to_group("_variables", var)
@@ -354,10 +351,11 @@ class ClusterSolver(Notifier):
  
     def _process_new(self):
         # try incremental matchers and old style matching alternatingly
-        while len(self._applicable_methods) > 0 or len(self._new) > 0:
+        non_redundant_methods = filter(lambda m: not self._is_redundant_method(m), self._applicable_methods)
+        while len(non_redundant_methods) > 0 or len(self._new) > 0:
             # check incremental matches
-            if len(self._applicable_methods) > 0:  
-                method = iter(self._applicable_methods).next()
+            if len(non_redundant_methods) > 0:  
+                method = iter(non_redundant_methods).next()
                 #print "applicable methods:", map(str, self._applicable_methods)
                 diag_print("incremental search found:"+str(method),"clsolver._process_new")
                 self._add_method_complete(method)
@@ -370,6 +368,7 @@ class ClusterSolver(Notifier):
                     self._new.append(newobject)
                 #endif
             # endif
+            non_redundant_methods = filter(lambda m: not self._is_redundant_method(m), self._applicable_methods)
         # endwhile
     #end def
     
@@ -426,46 +425,57 @@ class ClusterSolver(Notifier):
         # end for match
         return False
 
-    def _add_method_complete(self, merge):
-        diag_print("add_method_complete "+str(merge), "clsolver")
-        # check that method has one output
-        if len(merge.outputs()) != 1:
-            raise StandardError, "merge number of outputs != 1"
-        output = merge.outputs()[0]
-        
+    def _is_information_increasing(self, merge):
         # check that the method is information increasing (infinc)
+        output = merge.outputs()[0]
         infinc = True
         connected = set()
         for var in output.vars:
             dependend = self.find_dependend(var)
             dependend = filter(lambda x: self.is_top_level(x), dependend)
             connected.update(dependend)
-        #for cluster in merge.input_clusters():
-        #    if cluster in connected:
-        #        connected.remove(cluster)
-
         # NOTE 07-11-2007 (while writing the paper): this  implementation of information increasing may not be correct. We may need to check that the total sum of the information in the overlapping clusters is equal to the information in the output.
-
         for cluster in connected:
             if num_constraints(cluster.intersection(output)) >= num_constraints(output):
                 infinc = False
                 break
         diag_print("information increasing:"+str(infinc),"clsolver")
+        return infinc
 
+       
+    def _is_cluster_reducing(self, merge):
         # check if method reduces number of clusters (reduc)
+        output = merge.outputs()[0]
         nremove = 0
         for cluster in merge.input_clusters():
             if num_constraints(cluster.intersection(output)) >= num_constraints(cluster): 
                # will be removed from toplevel
                nremove += 1
+        # exeption if method sets noremove flag
+        if hasattr(merge,"noremove") and merge.noremove == True:
+            nremove = 0
         reduc = (nremove > 1)
         diag_print("reduce # clusters:"+str(reduc),"clsolver")
-        
-        # check if the method is redundant
+        return reduc
+
+    def _is_redundant_method(self, merge):
+        # check if the method is redundant (not information increasing and not reducing number of clusters)
+        infinc = self._is_information_increasing(merge)
+        reduc = self._is_cluster_reducing(merge)
         if not infinc and not reduc:
             diag_print("method is redundant","clsolver")
+            return True
+        else:
+            diag_print("method is not redundant","clsolver")
             return False
 
+    def _add_method_complete(self, merge):
+        diag_print("add_method_complete "+str(merge), "clsolver")
+        if self._is_redundant_method(merge):
+            return False
+
+        output = merge.outputs()[0]
+        
         # check consistency and local/global overconstrained
         consistent = True
         local_oc = False
@@ -478,14 +488,17 @@ class ClusterSolver(Notifier):
                 consistent = consistent and self._is_consistent_pair(c1, c2)
         merge.consistent = consistent
         merge.overconstrained = local_oc
+        
         # global overconstrained? (store in output cluster)
         overconstrained = not consistent
         for cluster in merge.input_clusters():
             overconstrained = overconstrained or cluster.overconstrained
         output.overconstrained = overconstrained
+        
         # add to graph
         self._add_cluster(output)
         self._add_method(merge)
+        
         # remove input clusters from top_level
         merge.restore_toplevel = []    # make restore list in method
         for cluster in merge.input_clusters():
@@ -501,10 +514,12 @@ class ClusterSolver(Notifier):
                 merge.restore_toplevel.append(cluster)
             else:
                 diag_print("keep top-level: "+str(cluster),"clsolver")
+        
         # add method to determine root-variable
         self._add_root_method(merge.input_clusters(),merge.outputs()[0])
+        
         # add solution selection methods, only if information increasing
-        if infinc:
+        if self._is_information_increasing(merge):
             output2 = self._add_prototype_selector(merge)
             output3 = self._add_solution_selector(output2)
         return True
