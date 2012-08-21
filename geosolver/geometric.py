@@ -842,7 +842,7 @@ class AngleConstraint(ParametricConstraint):
                 cmp = self._value
             result = tol_eq(ang, cmp)
         if result == False:
-            diag_print("measured angle = "+str(ang)+", parameter value = "+str(cmp), "geometric")
+            diag_print("measured angle = "+str(ang)+", parameter value = "+str(cmp), "satisfied")
         return result
 
     def __str__(self):

@@ -789,7 +789,7 @@ def test(problem, use_prototype=True):
     check = True
     if len(result.solutions) == 0:
         check = False
-    diag_select("GeometricProblem.verify")
+    diag_select("(GeometricProblem.verify)|(satisfied)")
     for sol in result.solutions:
         print "solution:",sol
         check = check and problem.verify(sol)
