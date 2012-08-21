@@ -899,10 +899,11 @@ class ConnectedTriplets(incremental.IncrementalSet):
                 shared12 = obj1.vars.intersection(obj2.vars)
                 for j in range(i):
                     obj3 = l[j]
-                    shared23 = obj2.vars.intersection(obj3.vars)
-                    if len(shared23)>=1:
+                    if len(obj2.vars.intersection(obj3.vars))>=1:
+                        shared23 = obj2.vars.intersection(obj3.vars)
                         shared13 = obj1.vars.intersection(obj3.vars)
-                        if len(shared13)>=1: 
+                        shared = shared12.union(shared23).union(shared13)
+                        if len(shared)>=3: 
                             self._add(frozenset((obj1,obj2,obj3)))
 
     def _receive_remove(self,source, obj):
