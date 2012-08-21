@@ -622,9 +622,10 @@ def solve_ada(a, b, c, a_cab, d_ab, a_abc):
     p_a = vector.vector([0.0,0.0])
     p_b = vector.vector([d_ab, 0.0])
     dir_ac = vector.vector([math.cos(-a_cab),math.sin(-a_cab)])
-    dir_bc = vector.vector([math.cos(math.pi-a_abc),math.sin(math.pi-a_abc)])
-    dir_ac[1] = math.fabs(dir_ac[1]) 
-    dir_bc[1] = math.fabs(dir_bc[1]) 
+    dir_bc = vector.vector([math.cos(math.pi+a_abc),math.sin(math.pi+a_abc)])
+    #used for 3D?
+    #dir_ac[1] = math.fabs(dir_ac[1]) 
+    #dir_bc[1] = math.fabs(dir_bc[1]) 
     if tol_eq(math.sin(a_cab), 0.0) and tol_eq(math.sin(a_abc),0.0):
                 m = d_ab/2 + math.cos(-a_cab)*d_ab - math.cos(-a_abc)*d_ab
                 p_c = vector.vector([m,0.0]) 
