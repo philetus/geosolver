@@ -48,6 +48,17 @@ class GeometricProblem (Notifier, Listener):
         self.dimension = dimension
         self.prototype = {}
         self.cg = ConstraintGraph()
+        self.use_prototype = True;
+
+    def set_prototype_selection(self, enabled):
+        """Enable (True, the default) or disable (False) use of prototype for solution selection"""
+        self.use_prototype = enabled
+        self.dr.set_prototype_selection(self.use_prototype)
+        self.send_notify(("set_prototype_selection", self.use_prototype))
+
+    def get_prototype_selection(self):
+        """Return True if prototype selection has been enabled (the default) or False otherwise"""
+        return self.use_prototype
 
     def add_point(self, variable,pos):
         """add a point variable with a prototype position"""
@@ -225,6 +236,7 @@ class GeometricProblem (Notifier, Listener):
             s += v + " = " + str(self.prototype[v]) + "\n"
         for con in self.cg.constraints():
             s += str(con) + "\n"
+        s+= "prototype-based selection = " + str(self.use_prototype)
         return s
  
 #class GeometricProblem
@@ -238,7 +250,7 @@ class GeometricSolver (Listener):
     """
 
     # public methods
-    def __init__(self, problem, use_prototype=True):
+    def __init__(self, problem):
         """Create a new GeometricSolver instance
         
            keyword args
@@ -260,7 +272,7 @@ class GeometricSolver (Listener):
         self._map = {}
         
         # enable prototype based selection by default
-        self.set_prototype_selection(use_prototype)
+        self._set_prototype_selection(problem.get_prototype_selection())
 
         # register 
         self.cg.add_listener(self)
@@ -292,10 +304,6 @@ class GeometricSolver (Listener):
         # add other constraints. 
         for con in toadd:
             self._add_constraint(con)
-
-    def set_prototype_selection(self, enabled):
-        """Enable (True) or disable (False) use of prototype for solution selection"""
-        self.dr.set_prototype_selection(enabled)
 
     def get_constrainedness(self):
         """Depricated. Use get_status instead"""
@@ -430,9 +438,10 @@ class GeometricSolver (Listener):
                 return GeometricDecomposition.OK
         else:
             return GeometricDecomposition.S_UNDER
-    
+   
+
     def receive_notify(self, object, message):
-        """Take notice of changes in constraint graph"""
+        """Take notice of changes in constraint problem"""
         if object == self.cg:
             (type, data) = message
             if type == "add_constraint":
@@ -443,6 +452,8 @@ class GeometricSolver (Listener):
                 self._add_variable(data)
             elif type == "rem_variable":
                 self._rem_variable(data)
+            elif type == "set_prototype_selection":
+                self.set_prototype_selection(data)
             else:
                 raise StandardError, "unknown message type"+str(type)
         elif object == self.problem:
@@ -461,6 +472,10 @@ class GeometricSolver (Listener):
             raise StandardError, "message from unknown source"+str((object, message))
     
     # internal methods
+
+    def _set_prototype_selection(self, enabled):
+        """Enable (True) or disable (False) use of prototype for solution selection"""
+        self.dr.set_prototype_selection(enabled)
 
     def _add_variable(self, var):
         if var not in self._map:

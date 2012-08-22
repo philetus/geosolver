@@ -13,29 +13,22 @@ Speed: The solver is currently much too slow. The problem is the pattern
     - compliled implementation (Psycho/C++/Haskell/???)
 
 Rules: More rewrite rules to increase the problem domain:
-    - need 3d rule: merge of 2 ridids with 2 shared points (hinge) + hog with angle not on hinge points  
+    - need 3d rule: merge of 2 rigids with 2 shared points (hinge) + hog with angle not on hinge points  
     - larger subproblems (octahedron, variable radius spheres/cylinders)
     - new clusters types (N degrees of freedom)
 
 Extentions:
     - implement geometry: lines, planes, spheres, cylinders, tori (mappings to
       cluster)
-    - constraints on parameters (equality, algebraic constraints)
-    - different variable domains (integers, reals, n-dimensional points,
+    - add constraints on parameters (equality, algebraic constraints)
+    - add other variable domains (integers, reals, n-dimensional points,
       surfaces, volumes, logic variables, lists)
 
 Easy of use:
-    - move use_prototype flag to GeometricProblem (instead of in
-      GeometricSolver)
     - check dimension of prototype points when adding to problem
 
 
 BUGS:
-
-- solver sometimes does not terminate - keeps adding merges where the result
-  cluster and one of the original clusters merge again and again. Problem 
-  likely that a source cluster should be removed (reducdant) but isn't. 
-  Often happens with test(triple_double_triangle_problem) 
 
 - following should be well-constrained, but gives underconstrained (need extra rule/pattern) 
 def diamond_3d():
@@ -65,104 +58,3 @@ def diamond_3d():
        FixConstraint(v2=[-5.0, 5.0, 0.0]) not satisfied
        FixConstraint(v1=[0.0, 0.0, 0.0]) not satisfied
 
-- when solvin DAD type clusters, sometimes raises:
-StandardError: cluster rigid#157388428(['v1', 'v2', 'v3']) already in clsolver
-
-Debug output:
-
-Solving....
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: a =   v3
-triplet2dad: c =   v1
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: a =   v3
-triplet2dad: c =   v1
-triplet2dad: start
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: start
-triplet2dad: b =  v2
-triplet2dad: b in rigids
-Traceback (most recent call last):
-  File "test.py", line 971, in <module>
-   t2d()
-  File "test.py", line 968, in test2d
-    test(dad_problem())
-  File "test.py", line 780, in test
-    solver = GeometricSolver(problem, use_prototype)
-  File "/home/rick/lib/python/geosolver/geometric.py", line 294, in __init__
-    self._add_constraint(con)
-  File "/home/rick/lib/python/geosolver/geometric.py", line 486, in _add_constraint
-    self.dr.add(hog)
-  File "/home/rick/lib/python/geosolver/clsolver.py", line 79, in add
-    self._process_new()
-  File "/home/rick/lib/python/geosolver/clsolver.py", line 363, in _process_new
-    self._add_method_complete(method)
-  File "/home/rick/lib/python/geosolver/clsolver.py", line 487, in _add_method_complete
-    self._add_cluster(output)
-  File "/home/rick/lib/python/geosolver/clsolver.py", line 236, in _add_cluster
-    raise StandardError, "cluster %s already in clsolver"%(str(newcluster))
-StandardError: cluster rigid#157388428(['v1', 'v2', 'v3']) already in clsolver

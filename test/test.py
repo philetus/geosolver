@@ -770,14 +770,13 @@ def test_ada_3d():
 
 # ------- generic test -------
 
-def test(problem, use_prototype=True):
+def test(problem):
     """Test solver on a given problem"""
     #diag_select(".*")
     print "problem:"
     print problem
-    print "use_prototype=",use_prototype
     print "Solving..."
-    solver = GeometricSolver(problem, use_prototype)
+    solver = GeometricSolver(problem)
     print "...done"
     print "drplan:"
     print solver.dr
