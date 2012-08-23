@@ -14,41 +14,43 @@ from notify import Notifier, Listener
 from tolerance import tol_eq
 from intersections import angle_3p, distance_2p
 from selconstr import SelectionConstraint
-from geosolver.intersections import is_left_handed, is_right_handed
-from geosolver.intersections import is_clockwise, is_counterclockwise 
-from geosolver.intersections import transform_point, make_hcs_3d
+from intersections import is_left_handed, is_right_handed
+from intersections import is_clockwise, is_counterclockwise 
+from intersections import transform_point, make_hcs_3d
 
 # ----------- GeometricProblem -------------
 
 class GeometricProblem (Notifier, Listener):
-    """A geometric constraint problem with a prototype.
+    """A geometric constraint problem with a prototpe.
     
-       A problem consists of point variables (just variables for short), prototype
-       points for each variable and constraints.
-       Variables are just names and can be any hashable object (recommend strings)
-       Supported constraints are instances of DistanceConstraint,AngleConstraint,
-       FixConstraint or SelectionConstraint.
-       
-       Prototype points are instances of vector.
+       A problem consists of geometric variables (just variables for short), a prototype
+       for each variable and constraints.
 
+       Variables are of type Point, Line, etc. Alternatively, variables of any other hashable type
+        (e.g. strings) are assumed to be points. (Depricated - used for backwards compatibility)
+       
+       Prototypes are of type vector 
+       A point prototype must have length equal to the dimensionality as the problem (D).
+       A line prototype must have length 2*D: it represents a point though which the line passes and a direction vector. 
+       A plane prototype must have length 3*D: it represents a point though which the plane passes and two direction vectors. 
+       Supported constraints are instances of ParametricConstraint, FixConstraint, SelectionConstraint, etc.
+       
        GeometricProblem listens for changes in constraint parameters and passes
        these changes, and changes in the system of constraints and the prototype, 
        to any other listerers (e.g. GeometricSolver) 
-
-       instance attributes:
-         cg         - a ConstraintGraph instance
-         prototype  - a dictionary mapping variables to points
-
     """
     
-    def __init__(self, dimension):
-        """initialize a new problem"""
+    def __init__(self, dimension, use_prototype=True):
+        """Initialize a new problem. Must specify dimensionality of the problem (i.e. dimension of points) and 
+            wheter to use the prototype for solution selection."""
         Notifier.__init__(self)
         Listener.__init__(self)
-        self.dimension = dimension
-        self.prototype = {}
-        self.cg = ConstraintGraph()
-        self.use_prototype = True;
+        self.dimension = dimension      # dimensionality of points
+        self.prototype = {}             # mapping from variables to prototypes
+        self.cg = ConstraintGraph()     # constraint graph
+        self.use_prototype = use_prototype;     # whether to use prototype for solution selection
+
+    # ----------- prototype --------
 
     def set_prototype_selection(self, enabled):
         """Enable (True, the default) or disable (False) use of prototype for solution selection"""
@@ -60,89 +62,105 @@ class GeometricProblem (Notifier, Listener):
         """Return True if prototype selection has been enabled (the default) or False otherwise"""
         return self.use_prototype
 
-    def add_point(self, variable,pos):
-        """add a point variable with a prototype position"""
-        position = vector.vector(pos)
-        assert len(position) == self.dimension
+    # ---------------- variables -----------
+
+    def add_variable(self, variable, prototype):
+        """add a variable with a prototype"""
+        prototypevector = vector.vector(prototype)
+        # check dimension of prototype
+        if isinstance(variable, Point):
+            assert len(prototypevector) == self.dimension
+        elif isinstance(variable, Line):
+            assert len(prototypevector) == 2 * self.dimension
+        elif isinstance(variable, Plane):
+            assert len(prototypevector) == 3 * self.dimension
+        else:
+            # assume point
+            assert len(prototypevector) == self.dimension
         if variable not in self.prototype:
-            self.prototype[variable] = position
+            self.prototype[variable] = prototypevector
             self.cg.add_variable(variable)
         else:
-            raise StandardError, "point already in problem"
+            raise StandardError, "variable already in problem"
 
-    def set_point(self, variable, pos):
-        """set prototype position of point variable"""
-        position = vector.vector(pos)
+    def has_variable(self, variable):
+        """returns True if variable in problem"""
+        return variable in self.prototype
+
+    def rem_variable(self, variable):
+        """remove a variable (and all constraints incident imposed on it)"""
         if variable in self.prototype:
-            self.prototype[variable] = position
-            self.send_notify(("set_point", (variable,position)))
-        else:
-            raise StandardError, "unknown point variable"
+            del self.prototype[variable] 
+            self.cg.rem_variable(variable) 
 
-    def get_point(self, variable):
-        """get prototype position of point variable"""
+    def set_prototype(self, variable, prototype):
+        """set prototype of variable"""
+        prototypevector = vector.vector(prototype)
+        if variable in self.prototype:
+            self.prototype[variable] = prototypevector
+            self.send_notify(("set_prototype", (variable,prototypevector)))
+        else:
+            raise StandardError, "unknown variable variable"
+
+    def get_prototype(self, variable):
+        """get prototype of variable"""
         if variable in self.prototype:
             return self.prototype[variable]
         else:
-            raise StandardError, "unknown point variable"
+            raise StandardError, "unknown variable variable"
+
+    # --------------- points - depricated  -------------
+    def add_point(self, variable, prototype):
+        """depricated - use add_variable"""
+        return self.add_variable(variable, prototype)
 
     def has_point(self, variable):
-         return variable in self.prototype
+        """depricated - use has_variable""" 
+        return self.has_variable(variable)
+
+    def set_point(self, variable, prototype):
+        """deprictaed - use set_prototype"""
+        return self.set_prototype(variable, prototype)
+
+    def get_point(self, variable):
+        """depricated - use get_prototype"""
+        return self.get_prototype(variable)
     
+    # ----------- constraints --------
+ 
     def add_constraint(self, con):
         """add a constraint"""
-        if isinstance(con, DistanceConstraint):
-            for var in con.variables():
+        # check that variables in problem
+        for var in con.variables():
                 if var not in self.prototype:
-                    raise StandardError, "point variable %s not in problem"%(var)
+                    raise StandardError, "variable %s not in problem"%(var)
+        # check that constraint not already in problem
+        if isinstance(con, DistanceConstraint):
             if self.get_distance(con.variables()[0],con.variables()[1]):
                 raise StandardError, "distance already in problem"
-            else: 
-                con.add_listener(self)
-                self.cg.add_constraint(con)
         elif isinstance(con, AngleConstraint):
-            for var in con.variables():
-                if var not in self.prototype:
-                    raise StandardError, "point variable %s not in problem"%(var)
             if self.get_angle(con.variables()[0],con.variables()[1], con.variables()[2]):
                 raise StandardError, "angle already in problem"
-            else: 
-                con.add_listener(self)
-                self.cg.add_constraint(con)
         elif isinstance(con, RigidConstraint):
-            for var in con.variables():
-                if var not in self.prototype:
-                    raise StandardError, "point variable %s not in problem"%(var)
-            #if self.get_rigid(con.variables())
-            #    raise StandardError, "rigid already in problem"
-            #else:
-            if True:
-                con.add_listener(self)
-                self.cg.add_constraint(con)
+            if self.get_rigid(con.variables()):
+                raise StandardError, "rigid already in problem"
         elif isinstance(con, MateConstraint):
-            for var in con.variables():
-                if var not in self.prototype:
-                    raise StandardError, "point variable %s not in problem"%(var)
-            #if self.get_mate(con.variables())
-            #    raise StandardError, "rigid already in problem"
-            #else:
-            if True:
-                con.add_listener(self)
-                self.cg.add_constraint(con)
+            if self.get_mate(con.variables()):
+                raise StandardError, "mate constraint already in problem"
         elif isinstance(con, SelectionConstraint):
-            for var in con.variables():
-                if var not in self.prototype:
-                    raise StandardError, "point variable %s not in problem"%(var)
-            self.cg.add_constraint(con)
+            pass
         elif isinstance(con, FixConstraint):
-            for var in con.variables():
-                if var not in self.prototype:
-                    raise StandardError, "point variable %s not in problem"%(var)
             if self.get_fix(con.variables()[0]):
                 raise StandardError, "fix already in problem"
-            self.cg.add_constraint(con)
+        elif isinstance(con, CoincidenceConstraint):
+            if self.get_coincidence(con.variables()[0], con.variables()[1]):
+                raise StandardError, "coincidence already in problem"
         else:
             raise StandardError, "unsupported constraint type"
+        # passed tests, add to poblem
+        if isinstance(self, ParametricConstraint):
+            con.add_listener(self)
+        self.cg.add_constraint(con)
 
     def get_distance(self, a, b):
         """return the distance constraint on given points, or None"""
@@ -172,6 +190,10 @@ class GeometricProblem (Notifier, Listener):
         else:
             return None
 
+    def get_rigid(self, vars):
+        print "GeometricProblem.get_rigid NOT IMPLEMENTED"
+        return None
+
     def get_fix(self, p):
         """return the fix constraint on given point, or None"""
         on_p = self.cg.get_constraints_on(p)
@@ -182,6 +204,10 @@ class GeometricProblem (Notifier, Listener):
             return fixes[0]
         else:
             return None
+
+    def get_coincidence(self, p, g):
+        print "GeometricProblem.get_coincidence NOT IMPLEMENTED"
+        return None
 
     def verify(self, solution):
         """returns true iff all constraints satisfied by given solution. 
@@ -233,7 +259,7 @@ class GeometricProblem (Notifier, Listener):
     def __str__(self):
         s = ""
         for v in self.prototype:
-            s += v + " = " + str(self.prototype[v]) + "\n"
+            s += str(v) + " = " + str(self.prototype[v]) + "\n"
         for con in self.cg.constraints():
             s += str(con) + "\n"
         s+= "prototype-based selection = " + str(self.use_prototype)
@@ -268,7 +294,7 @@ class GeometricSolver (Listener):
         elif self.problem.dimension == 3:
             self.dr = ClusterSolver3D()
         else:
-            raise StandardError, "Do not know how to solve problems of dimension > 3."
+            raise StandardError, "Sorry, can't solve problems of dimension < 2 or > 3."
         self._map = {}
         
         # enable prototype based selection by default
@@ -478,6 +504,17 @@ class GeometricSolver (Listener):
         self.dr.set_prototype_selection(enabled)
 
     def _add_variable(self, var):
+        if isinstance(var, Point):
+            self._add_point(var)
+        elif isinstance(var, Line):
+            self._add_line(var)
+        elif isinstance(var, Plane):
+            self._add_plane(var)
+        else:
+            # assume point - depricated
+            self._add_point(var)
+
+    def _add_point(self, var):
         if var not in self._map:
             rigid = Rigid([var])
             self._map[var] = rigid
@@ -745,7 +782,46 @@ class GeometricDecomposition:
         return s
     # def
 
+
+# ------------------- variable type -------------
+
+class GeometricVariable:
+    """Abstract base class for geometric variabes (Point, Line, etc)
+        A geometric variable is identified by its name attibute and its type.
+        It is hasable so it can be used in sets etc.
+    """ 
   
+    def __eq__(self, other):
+        return self.__class__ == other.__class__ and self.name == other.name  
+ 
+    def __hash__(self):
+        return hash(self.name)
+   
+    def __repr__(self):
+        return repr(self.__class__)+"("+repr(self.name)+")"
+    
+
+class Point(GeometricVariable):
+    def __init__(self, name):
+        self.name = name
+    
+    def __str__(self):
+        return "Point("+str(self.name)+")"
+
+class Line(GeometricVariable):
+    def __init__(self, name):
+        self.name = name
+    
+    def __str__(self):
+        return "Line("+str(self.name)+")"
+
+class Plane(GeometricVariable):
+    def __init__(self, name):
+        self.name = name
+    
+    def __str__(self):
+        return "Plane("+str(self.name)+")"
+
 # --------------------- constraint types --------------------
 
 
@@ -977,5 +1053,39 @@ class MateConstraint(ParametricConstraint):
     def __str__(self):
         return "MateConstraint("+str(self._variables)+")" 
 
+
+class CoincidenceConstraint(Constraint):
+    """defines a coincidence between a point and another geometricvariable (i.e. point, line, plane)"""
+    def __init__(self, point, geometry):
+        assert isinstance(point, Point)
+        assert isinstance(geometry, GeometricVariable)
+        self._point = point  
+        self._geometry = geometry
+        self._variables = [point, geometry]
+
+    def satisfied(self, mapping):
+        """return True iff mapping from variable names to points satisfies constraint""" 
+        if isinstance(geometry, Point):
+            p1 = mapping[self._point]
+            p2 = mapping[self._geometry]
+            return tol_eq(distance_2p(p1,p2),0)   
+        elif isinstance(geometry, Line):
+            p = mapping[self._point]
+            l = mapping[self._geometry]
+            p1 = l[0:3]
+            p2 = l[3:6]
+            return tol_eq(distance_point_line(p, p1, p2),0)   
+        elif isinstance(geometry, Plane):
+            p = mapping[self._point]
+            l = mapping[self._geometry]
+            p1 = l[0:3]
+            p2 = l[3:6]
+            p2 = l[6:9]
+            return tol_eq(distance_point_plane(p, p1, p2, p3),0)   
+        else:
+            raise StandardError, "unknown geometry type"""
+ 
+    def __str__(self):
+        return "CoincidenceConstraint("+str(self._point)+","+str(self._geometry)+")" 
 
 

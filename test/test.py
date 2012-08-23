@@ -970,5 +970,16 @@ def test2d():
     #test(ada_problem())
     #test(aad_problem())
 
+def line_problem():
+    """A problem with a fix constraint"""
+    problem = GeometricProblem(dimension=3)
+    problem.add_variable(Point('p1'),vector([0.0, 0.0, 0.0]))
+    problem.add_variable(Line('l1'),vector([0.0, 0.0, 0.0, 1.0, 1.0, 1.0]))
+    problem.add_constraint(CoincidenceConstraint(Point('p1'), Line('l1')))
+    return problem 
+
+def test_line():
+    test(line_problem())
+
 if __name__ == "__main__": 
-    test2d()
+    test_line()

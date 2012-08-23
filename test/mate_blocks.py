@@ -18,7 +18,7 @@ def test(problem):
     #diag_select(".*")
     print "problem:"
     print problem
-    solver = GeometricSolver(problem, use_prototype=True)
+    solver = GeometricSolver(problem)
     #print "drplan:"
     #print solver.dr
     #print "number of top-level rigids:",len(solver.dr.top_level())

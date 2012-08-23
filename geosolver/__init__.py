@@ -32,7 +32,7 @@ from geometric import MateConstraint
 from geometric import FixConstraint
 from geometric import LeftHandedConstraint
 from geometric import RightHandedConstraint
-from geometric import NotRightHandedConstraint
+from geometric import NotLeftHandedConstraint
 from geometric import NotRightHandedConstraint
 from geometric import CounterClockwiseConstraint
 from geometric import ClockwiseConstraint
