@@ -1,4 +1,4 @@
-# ----------- random problem generation ----------------
+#----------- random problem generation ----------------
 
 import random
 from diagnostic import diag_print
@@ -328,12 +328,11 @@ def random_triangular_problem_3D(npoints, radius, roundoff, pangle):
 					problem.add_constraint(AngleConstraint(pl,p,pr,angle))
 	return problem	
 
-
 def test():
-	#problem = random_triangular_problem_3D(10, 10.0, 0.0, 0.5)
-	problem = random_problem_2D(10, 10.0, 0.0, 0.6)
-        problem = randomize_angles(problem)
-	print problem
+    #problem = random_triangular_problem_3D(10, 10.0, 0.0, 0.5)
+    problem = random_problem_2D(10, 10.0, 0.0, 0.6)
+    problem = randomize_angles(problem)
+    print problem
 
-if __name__ == "__main__": test()
-
+if __name__ == "__main__": 
+    test()

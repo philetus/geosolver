@@ -190,10 +190,6 @@ class GeometricProblem (Notifier, Listener):
         else:
             return None
 
-    def get_rigid(self, vars):
-        print "GeometricProblem.get_rigid NOT IMPLEMENTED"
-        return None
-
     def get_fix(self, p):
         """return the fix constraint on given point, or None"""
         on_p = self.cg.get_constraints_on(p)
@@ -208,6 +204,15 @@ class GeometricProblem (Notifier, Listener):
     def get_coincidence(self, p, g):
         print "GeometricProblem.get_coincidence NOT IMPLEMENTED"
         return None
+
+    def get_rigid(self, vars):
+        print "GeometricProblem.get_rigid NOT IMPLEMENTED"
+        return None
+
+    def get_mate(self, vars):
+        print "GeometricProblem.get_mate NOT IMPLEMENTED"
+        return None
+
 
     def verify(self, solution):
         """returns true iff all constraints satisfied by given solution. 
