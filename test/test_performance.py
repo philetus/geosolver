@@ -14,10 +14,10 @@ from geosolver.intersections import distance_2p, angle_3p
 from time import time
 
 # create statistics for solving time
-def stats_solving():
+def stats_solving(minsize, maxsize, repeats):
     print "size \t # \t time \t result"
-    for size in range(4,31):
-        for i in range(1,10):
+    for size in range(minsize,maxsize+1):
+        for i in range(1,repeats+1):
             problem = random_triangular_problem_3D(size,10.0,0.0,0.0)
             t1 = time()
             solver = GeometricSolver(problem)
@@ -27,11 +27,11 @@ def stats_solving():
             print size,"\t",i,"\t",t,"\t",result
 
 # create statistics for incremental solving time
-def stats_incremental():
+def stats_incremental(minsize, maxsize, repeats):
     #diag_select("clsolver.remove")
     print "size \t # \t time \t result"
-    for size in range(4,31):
-        for i in range(1,10):
+    for size in range(minsize,maxsize+1):
+        for i in range(1,repeats+1):
             problem = random_triangular_problem_3D(size,10.0,0.0,0.0)
             solver = GeometricSolver(problem)
             t1 = time()
@@ -44,33 +44,28 @@ def stats_incremental():
             print size,"\t",i,"\t",t,"\t",result
 
 # create statistics for parametric change
-def stats_parametric_incremental():
+def stats_parametric_incremental(minsize, maxsize, repeats):
     #diag_select("clsolver.remove")
     print "size \t # \t time \t result"
-    for size in range(4,31):
-        for i in range(1,10):
+    for size in range(minsize,maxsize+1):
+        for i in range(1,repeats+1):
             problem = random_triangular_problem_3D(size,10.0,0.0,0.0)
             solver = GeometricSolver(problem)
             constraint = random.choice(problem.cg.constraints())
-            #problem.rem_constraint(constraint)
-            #problem.add_constraint(constraint)
-            #problem.rem_constraint(constraint)
-            #problem.add_constraint(constraint)
             t1 = time()
-            #problem.rem_constraint(constraint)
-            #problem.add_constraint(constraint)
-            #constraint.set_parameter(constraint.get_parameter())
+            problem.rem_constraint(constraint)
+            problem.add_constraint(constraint)
             result = solver.get_status()
             t2 = time()
             t = t2-t1
             print size,"\t",i,"\t",t,"\t",result
 
 # create statistics for parametric change
-def stats_parametric():
+def stats_parametric(minsize, maxsize, repeats):
     #diag_select("clsolver.remove")
     print "size \t # \t time \t result"
-    for size in range(4,31):
-        for i in range(1,10):
+    for size in range(minsize,maxsize+1):
+        for i in range(1,repeats+1):
             problem = random_triangular_problem_3D(size,10.0,0.0,0.0)
             solver = GeometricSolver(problem)
             constraint = random.choice(problem.cg.constraints())
@@ -82,10 +77,13 @@ def stats_parametric():
             print size,"\t",i,"\t",t,"\t",result
 
 def runstats():
-    stats_solving() 
-    stats_incremental() 
-    stats_parametric_incremental() 
-    stats_parametric() 
+    minsize = 4
+    maxsize = 10
+    repeats = 1
+    stats_solving(minsize, maxsize, repeats) 
+    stats_incremental(minsize, maxsize, repeats) 
+    stats_parametric_incremental(minsize, maxsize, repeats) 
+    stats_parametric(minsize, maxsize, repeats) 
 
 if __name__ == "__main__": 
     runstats()
