@@ -574,8 +574,13 @@ class ClusterSolver(Notifier):
                 if isinstance(item, SelectionMethod):
                     for con in item.iter_constraints():
                         self._selection_method[con] = None
-            elif isinstance(item, MultiVariable):
+            if isinstance(item, MultiVariable):
                 self._mg.rem_variable(item)
+            # remove variables with no dependent clusters
+            if isinstance(item, Cluster):
+                for var in item.vars:
+                    if len(self.find_dependend(var)) == 0:
+                        self._graph.remove(var)
             # notify listeners
             self.send_notify(("remove", item))
         # restore toplevel (also added to _new)

@@ -291,15 +291,21 @@ class GeometricSolver (Listener):
         Listener.__init__(self)
 
         # init variables
+        # the problem on which this solver works 
         self.problem = problem
+        # shortcut to the dimension of the problem
         self.dimension = problem.dimension
-        self.cg = problem.cg   
+        # shortcut to the constraint graph of the problem
+        self.cg = problem.cg  
+        # the cluster-solver (or dr for decomposition-recombination) 
         if self.problem.dimension == 2:
             self.dr = ClusterSolver2D()
         elif self.problem.dimension == 3:
             self.dr = ClusterSolver3D()
         else:
             raise StandardError, "Sorry, can't solve problems of dimension < 2 or > 3."
+        
+        # a map from problem variables and constraints to clusters, and vice versa
         self._map = {}
         
         # enable prototype based selection by default
@@ -341,10 +347,14 @@ class GeometricSolver (Listener):
         return self.get_status()
 
     def get_result(self):
-        """Depricated. Use get_cluster instead."""
-        return self.get_cluster()  
+        """Depricated. Use get_decomposition."""
+        return self.get_decomposition()  
 
     def get_cluster(self):
+        """Depricated. Use get_decomposition."""
+        return self.get_decomposition()  
+    
+    def get_decomposition(self):
         """Returns a GeometricDecomposition (the root of a tree of clusters),
          describing the solutions and the decomposition of the problem."""
         # several drcluster can maps to a single geoclusters 
@@ -426,7 +436,7 @@ class GeometricSolver (Listener):
     def get_solutions(self):
         """Returns a list of Configurations, which will be empty if the
            problem has no solutions. Note: this method is
-           cheaper but less informative than get_cluster. The
+           cheaper but less informative than get_decomposition. The
            list and the configurations should not be changed (since they are
            references to objects in the solver)."""
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
@@ -444,7 +454,7 @@ class GeometricSolver (Listener):
             GeometricDecomposition.EMPTY,
             GeometricDecomposition.I_OVER,
             GeometricDecomposition.I_UNDER.
-           Note: this method is cheaper but less informative than get_cluster. 
+           Note: this method is cheaper but less informative than get_decomposition. 
         """
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
         if len(rigids) == 0:            
@@ -502,7 +512,7 @@ class GeometricSolver (Listener):
         else:
             raise StandardError, "message from unknown source"+str((object, message))
     
-    # internal methods
+    # --------------- internal methods ------------------
 
     def _set_prototype_selection(self, enabled):
         """Enable (True) or disable (False) use of prototype for solution selection"""
@@ -526,11 +536,12 @@ class GeometricSolver (Listener):
             self._map[rigid] = var
             self.dr.add(rigid)
             self._update_variable(var)
-        
+     
     def _rem_variable(self, var):
         diag_print("GeometricSolver._rem_variable","gcs")
         if var in self._map:
-            self.dr.remove(self._map[var])
+            self.dr.remove(self._map[var])      
+            # Note: CLSolver automatically removes variables with no dependent clusters
             del self._map[var]
 
     def _add_constraint(self, con):

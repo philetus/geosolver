@@ -15,6 +15,7 @@ from time import time
 
 # create statistics for solving time
 def stats_solving(minsize, maxsize, repeats):
+    print "times for solving problems from scratch"
     print "size \t # \t time \t result"
     for size in range(minsize,maxsize+1):
         for i in range(1,repeats+1):
@@ -29,6 +30,7 @@ def stats_solving(minsize, maxsize, repeats):
 # create statistics for incremental solving time
 def stats_incremental(minsize, maxsize, repeats):
     #diag_select("clsolver.remove")
+    print "times for incremental re-solving (one constraint removed and re-added)"
     print "size \t # \t time \t result"
     for size in range(minsize,maxsize+1):
         for i in range(1,repeats+1):
@@ -36,23 +38,6 @@ def stats_incremental(minsize, maxsize, repeats):
             solver = GeometricSolver(problem)
             t1 = time()
             constraint = random.choice(problem.cg.constraints())
-            problem.rem_constraint(constraint)
-            problem.add_constraint(constraint)
-            result = solver.get_status()
-            t2 = time()
-            t = t2-t1
-            print size,"\t",i,"\t",t,"\t",result
-
-# create statistics for parametric change
-def stats_parametric_incremental(minsize, maxsize, repeats):
-    #diag_select("clsolver.remove")
-    print "size \t # \t time \t result"
-    for size in range(minsize,maxsize+1):
-        for i in range(1,repeats+1):
-            problem = random_triangular_problem_3D(size,10.0,0.0,0.0)
-            solver = GeometricSolver(problem)
-            constraint = random.choice(problem.cg.constraints())
-            t1 = time()
             problem.rem_constraint(constraint)
             problem.add_constraint(constraint)
             result = solver.get_status()
@@ -63,6 +48,7 @@ def stats_parametric_incremental(minsize, maxsize, repeats):
 # create statistics for parametric change
 def stats_parametric(minsize, maxsize, repeats):
     #diag_select("clsolver.remove")
+    print "times for parameteric updates (one constraint parameter)"
     print "size \t # \t time \t result"
     for size in range(minsize,maxsize+1):
         for i in range(1,repeats+1):
@@ -82,7 +68,6 @@ def runstats():
     repeats = 1
     stats_solving(minsize, maxsize, repeats) 
     stats_incremental(minsize, maxsize, repeats) 
-    stats_parametric_incremental(minsize, maxsize, repeats) 
     stats_parametric(minsize, maxsize, repeats) 
 
 if __name__ == "__main__": 
