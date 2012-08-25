@@ -12,7 +12,7 @@ from multimethod import MultiVariable, MultiMethod
 from cluster import *
 from configuration import Configuration
 from gmatch import gmatch
-from method import OrMethod
+from method import OrMethod,SetMethod
 from incremental import MutableSet,Union,Filter
 
 # --------------------------------------------------
@@ -521,8 +521,10 @@ class ClusterSolver(Notifier):
                 diag_print("keep top-level: "+str(cluster),"clsolver")
         
         # add method to determine root-variable
-        self._add_root_method(merge.input_clusters(),merge.outputs()[0])
-        
+        if hasattr(merge,"noremove") and merge.noremove == True:
+            self._add_root_false(merge.outputs()[0]) 
+        else:
+            self._add_root_method(merge.input_clusters(),merge.outputs()[0])
         # add solution selection methods, only if information increasing
         if infinc:
             output2 = self._add_prototype_selector(merge)
@@ -537,6 +539,14 @@ class ClusterSolver(Notifier):
             inroots.append(rootname(cluster))
         outroot = rootname(outcluster)
         method = OrMethod(inroots, outroot)
+        # add method
+        self._add_method(method)
+        # make sure its deleted when cluster is deleted
+        self._add_dependency(outcluster, method) 
+
+    def _add_root_false(self,outcluster):
+        outroot = rootname(outcluster)
+        method = SetMethod(outroot, False)
         # add method
         self._add_method(method)
         # make sure its deleted when cluster is deleted

@@ -119,7 +119,7 @@ class GeometricProblem (Notifier, Listener):
         return self.has_variable(variable)
 
     def set_point(self, variable, prototype):
-        """deprictaed - use set_prototype"""
+        """depricated - use set_prototype"""
         return self.set_prototype(variable, prototype)
 
     def get_point(self, variable):
@@ -325,6 +325,12 @@ class GeometricSolver (Listener):
        
         # add constraints
         toadd = set(self.cg.constraints())
+
+        # add coincidences first. Prevents re-mapping of primitves and re-solving of problem 
+        for con in list(toadd):
+            if isinstance(con, CoincidenceConstraint): 
+                self._add_constraint(con)
+                toadd.remove(con)
 
         # add selection constraints first. Prevents re-evaluation 
         for con in list(toadd):
@@ -649,11 +655,17 @@ class GeometricSolver (Listener):
             v0 = vars[0]
             v1 = vars[1]
             dist = con.get_parameter()
-            p0 = vector.vector([0.0,0.0])
-            p1 = vector.vector([dist,0.0])
-            if self.dimension == 3:
-                p0.append(0.0)
-                p1.append(0.0)
+            #p0 = vector.vector([0.0,0.0])
+            #p1 = vector.vector([dist,0.0])
+            # use prototype to orient rigid - minimize difference solution and prototype
+            p0 = self.problem.get_prototype(v0)
+            v = self.problem.get_prototype(v1) - p0
+            if vector.norm(v) != 0:
+                v = v / vector.norm(v)
+            else:
+                v = vector.vector([0.0 for i in range(self.dimension)])
+                v[0] = 1.0
+            p1 = p0+v*dist
             conf = Configuration({v0:p0,v1:p1})
             self.dr.set(rig, [conf])
             assert con.satisfied(conf.map)
