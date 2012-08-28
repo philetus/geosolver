@@ -5,7 +5,7 @@ problems.
 This distribution consists of:
     - a geometric constraints solver (geosolver)
     - a simple test module (solvertest) 
-    - a graphical geometric constraint solving workbench (solvergui)
+    - a graphical geometric constraint solving workbench (workbench)
     - a python wrapper for qhull (Delny)
 
 Delny is included in this distribution, but not created or maintained
@@ -67,7 +67,7 @@ RUNNING
 
 To run geosolver tests:
 >cd test
->python test.py
+>python test_3d.py
 
 To run solvergui:
 >cd workbench
@@ -82,11 +82,6 @@ documentation. The main API is the geomsolver.geometric
 module. For documentation type:
 
  pydoc geosolver.geometric
-
-
-
-
-
 
 
 

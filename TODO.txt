@@ -23,12 +23,13 @@ Extentions:
     - add constraints on parameters (equality, algebraic constraints)
     - add other variable domains (integers, reals, n-dimensional points,
       surfaces, volumes, logic variables, lists)
-
-Easy of use:
-    - check dimension of prototype points when adding to problem
-
+    - hybrid with other solving methods: and-propagation, iterative solvers, etc.
 
 BUGS:
+
+- stop problem from rotating and jumping around when there are no fixed points. It should 
+  be as close to the prototype as possible; 
+  should have at least have one (2d) or two(3d) edge(s) with the same offset and orientation.
 
 - following should be well-constrained, but gives underconstrained (need extra rule/pattern) 
 def diamond_3d():
