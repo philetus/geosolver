@@ -115,6 +115,7 @@ class DecompositionView(QtGui.QDialog):
             self.optimiseGraphLayout()
 
     def optimiseGraphLayout(self):
+
         # create a graph of clusters and connections
         graph = geosolver.graph.Graph()
         if self.ui.graphicsScene != None:
@@ -123,39 +124,74 @@ class DecompositionView(QtGui.QDialog):
                     graph.add_vertex(item)
                     item.force = numpy.array([0.0,0.0])
                 elif isinstance(item, CVConnection):
-                    graph.add_edge(item.nodeFrom, item.nodeTo)   
-        
-        #for cluster in graph.vertices():
-        #    print "cluster",cluster
-        #for connection in graph.edges():
-        #    print "connection", connection
-
-        # determine forces due to overlapping cluster boxes
+                    graph.add_edge(item.nodeFrom, item.nodeTo, item)   
+       
         l = list(graph.vertices())
-        n = len(l)
-        for i in range(n):
-            for j in range(i+1,n):
-                c1 = l[i]     
-                c2 = l[j] 
+
+        # iteratively implove layout 
+        for i in range(100):
+            # clear forces 
+            for c in l:
+                c.force = numpy.array([random.random()*0, random.random()*0])
+
+            # determine forces due to overlapping cluster boxes
+            n = len(l)
+            for i in range(n):
+                for j in range(i+1,n):
+                    c1 = l[i]     
+                    c2 = l[j] 
+                    box1 = c1.paintRect.translated(c1.position)
+                    box1.setWidth(2*box1.width())
+                    box1.setHeight(2*box1.height())
+                    box2 = c2.paintRect.translated(c2.position)
+                    box2.setWidth(2*box2.width())
+                    box2.setHeight(2*box2.height())
+                    #print "box 1", box1 
+                    #print "box 2", box2 
+                    if box1.intersects(box2):
+                        #print "intersects"
+                        force = box1.intersected(box2).width() + box1.intersected(box2).height() 
+                        centerdiff = box2.center()-box1.center()
+                        direction = numpy.array([centerdiff.x(),centerdiff.y()])
+                        norm =  numpy.linalg.norm(direction)
+                        if norm != 0:
+                            direction = direction / numpy.linalg.norm(direction)
+                        direction[1] = 0.0
+                        c1.force += force*direction;
+                        c2.force += -force*direction;
+                        #print "force 1", c1.force
+                        #print "force 2", c2.force
+            
+            # determine forces due to connections
+            for e in graph.edges():
+                c1 = e[0]     
+                c2 = e[1] 
                 box1 = c1.paintRect.translated(c1.position)
                 box2 = c2.paintRect.translated(c2.position)
-                print "box 1", box1 
-                print "box 2", box2 
-                if box1.intersects(box2):
-                    print "intersects"
-                    force = box1.intersected(box2).width() + box1.intersected(box2).height() 
-                    centerdiff = box2.center()-box1.center()
-                    direction = numpy.array([centerdiff.x(),centerdiff.y()])
-                    c1.force += force*direction;
-                    c2.force += -force*direction;
-                    print "force 1", c1.force
-                    print "force 2", c2.force
+                centerdiff = box2.center()-box1.center()
+                direction = numpy.array([centerdiff.x(),centerdiff.y()])
+                norm =  numpy.linalg.norm(direction)
+                if norm != 0:
+                    direction = direction / numpy.linalg.norm(direction)
+                #goal = box1.height() + box2.height() + box1.width() + box2.width()
+                #goal = 0
+                force = (norm - goal) / 1.0
+                direction[1] = 0.0
+                c1.force += force*direction;
+                c2.force += -force*direction;
+                #print "force ", force
 
-        # apply forces 
-        for c in l:
-            move = QtCore.QPointF(c.force[0],c.force[1])
-            c.position += move
-            c.translate(move.x(), move.y())
+            # apply forces 
+            for c in l:
+                move = QtCore.QPointF(c.force[0],c.force[1])/2 
+                c.position += move
+                c.translate(move.x(), move.y())
+        # done iterating
+
+        # uppate connectors
+        for e in graph.edges():
+            connector = graph.get(e[0],e[1])
+            connector.determinePath()
 
     def updateViewports(self):
         self.viewportManager.updateViewports()
