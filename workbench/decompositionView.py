@@ -4,6 +4,8 @@ from ui_compositionView import Ui_compositionView
 from cvitems import CVCluster, CVConnection
 from parameters import Settings
 import random
+import geosolver.graph
+import numpy
 
 class DecompositionView(QtGui.QDialog):
     """ A view where the decomposition of the system of constraints is visualised as a directed acyclic graph"""
@@ -109,6 +111,51 @@ class DecompositionView(QtGui.QDialog):
             for c in clusters:
                 for child in c.subs:
                     self.ui.graphicsScene.addItem(CVConnection(self, self.map[c], self.map[child]))
+            # iteratively improve graph layout
+            self.optimiseGraphLayout()
+
+    def optimiseGraphLayout(self):
+        # create a graph of clusters and connections
+        graph = geosolver.graph.Graph()
+        if self.ui.graphicsScene != None:
+            for item in self.ui.graphicsView.items():
+                if isinstance(item, CVCluster):
+                    graph.add_vertex(item)
+                    item.force = numpy.array([0.0,0.0])
+                elif isinstance(item, CVConnection):
+                    graph.add_edge(item.nodeFrom, item.nodeTo)   
+        
+        #for cluster in graph.vertices():
+        #    print "cluster",cluster
+        #for connection in graph.edges():
+        #    print "connection", connection
+
+        # determine forces due to overlapping cluster boxes
+        l = list(graph.vertices())
+        n = len(l)
+        for i in range(n):
+            for j in range(i+1,n):
+                c1 = l[i]     
+                c2 = l[j] 
+                box1 = c1.paintRect.translated(c1.position)
+                box2 = c2.paintRect.translated(c2.position)
+                print "box 1", box1 
+                print "box 2", box2 
+                if box1.intersects(box2):
+                    print "intersects"
+                    force = box1.intersected(box2).width() + box1.intersected(box2).height() 
+                    centerdiff = box2.center()-box1.center()
+                    direction = numpy.array([centerdiff.x(),centerdiff.y()])
+                    c1.force += force*direction;
+                    c2.force += -force*direction;
+                    print "force 1", c1.force
+                    print "force 2", c2.force
+
+        # apply forces 
+        for c in l:
+            move = QtCore.QPointF(c.force[0],c.force[1])
+            c.position += move
+            c.translate(move.x(), move.y())
 
     def updateViewports(self):
         self.viewportManager.updateViewports()
