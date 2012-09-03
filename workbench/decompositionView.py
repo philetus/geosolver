@@ -102,7 +102,7 @@ class DecompositionView(QtGui.QDialog):
                 for k in range(0,len(layer)):
                     c = layer[k]
                     y = n * 50.0
-                    x = (k - len(layer)/2.0) * 30.0 * n
+                    x = (k - len(layer)/2.0) * 50.0 * n
                     cvcluster = CVCluster(self, c, x,y)
                     self.ui.graphicsScene.addItem(cvcluster)
                     self.map[c] = cvcluster
@@ -112,7 +112,7 @@ class DecompositionView(QtGui.QDialog):
                 for child in c.subs:
                     self.ui.graphicsScene.addItem(CVConnection(self, self.map[c], self.map[child]))
             # iteratively improve graph layout
-            self.optimiseGraphLayout()
+            # self.optimiseGraphLayout()
 
     def optimiseGraphLayout(self):
 
@@ -156,9 +156,9 @@ class DecompositionView(QtGui.QDialog):
                         norm =  numpy.linalg.norm(direction)
                         if norm != 0:
                             direction = direction / numpy.linalg.norm(direction)
-                        direction[1] = 0.0
-                        c1.force += force*direction;
-                        c2.force += -force*direction;
+                        #direction[1] = 0.0
+                        c1.force += -force*direction / 10.0;
+                        c2.force += force*direction / 10.0;
                         #print "force 1", c1.force
                         #print "force 2", c2.force
             
@@ -173,17 +173,16 @@ class DecompositionView(QtGui.QDialog):
                 norm =  numpy.linalg.norm(direction)
                 if norm != 0:
                     direction = direction / numpy.linalg.norm(direction)
-                #goal = box1.height() + box2.height() + box1.width() + box2.width()
-                #goal = 0
-                force = (norm - goal) / 1.0
-                direction[1] = 0.0
-                c1.force += force*direction;
+                goal = box1.height() + box2.height() + box1.width() + box2.width()
+                force = (norm - goal) / 20.0
+                #direction[1] = 0.0
+                c1.force += +force*direction;
                 c2.force += -force*direction;
                 #print "force ", force
 
             # apply forces 
             for c in l:
-                move = QtCore.QPointF(c.force[0],c.force[1])/2 
+                move = QtCore.QPointF(c.force[0],c.force[1])
                 c.position += move
                 c.translate(move.x(), move.y())
         # done iterating
