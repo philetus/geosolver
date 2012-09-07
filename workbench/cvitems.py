@@ -47,7 +47,6 @@ class CVConnection(QtGui.QGraphicsItem):
         self.nodeFrom = nodeFrom
         self.nodeTo = nodeTo
         self.beziercurve = None
-        self.paintRect = None
         self.setZValue(1)
         
         self.determinePath()

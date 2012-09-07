@@ -95,7 +95,29 @@ class DecompositionView(QtGui.QDialog):
                 n = len(c.variables)
                 layers[n].append(c)
             # sort clusters in layers
-            # ?? 
+            # start from layer N (largest clusters)
+            # clusters are initially ordered according to the order in which sub-clusters appear in the previous (n+1) layer             
+            for n in reversed(range(1,N)):
+                print "ordering layers",n
+                # find subiable pseudo-ordering in previous layers
+                subordervalue = {}
+                clusterindex = 0
+                for cluster in layers[n+1]:
+                    clusterindex  = clusterindex+1 
+                    for sub in cluster.subs:
+                        # order by first appearence in cluster from left to right
+                        if sub not in subordervalue:
+                            subordervalue[sub] = clusterindex
+                # determine pseudo-order clusters in this layers: sum subordervalues per cluster
+                clusterordervalue = {}
+                for cluster in layers[n]:
+                    clusterordervalue[cluster] = 0
+                    for sub in cluster.subs:
+                        if sub in subordervalue:
+                            clusterordervalue[cluster] += subordervalue[sub]
+                # sort clusters in layers
+                layers[n].sort(lambda x,y:clusterordervalue[x]<clusterordervalue[y])
+            
             # map GeometricDecompositions to CVClusters
             for n in range(0,N+1):
                 layer = layers[n]
@@ -112,10 +134,10 @@ class DecompositionView(QtGui.QDialog):
                 for child in c.subs:
                     self.ui.graphicsScene.addItem(CVConnection(self, self.map[c], self.map[child]))
             # iteratively improve graph layout
-            # self.optimiseGraphLayout()
+            self.optimiseGraphLayout()
 
     def optimiseGraphLayout(self):
-
+        print "optimising graph layout..."
         # create a graph of clusters and connections
         graph = geosolver.graph.Graph()
         if self.ui.graphicsScene != None:
@@ -140,10 +162,10 @@ class DecompositionView(QtGui.QDialog):
                 for j in range(i+1,n):
                     c1 = l[i]     
                     c2 = l[j] 
-                    box1 = c1.paintRect.translated(c1.position)
+                    box1 = c1.boundingRect().translated(c1.position)
                     box1.setWidth(2*box1.width())
                     box1.setHeight(2*box1.height())
-                    box2 = c2.paintRect.translated(c2.position)
+                    box2 = c2.boundingRect().translated(c2.position)
                     box2.setWidth(2*box2.width())
                     box2.setHeight(2*box2.height())
                     #print "box 1", box1 
@@ -166,19 +188,47 @@ class DecompositionView(QtGui.QDialog):
             for e in graph.edges():
                 c1 = e[0]     
                 c2 = e[1] 
-                box1 = c1.paintRect.translated(c1.position)
-                box2 = c2.paintRect.translated(c2.position)
+                box1 = c1.boundingRect().translated(c1.position)
+                box2 = c2.boundingRect().translated(c2.position)
                 centerdiff = box2.center()-box1.center()
                 direction = numpy.array([centerdiff.x(),centerdiff.y()])
                 norm =  numpy.linalg.norm(direction)
                 if norm != 0:
                     direction = direction / numpy.linalg.norm(direction)
-                goal = box1.height() + box2.height() + box1.width() + box2.width()
-                force = (norm - goal) / 20.0
+                #goal = max(box1.width(),box2.width())
+                goal = 5 * box1.height()
+                force = (norm - goal) / 50.0
                 #direction[1] = 0.0
                 c1.force += +force*direction;
                 c2.force += -force*direction;
                 #print "force ", force
+
+            # determine forces due to clusters overlapping connections
+            n = len(l)
+            for c in graph.vertices():
+                for e in graph.edges():
+                    box1 = c.boundingRect().translated(c.position)
+                    box1.setWidth(2*box1.width())
+                    box1.setHeight(2*box1.height())
+                    con = graph.get(e[0],e[1])
+                    box2 = con.boundingRect()
+                    box2.setWidth(2*box2.width())
+                    box2.setHeight(2*box2.height())
+                    #print "box 1", box1 
+                    #print "box 2", box2 
+                    if box1.intersects(box2):
+                        #print "intersects"
+                        force = box1.intersected(box2).width() + box1.intersected(box2).height() 
+                        centerdiff = box2.center()-box1.center()
+                        direction = numpy.array([centerdiff.x(),centerdiff.y()])
+                        norm =  numpy.linalg.norm(direction)
+                        if norm != 0:
+                            direction = direction / numpy.linalg.norm(direction)
+                        #direction[1] = 0.0
+                        c.force += -force*direction / 50.0;
+                        #print "force 1", c1.force
+                        #print "force 2", c2.force
+            
 
             # apply forces 
             for c in l:
@@ -191,6 +241,7 @@ class DecompositionView(QtGui.QDialog):
         for e in graph.edges():
             connector = graph.get(e[0],e[1])
             connector.determinePath()
+        print "done"
 
     def updateViewports(self):
         self.viewportManager.updateViewports()
