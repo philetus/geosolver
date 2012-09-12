@@ -37,8 +37,26 @@ def line_problem3():
     problem.add_constraint(DistanceConstraint(Point('p1'), Point('p2'), 5.0))
     return problem 
 
+def line_problem4():
+    """A problem with a Point, a Line and a CoincicentConstraint"""
+    problem = GeometricProblem(dimension=3)
+    problem.add_variable(Point('p1'),vector([3.0, 2.0, 1.0]))
+    problem.add_variable(Point('p2'),vector([1.0, 1.0, 1.0]))
+    problem.add_variable(Line('l1'),vector([0.0, 0.0, 0.0, 1.0, 1.0, 1.0]))
+    problem.add_constraint(CoincidenceConstraint(Point('p1'), Line('l1')))
+    problem.add_constraint(CoincidenceConstraint(Point('p2'), Line('l1')))
+    problem.add_constraint(DistanceConstraint(Point('p1'), Point('p2'), 5.0))
+    problem.add_variable(Point('p3'),vector([0.0, 0.0, 1.0]))
+    problem.add_constraint(CoincidenceConstraint(Point('p3'), Line('l1')))
+    problem.add_constraint(DistanceConstraint(Point('p1'), Point('p3'), 8.0))
+    return problem 
+
+
 def test_line():
+    test(line_problem1())
+    test(line_problem2())
     test(line_problem3())
+    test(line_problem4())
 
 if __name__ == "__main__": 
     test_line()
