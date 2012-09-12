@@ -7,13 +7,14 @@ from clsolver import PrototypeMethod, SelectionMethod
 from clsolver3D import ClusterSolver3D 
 from clsolver2D import ClusterSolver2D 
 from cluster import *
+from selconstr import SelectionConstraint
 from configuration import Configuration 
 from diagnostic import diag_print
 from constraint import Constraint, ConstraintGraph
 from notify import Notifier, Listener
 from tolerance import tol_eq
 from intersections import angle_3p, distance_2p
-from selconstr import SelectionConstraint
+from intersections import distance_point_line
 from intersections import is_left_handed, is_right_handed
 from intersections import is_clockwise, is_counterclockwise 
 from intersections import transform_point, make_hcs_3d
@@ -107,7 +108,7 @@ class GeometricProblem (Notifier, Listener):
         if variable in self.prototype:
             return self.prototype[variable]
         else:
-            raise StandardError, "unknown variable variable"
+            raise StandardError, "unknown variable "+str(variable)
 
     # --------------- points - depricated  -------------
     def add_point(self, variable, prototype):
@@ -201,18 +202,39 @@ class GeometricProblem (Notifier, Listener):
         else:
             return None
 
+    def get_constraints_with_type_on_variables(self, constrainttype, variables):
+        candidates = None
+        for var in variables:
+            if candidates == None:
+                candidates = set(filter(lambda c:isinstance(c,constrainttype),self.cg.get_constraints_on(var)))
+            else:    
+                candidates.intersection_update(filter(lambda c:isinstance(c,constrainttype),self.cg.get_constraints_on(var)))
+        return candidates
+
+    def get_unique_constraint(self, constrainttype, variables):
+        candidates = self.get_constraints_with_type_on_variables(constrainttype, variables)
+        if len(candidates) == 0:
+            return None
+        elif len(candidates) == 1:
+            return candidates[0]
+        else: # >= 1
+            raise StandardError, "multiple constraints found"
+        
     def get_coincidence(self, p, g):
-        print "GeometricProblem.get_coincidence NOT IMPLEMENTED"
-        return None
+        return self.get_unique_constraint(CoincidenceConstraint, [p,g])
 
-    def get_rigid(self, vars):
-        print "GeometricProblem.get_rigid NOT IMPLEMENTED"
-        return None
+    def get_rigid(self, variables):
+        return self.get_unique_constraint(RigidConstraint, variables)
 
-    def get_mate(self, vars):
-        print "GeometricProblem.get_mate NOT IMPLEMENTED"
-        return None
+    def get_mate(self, variables):
+        return self.get_unique_constraint(MateConstraint, variables)
 
+    def get_coincident_points(self, geometry):
+        coincidences = self.get_constraints_with_type_on_variables(CoincidenceConstraint, [geometry])
+        points = set()
+        for constraint in coincidences:
+            points.update(filter(lambda var: isinstance(var, Point) and var != geometry, constraint.variables()))
+        return points
 
     def verify(self, solution):
         """returns true iff all constraints satisfied by given solution. 
@@ -384,12 +406,13 @@ class GeometricSolver (Listener):
             drclusters = map[geocluster]
             drcluster = max(drclusters, key=lambda c: c.creationtime)
             # determine solutions
-            solutions = self.dr.get(drcluster)
+            geocluster.solutions = self._map_cluster_solutions(drcluster)
+            # determine incidental underconstrainedness
             underconstrained = False
-            if solutions != None:
-                for solution in solutions:
-                    geocluster.solutions.append(solution.map)
-                    if solution.underconstrained:
+            configurations = self.dr.get(drcluster)
+            if configurations != None:
+                for config in configurations:
+                    if config.underconstrained:
                         underconstrained = True
             # determine flag
             if drcluster.overconstrained:
@@ -442,14 +465,51 @@ class GeometricSolver (Listener):
     def get_solutions(self):
         """Returns a list of Configurations, which will be empty if the
            problem has no solutions. Note: this method is
-           cheaper but less informative than get_decomposition. The
-           list and the configurations should not be changed (since they are
-           references to objects in the solver)."""
+           cheaper but less informative than get_decomposition. 
+        """
+        #"""The list and the configurations should not be changed (since they are
+        #references to objects in the solver)."""
+        # find top level rigid and all its configurations
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
         if len(rigids) != 0:   
-            return self.dr.get(rigids[0])
+            solutions = self._map_cluster_solutions(drcluster)
         else:
-            return []
+            solutions = []
+        return solutions
+
+    def _map_cluster_solutions(self, drcluster):
+        # map dr-cluster configurations to solutions, i.e. a map from problem variables to values           
+        configurations = self.dr.get(drcluster)
+        solutions = []
+        diag_print("mapping cluster "+str(drcluster)+" #configurations="+str(len(configurations)),"GeometricSolver")
+        for configuration in configurations:
+            solution = {}
+            for var in self.problem.cg.variables():
+                if isinstance(var, Point):
+                    assert len(self._map[var].vars) == 1
+                    point = iter(self._map[var].vars).next()
+                    if point in configuration:
+                        solution[var] = configuration[point]
+                elif isinstance(var, Line):
+                    if var in self._map:
+                        vertices = list(self._map[var].vars) 
+                    else: 
+                        # when line coincident with 2 points, then not mapped to cluster... use any two coincident points
+                        points = self.problem.get_coincident_points(var)
+                        assert len(points) >= 2
+                        print "points",points
+                        vertices = map(lambda v: iter(self._map[v].vars).next(), list(points)[0:2])
+                        print "vertices",vertices
+                    assert len(vertices) == 2
+                    if vertices[0] in configuration and vertices[1] in configuration:
+                        solution[var] = vector.vector(configuration[vertices[0]]).concatonated( vector.vector(configuration[vertices[1]]) )
+                        
+                else:
+                    raise StandardError, "unknown variable type"
+            #for
+            solutions.append(solution)
+        #for    
+        return solutions
 
     def get_status(self):
         """Returns a symbolic flag, one of:
@@ -542,7 +602,50 @@ class GeometricSolver (Listener):
             self._map[rigid] = var
             self.dr.add(rigid)
             self._update_variable(var)
-     
+    
+    def _add_line(self, var):
+        diag_print("add line "+str(var),"GeometricSolver")
+        # find coincident points
+        points = list(self.problem.get_coincident_points(var))
+        diag_print("on "+str(points),"GeometricSolver")
+        if len(points) == 0:
+            self._map_line_distance(var)
+        elif len(points) == 1:
+            self._map_line_point_distance(var, points[0])
+        elif len(points) == 2:
+            self._map_line_point_point(var, points[0], points[1])
+        else: # >=3
+            self._map_line_points_radial(var, points)
+    
+    def _map_line_distance(self,line):
+        # map a line (coincident with no points) to a distance cluster (on two new point variables)
+        v1 = str(line)+"_v1"
+        v2 = str(line)+"_v2"
+        dist = Rigid([v1,v2])
+        self._map[line] = dist
+        self._map[dist] = line
+        self.dr.add(dist)
+        self._update_variable(line)
+ 
+    def _map_line_point_distance(self,line, point):
+        # map a line coincident with one point to a distance clusters (and one new point variable)
+        v1 = list(self._map[point].vars)[0]
+        v2 = str(line)+"_v2"
+        dist = Rigid([v1,v2])
+        self._map[line] = dist
+        self._map[dist] = line
+        self.dr.add(dist)
+        self._update_variable(line)
+ 
+    def _map_line_point_point(self, line, point1, point2):
+        # map a line coincident with two existing point variables; no new clusters created
+        self._update_variable(line)
+
+    def _map_line_points_radial(self, line, points):
+        # map a line coincient with three or more points to a radial clusters 
+        raise NotImplementedError
+
+ 
     def _rem_variable(self, var):
         diag_print("GeometricSolver._rem_variable","gcs")
         if var in self._map:
@@ -600,6 +703,14 @@ class GeometricSolver (Listener):
         elif isinstance(con, SelectionConstraint):
             # add directly to clustersolver
             self.dr.add_selection_constraint(con)
+        elif isinstance(con, CoincidenceConstraint):
+            # re-map lines, planes, etc
+            lines = filter(lambda var: isinstance(var,Line),con.variables())
+            if len(lines)==1:
+                line = iter(lines).next()
+                self._rem_variable(line)
+                self._add_line(line)
+            #endif
         else:
             raise StandardError, "unknown constraint type"
             pass
@@ -710,11 +821,40 @@ class GeometricSolver (Listener):
         else:
             raise StandardError, "unknown constraint type"
     
-    def _update_variable(self, variable):
+    def _update_variable(self, var):
+        if isinstance(var, Point):
+            self._update_point(var)
+        elif isinstance(var, Line):
+            self._update_line(var)
+        elif isinstance(var, Plane):
+            self._update_plane(var)
+        else:
+            # assume point - depricated
+            self._update_point(var)
+
+    def _update_point(self, variable):
         cluster = self._map[variable]
-        proto = self.problem.get_point(variable)
+        proto = self.problem.get_prototype(variable)
         conf = Configuration({variable:proto})
         self.dr.set(cluster, [conf])
+
+    def _update_line(self, variable):
+        # note: line may not be mapped to a cluster at all!
+        if variable in self._map:
+            cluster = self._map[variable]
+            proto = self.problem.get_prototype(variable)
+            vertices = list(cluster.vars);
+            v1 = vertices[0]
+            v2 = vertices[1]
+            assert self.problem.dimension==2 or self.problem.dimension==3
+            if self.problem.dimension == 2:
+                p1 = proto[0:2]
+                p2 = proto[2:4]
+            elif self.problem.dimension == 3:
+                p1 = proto[0:3]
+                p2 = proto[3:6]
+            conf = Configuration({v1:p1, v2:p2})
+            self.dr.set(cluster, [conf])
 
     def _update_fix(self):
         if self.fixcluster:
@@ -826,7 +966,7 @@ class GeometricVariable:
         return hash(self.name)
    
     def __repr__(self):
-        return repr(self.__class__)+"("+repr(self.name)+")"
+        return self.__class__.__name__+"("+repr(self.name)+")"
     
 
 class Point(GeometricVariable):
@@ -1093,17 +1233,17 @@ class CoincidenceConstraint(Constraint):
 
     def satisfied(self, mapping):
         """return True iff mapping from variable names to points satisfies constraint""" 
-        if isinstance(geometry, Point):
+        if isinstance(self._geometry, Point):
             p1 = mapping[self._point]
             p2 = mapping[self._geometry]
             return tol_eq(distance_2p(p1,p2),0)   
-        elif isinstance(geometry, Line):
+        elif isinstance(self._geometry, Line):
             p = mapping[self._point]
             l = mapping[self._geometry]
             p1 = l[0:3]
             p2 = l[3:6]
             return tol_eq(distance_point_line(p, p1, p2),0)   
-        elif isinstance(geometry, Plane):
+        elif isinstance(self._geometry, Plane):
             p = mapping[self._point]
             l = mapping[self._geometry]
             p1 = l[0:3]

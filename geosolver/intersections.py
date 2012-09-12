@@ -231,6 +231,20 @@ def distance_2p(p1, p2):
     """
     return vector.norm(p2 - p1)
 
+def distance_point_line(p,l1,l2):
+    """distance from point p to line l1-l2"""
+    # v,w is p, l2 relative to l1
+    v = p-l1
+    w = l2-l1
+    # x = projection v on w
+    l = (vector.norm(v) * vector.norm(w))
+    if tol_eq(l,0):
+        x = 0*v
+    else:
+        x = v * vector.dot(v,w) / l
+    # result is distance x,v
+    return vector.norm(x-v)
+
 # ------ 2D
 
 def is_clockwise(p1,p2,p3):

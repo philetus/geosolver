@@ -138,6 +138,13 @@ class DecompositionView(QtGui.QDialog):
 
     def optimiseGraphLayout(self):
         print "optimising graph layout..."
+        # force due to overlapping overlaps 
+        force_cluster = 0.2
+        # force due to connection length
+        force_connection = 0.025
+        # force due to clusters overlapping connections
+        force_cluster_connection = 0.05
+
         # create a graph of clusters and connections
         graph = geosolver.graph.Graph()
         if self.ui.graphicsScene != None:
@@ -150,7 +157,7 @@ class DecompositionView(QtGui.QDialog):
        
         l = list(graph.vertices())
 
-        # iteratively implove layout 
+        # iteratively improve layout 
         for i in range(100):
             # clear forces 
             for c in l:
@@ -178,9 +185,11 @@ class DecompositionView(QtGui.QDialog):
                         norm =  numpy.linalg.norm(direction)
                         if norm != 0:
                             direction = direction / numpy.linalg.norm(direction)
+                        else:
+                            direction = numpy.array([0,0])
                         #direction[1] = 0.0
-                        c1.force += -force*direction / 10.0;
-                        c2.force += force*direction / 10.0;
+                        c1.force += -force*direction * force_cluster;
+                        c2.force += force*direction * force_cluster;
                         #print "force 1", c1.force
                         #print "force 2", c2.force
             
@@ -190,30 +199,43 @@ class DecompositionView(QtGui.QDialog):
                 c2 = e[1] 
                 box1 = c1.boundingRect().translated(c1.position)
                 box2 = c2.boundingRect().translated(c2.position)
+                # force 1: pull together on x
                 centerdiff = box2.center()-box1.center()
-                direction = numpy.array([centerdiff.x(),centerdiff.y()])
+                direction = numpy.array([centerdiff.x(),0])
                 norm =  numpy.linalg.norm(direction)
                 if norm != 0:
                     direction = direction / numpy.linalg.norm(direction)
-                #goal = max(box1.width(),box2.width())
-                goal = 5 * box1.height()
-                force = (norm - goal) / 50.0
-                #direction[1] = 0.0
+                else:
+                    direction = numpy.array([0,0])
+                goal = 0 
+                force = (norm - goal) * force_connection;
+                c1.force += +force*direction;
+                c2.force += -force*direction;
+                # force 2: keep y at distance and in layer order
+                direction = numpy.array([0, centerdiff.y()])
+                norm =  numpy.linalg.norm(direction)
+                if norm != 0:
+                    direction = direction / numpy.linalg.norm(direction)
+                else:
+                    direction = numpy.array([0,0])
+                goal = box1.height() + box2.height()
+                force = (norm - goal) * force_connection;
                 c1.force += +force*direction;
                 c2.force += -force*direction;
                 #print "force ", force
+                
 
             # determine forces due to clusters overlapping connections
             n = len(l)
             for c in graph.vertices():
                 for e in graph.edges():
                     box1 = c.boundingRect().translated(c.position)
-                    box1.setWidth(2*box1.width())
-                    box1.setHeight(2*box1.height())
+                    box1.setWidth(0.5*box1.width())
+                    box1.setHeight(0.5*box1.height())
                     con = graph.get(e[0],e[1])
                     box2 = con.boundingRect()
-                    box2.setWidth(2*box2.width())
-                    box2.setHeight(2*box2.height())
+                    box2.setWidth(0.5*box2.width())
+                    box2.setHeight(0.5*box2.height())
                     #print "box 1", box1 
                     #print "box 2", box2 
                     if box1.intersects(box2):
@@ -224,23 +246,26 @@ class DecompositionView(QtGui.QDialog):
                         norm =  numpy.linalg.norm(direction)
                         if norm != 0:
                             direction = direction / numpy.linalg.norm(direction)
-                        #direction[1] = 0.0
-                        c.force += -force*direction / 50.0;
+                        else:
+                            direction = numpy.array([0,0])
+                        c.force += -force*direction * force_cluster_connection;
+                        e[0].force += force*direction * force_cluster_connection;
+                        e[1].force += force*direction * force_cluster_connection;
                         #print "force 1", c1.force
                         #print "force 2", c2.force
-            
 
             # apply forces 
             for c in l:
                 move = QtCore.QPointF(c.force[0],c.force[1])
                 c.position += move
                 c.translate(move.x(), move.y())
-        # done iterating
 
-        # uppate connectors
-        for e in graph.edges():
-            connector = graph.get(e[0],e[1])
-            connector.determinePath()
+            # uppate connectors
+            for e in graph.edges():
+                connector = graph.get(e[0],e[1])
+                connector.determinePath()
+
+        # done iterating
         print "done"
 
     def updateViewports(self):

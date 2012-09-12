@@ -590,7 +590,7 @@ class ClusterSolver(Notifier):
             if isinstance(item, Cluster):
                 for var in item.vars:
                     if len(self.find_dependend(var)) == 0:
-                        self._graph.remove(var)
+                        self._graph.rem_vertex(var)
             # notify listeners
             self.send_notify(("remove", item))
         # restore toplevel (also added to _new)

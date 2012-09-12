@@ -3,7 +3,7 @@ TODO/WISH LIST
 
 Code: Some bits of the code are ugly:
     - vector module, matpy module and Numpy package, all offer similar
-      functionality. Use only one, get rid of two. 
+      functionality. Use only one (numpy), get rid of two. 
     - more documentation!
 
 Speed: The solver is currently much too slow. The problem is the pattern

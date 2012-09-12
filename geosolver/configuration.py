@@ -333,6 +333,11 @@ class Configuration:
         else:
             return "Configuration("+str(self.map)+")"
 
+    def __contains__(self,var):
+        return var in self.map
+
+    def __getitem__(self,var):
+        return self.map[var]
 
 def testeq():
     p1 = vector.vector([0.0,0.0,0.0])
