@@ -237,11 +237,11 @@ def distance_point_line(p,l1,l2):
     v = p-l1
     w = l2-l1
     # x = projection v on w
-    l = (vector.norm(v) * vector.norm(w))
-    if tol_eq(l,0):
-        x = 0*v
+    lw = vector.norm(w)
+    if tol_eq(lw,0):
+        x = 0*w
     else:
-        x = v * vector.dot(v,w) / l
+        x = w * vector.dot(v,w) / lw
     # result is distance x,v
     return vector.norm(x-v)
 
