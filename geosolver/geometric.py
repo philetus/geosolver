@@ -620,8 +620,17 @@ class GeometricSolver (Listener):
         dist = Rigid([v,n])
         # add add-hoc attributes to rigid, so we can distinguish vertex and normal! 
         dist.vertex = v
-        dist.normal = n 
-        # add to mapping
+        dist.normal = n
+        # add rigids for created points, needed for prototypes
+        # NOTE: adding non-problem variables to mapping! 
+        # TODO: clean up after removal of line
+        vertex_rigid = Rigid([dist.vertex])
+        self.dr.add(vertex_rigid)
+        self._map[dist.vertex] = vertex_rigid 
+        normal_rigid = Rigid([dist.normal])
+        self.dr.add(normal_rigid)
+        self._map[dist.normal] = normal_rigid 
+        # add line to mapping
         self._map[line] = dist
         self._map[dist] = line
         self.dr.add(dist)
@@ -637,6 +646,12 @@ class GeometricSolver (Listener):
         # add add-hoc attributes to rigid, so we can distinguish vertex and normal! 
         dist.vertex = v
         dist.normal = n 
+        # add rigids for created points, needed for prototypes
+        # NOTE: adding non-problem variables to mapping! 
+        # TODO: clean up after removal of line
+        normal_rigid = Rigid([dist.normal])
+        self.dr.add(normal_rigid)
+        self._map[dist.normal] = normal_rigid 
         # add to mapping 
         self._map[line] = dist
         self._map[dist] = line
@@ -878,20 +893,36 @@ class GeometricSolver (Listener):
         self.dr.set(cluster, [conf])
 
     def _update_line(self, variable):
+        cluster = self._map[variable]
+        proto = self.problem.get_prototype(variable)
+        line_vertex = cluster.vertex
+        line_normal = cluster.normal
         if self.dimension == 2:
-            cluster = self._map[variable]
-            proto = self.problem.get_prototype(variable)
-            line_vertex = cluster.vertex
-            line_normal = cluster.normal
+            # determine vertex and normal prototype coordinates
             p1 = proto[0:2]
             p2 = proto[2:4]
             v = p1
             n = perp_2d(p2-p1)
+            # update prototypes of created point variables
+            if line_vertex in self._map:
+                vertex_rigid = self._map[line_vertex]
+                conf = Configuration({line_vertex: v})
+                self.dr.set(vertex_rigid, [conf])
+                diag_print("set "+str(vertex_rigid)+" to "+str(conf),"GeometricSolver")
+            if line_normal in self._map:
+                normal_rigid = self._map[line_normal]
+                conf = Configuration({line_normal: n})
+                self.dr.set(normal_rigid, [conf])
+                diag_print("set "+str(normal_rigid)+" to "+str(conf),"GeometricSolver")
+            # update line configuration
             conf = Configuration({line_vertex:v, line_normal:n})
             self.dr.set(cluster, [conf])
             diag_print("set "+str(cluster)+" to "+str(conf),"GeometricSolver")
+
         elif self.dimension == 3:
             raise NotImplementedError
+               
+
 
     def _update_fix(self):
         if self.fixcluster:

@@ -13,7 +13,11 @@ Speed: The solver is currently much too slow. The problem is the pattern
     - compliled implementation (Psycho/C++/Haskell/???)
 
 Rules: More rewrite rules to increase the problem domain:
-    - need 3d rule: merge of 2 rigids with 2 shared points (hinge) + hog with angle not on hinge points  
+    - need 2d and 3d rules for merging radial clusters 
+       2D:H+H->H sharing center and 1 point
+       3D:H+H+H-> sharing center and 3 points, 2 points per pair of hogs
+       3D:H+H->H sharing center and 2 points (local overconstrained)
+    - need 3d rule: merge of 2 rigids with 2 shared points (hinge) + hog with angle not on hinge points 
     - larger subproblems (octahedron, variable radius spheres/cylinders)
     - new clusters types (N degrees of freedom)
 
@@ -26,6 +30,8 @@ Extentions:
     - hybrid with other solving methods: and-propagation, iterative solvers, etc.
 
 BUGS:
+
+- prototype based selection doesn't seem to work on line mappings
 
 - stop problem from rotating and jumping around when there are no fixed points. It should 
   be as close to the prototype as possible; 
@@ -58,4 +64,14 @@ def diamond_3d():
   or: 
        FixConstraint(v2=[-5.0, 5.0, 0.0]) not satisfied
        FixConstraint(v1=[0.0, 0.0, 0.0]) not satisfied
+
+- 2D deriveADD accepts this pattern, but fails during execution. 
+    Angle(p3,p2,p4)
+    Rigid(p1,p2,p4)    
+    Distance(p1,p3)
+   Note: this pattern can be solved only in 2D. To keep DeriveADD general
+     (and simple), pattern matching should be more strict, allowing only
+     patterns where the angle constraint is in the derived triangle.
+     An extra rule is needed to merge two angles (radial clusters) in 2D. 
+     In 3D, three radial clusters can be merged.
 

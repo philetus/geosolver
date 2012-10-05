@@ -99,7 +99,21 @@ def line_problem_2d_2():
     problem.add_constraint(DistanceConstraint(Point('p1'), Point('p2'), 5.0))
     return problem 
 
-def line_problem_2d_3():
+def line_problem_2d_3a():
+    """A problem with a Line and a 3 CoincicentConstraints"""
+    problem = GeometricProblem(dimension=2)
+    problem.add_variable(Point('p1'),vector([3.0, 2.0]))
+    problem.add_variable(Point('p2'),vector([1.0, 1.0]))
+    problem.add_variable(Line('l1'),vector([0.0, 0.0, 1.0, 1.0]))
+    problem.add_constraint(CoincidenceConstraint(Point('p1'), Line('l1')))
+    problem.add_constraint(CoincidenceConstraint(Point('p2'), Line('l1')))
+    problem.add_constraint(DistanceConstraint(Point('p1'), Point('p2'), 5.0))
+    problem.add_variable(Point('p3'),vector([1.0, 0.0]))
+    problem.add_constraint(CoincidenceConstraint(Point('p3'), Line('l1')))
+    problem.add_constraint(DistanceConstraint(Point('p3'), Point('p2'), 8.0))
+    return problem 
+
+def line_problem_2d_3b():
     """A problem with a Line and a 3 CoincicentConstraints"""
     problem = GeometricProblem(dimension=2)
     problem.add_variable(Point('p1'),vector([3.0, 2.0]))
@@ -112,6 +126,7 @@ def line_problem_2d_3():
     problem.add_constraint(CoincidenceConstraint(Point('p3'), Line('l1')))
     problem.add_constraint(DistanceConstraint(Point('p1'), Point('p3'), 8.0))
     return problem 
+
 
 def line_problem_2d_4():
     """A problem with a Line and a 4 CoincicentConstraints"""
@@ -136,7 +151,8 @@ def test_line():
     #test(line_problem_2d_0())
     #test(line_problem_2d_1())
     #test(line_problem_2d_2())
-    test(line_problem_2d_3())
+    test(line_problem_2d_3a())
+    #test(line_problem_2d_3b())
     #test(line_problem_2d_4())
 
     #test(line_problem_3d_0())
