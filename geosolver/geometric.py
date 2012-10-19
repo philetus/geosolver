@@ -18,7 +18,7 @@ from intersections import distance_point_line
 from intersections import is_left_handed, is_right_handed
 from intersections import is_clockwise, is_counterclockwise 
 from intersections import transform_point, make_hcs_3d
-from intersections import perp_2d
+from intersections import perp_2d, perp_3d
 
 # ----------- GeometricProblem -------------
 
@@ -418,13 +418,13 @@ class GeometricSolver (Listener):
                         underconstrained = True
             # determine flag
             if drcluster.overconstrained:
-                geocluster.flag = GeometricDecomposition.S_OVER
+                geocluster.flag = GeometricDecomposition.OVERCONSTRAINED
             elif geocluster.solutions == None:
                 geocluster.flag = GeometricDecomposition.UNSOLVED
             elif len(geocluster.solutions) == 0:
-                geocluster.flag = GeometricDecomposition.I_OVER
+                geocluster.flag = GeometricDecomposition.INCONSISTENT
             elif underconstrained:
-                geocluster.flag = GeometricDecomposition.I_UNDER
+                geocluster.flag = GeometricDecomposition.DEGENERTE
             else:
                 geocluster.flag = GeometricDecomposition.OK
 
@@ -447,7 +447,7 @@ class GeometricSolver (Listener):
         if len(top) > 1:
             # structurally underconstrained cluster
             result = GeometricDecomposition(self.problem.cg.variables())
-            result.flag = GeometricDecomposition.S_UNDER
+            result.flag = GeometricDecomposition.UNDERCONSTRAINED
             for cluster in rigids:
                 result.subs.append(map[cluster])
         else:
@@ -493,19 +493,34 @@ class GeometricSolver (Listener):
                     if point in configuration:
                         solution[var] = configuration[point]
                 elif isinstance(var, Line):
-                        line_rigid = self._map[var]
+                    line_rigid = self._map[var]
+                    if self.dimension == 2:
                         line_vertex = line_rigid.vertex 
                         line_normal = line_rigid.normal
                         if line_vertex in configuration and line_normal in configuration:
                             p1 = configuration[line_vertex]
                             n = configuration[line_normal]
-                            if self.dimension == 2:
-                                p2 = p1 + perp_2d(n-p1)
-                            else:
-                                raise NotImplementedError
+                            p2 = p1 + perp_2d(n-p1)
                             solution[var] = p1.concatonated(p2)
+                        #endif in config
+                    elif self.dimension == 3:
+                        line_vertex = line_rigid.vertex 
+                        line_normal1 = line_rigid.normal1
+                        line_normal2 = line_rigid.normal2
+                        if line_vertex in configuration and line_normal1 in configuration and line_normal2 in configuration:
+                            p1 = configuration[line_vertex]
+                            n1 = configuration[line_normal1]
+                            n2 = configuration[line_normal2]
+                            p2 = p1 + vector.cross(n1-p1, n2-p1)
+                            solution[var] = p1.concatonated(p2)
+                        #endif in config
+                    #endif dimension 
                 else:
-                    raise StandardError, "unknown variable type"
+                    # assume point - depricated
+                    assert len(self._map[var].vars) == 1
+                    point = iter(self._map[var].vars).next()
+                    if point in configuration:
+                        solution[var] = configuration[point]
             #for
             solutions.append(solution)
         #for    
@@ -513,13 +528,13 @@ class GeometricSolver (Listener):
 
     def get_status(self):
         """Returns a symbolic flag, one of:
-            GeometricDecomposition.S_UNDER, 
-            GeometricDecomposition.S_OVER,
+            GeometricDecomposition.UNDERCONSTRAINED, 
+            GeometricDecomposition.OVERCONSTRAINED,
             GeometricDecomposition.OK,
             GeometricDecomposition.UNSOLVED,
             GeometricDecomposition.EMPTY,
-            GeometricDecomposition.I_OVER,
-            GeometricDecomposition.I_UNDER.
+            GeometricDecomposition.INCONSISTENT,
+            GeometricDecomposition.DEGENERTE.
            Note: this method is cheaper but less informative than get_decomposition. 
         """
         rigids = filter(lambda c: isinstance(c, Rigid), self.dr.top_level())
@@ -536,15 +551,15 @@ class GeometricSolver (Listener):
                     if solution.underconstrained:
                         underconstrained = True
             if drcluster.overconstrained:
-                return GeometricDecomposition.S_OVER
+                return GeometricDecomposition.OVERCONSTRAINED
             elif len(solutions) == 0:
-                return GeometricDecomposition.I_OVER
+                return GeometricDecomposition.INCONSISTENT
             elif underconstrained:
-                return GeometricDecomposition.I_UNDER
+                return GeometricDecomposition.DEGENERTE
             else:
                 return GeometricDecomposition.OK
         else:
-            return GeometricDecomposition.S_UNDER
+            return GeometricDecomposition.UNDERCONSTRAINED
    
 
     def receive_notify(self, object, message):
@@ -608,11 +623,17 @@ class GeometricSolver (Listener):
         # find coincident points
         points = list(self.problem.get_coincident_points(var))
         diag_print("on "+str(points),"GeometricSolver")
-        if len(points) == 0:
-            self._map_line_distance(var)
-        elif len(points) >= 1:
-            self._map_line_point_distance(var, points[0])
- 
+        if self.dimension == 2:
+            if len(points) == 0:
+                self._map_line_distance(var)
+            elif len(points) >= 1:
+                self._map_line_point_distance(var, points[0])
+        elif self.dimension == 3:
+            if len(points) == 0:
+                self._map_line_3d_distance(var)
+            elif len(points) >= 1:
+                self._map_line_3d_point_distance(var, points[0])
+
     def _map_line_distance(self,line):
         # map a line (coincident with no points) to a distance cluster (on two new point variables)
         v = str(line)+"_vertex"
@@ -659,6 +680,62 @@ class GeometricSolver (Listener):
         diag_print("mapped "+str(line)+" to "+str(dist),"GeometricSolver")   
         self._update_variable(line)
  
+    def _map_line_3d_distance(self,line):
+        # map a line (coincident with no points) to a distance cluster (on two new point variables)
+        v = str(line)+"_vertex"
+        n1 = str(line)+"_normal1"
+        n2 = str(line)+"_normal2"
+        dist = Rigid([v,n1, n2])
+        # add add-hoc attributes to rigid, so we can distinguish vertex and normal! 
+        dist.vertex = v
+        dist.normal1 = n1
+        dist.normal2 = n2
+        # add rigids for created points, needed for prototypes
+        # NOTE: adding non-problem variables to mapping! 
+        # TODO: clean up after removal of line
+        vertex_rigid = Rigid([dist.vertex])
+        self.dr.add(vertex_rigid)
+        self._map[dist.vertex] = vertex_rigid 
+        normal1_rigid = Rigid([dist.normal1])
+        self.dr.add(normal1_rigid)
+        self._map[dist.normal1] = normal1_rigid 
+        normal2_rigid = Rigid([dist.normal2])
+        self.dr.add(normal2_rigid)
+        self._map[dist.normal2] = normal2_rigid 
+        # add line to mapping
+        self._map[line] = dist
+        self._map[dist] = line
+        self.dr.add(dist)
+        diag_print("mapped "+str(line)+" to "+str(dist),"GeometricSolver")   
+        # update configurations
+        self._update_variable(line)
+
+    def _map_line_3d_point_distance(self,line, point):
+        # map a line coincident with one point to a distance clusters (and one new point variable)
+        v = list(self._map[point].vars)[0]
+        n1 = str(line)+"_normal1"
+        n2 = str(line)+"_normal2"
+        dist = Rigid([v,n1, n2])
+        # add add-hoc attributes to rigid, so we can distinguish vertex and normal! 
+        dist.vertex = v
+        dist.normal1 = n1 
+        dist.normal2 = n2 
+        # add rigids for created points, needed for prototypes
+        # NOTE: adding non-problem variables to mapping! 
+        # TODO: clean up after removal of line
+        normal1_rigid = Rigid([dist.normal1])
+        self.dr.add(normal1_rigid)
+        self._map[dist.normal1] = normal1_rigid 
+        normal2_rigid = Rigid([dist.normal2])
+        self.dr.add(normal2_rigid)
+        self._map[dist.normal2] = normal2_rigid 
+        # add to mapping 
+        self._map[line] = dist
+        self._map[dist] = line
+        self.dr.add(dist)
+        diag_print("mapped "+str(line)+" to "+str(dist),"GeometricSolver")   
+        self._update_variable(line)
+
     def _rem_variable(self, var):
         diag_print("GeometricSolver._rem_variable","GeometricSolver")
         if var in self._map:
@@ -731,16 +808,28 @@ class GeometricSolver (Listener):
                 point_rigid = self._map[point]
                 point_vertex = iter(point_rigid.vars).next()
                 if point_vertex not in line_rigid.vars:
-                    line_vertex = line_rigid.vertex
-                    line_normal = line_rigid.normal  
-                    angle_hog = Hedgehog(line_vertex,[line_normal, point_vertex])
-                    self._map[con] = angle_hog 
-                    self._map[angle_hog] = con
-                    self.dr.add(angle_hog)
-                    diag_print("mapped "+str(con)+" to "+str(angle_hog),"GeometricSolver")   
-                    self._update_constraint(con)
-                #endif
-            #endif
+                    if self.dimension==2:
+                        line_vertex = line_rigid.vertex
+                        line_normal = line_rigid.normal  
+                        angle_hog = Hedgehog(line_vertex,[line_normal, point_vertex])
+                        self._map[con] = angle_hog 
+                        self._map[angle_hog] = con
+                        self.dr.add(angle_hog)
+                        diag_print("mapped "+str(con)+" to "+str(angle_hog),"GeometricSolver")   
+                        self._update_constraint(con)
+                    elif self.dimension==3:
+                        line_vertex = line_rigid.vertex
+                        line_normal1 = line_rigid.normal1  
+                        line_normal2 = line_rigid.normal2  
+                        angle_hog = Hedgehog(line_vertex,[line_normal1, line_normal2, point_vertex])
+                        self._map[con] = angle_hog 
+                        self._map[angle_hog] = con
+                        self.dr.add(angle_hog)
+                        diag_print("mapped "+str(con)+" to "+str(angle_hog),"GeometricSolver")   
+                        self._update_constraint(con)
+                    #endif dimension
+                #endif point_vertex
+            #endif co(line,point)
         else:
             raise StandardError, "unknown constraint type"
             pass
@@ -870,8 +959,25 @@ class GeometricSolver (Listener):
                     self.dr.set(angle_hog, [conf1,conf2])
                     diag_print("set "+str(angle_hog)+" to "+str(conf1),"GeometricSolver")
                     diag_print("set "+str(angle_hog)+" to "+str(conf2),"GeometricSolver")
-                else:
-                    raise NotImplementedError
+                elif self.dimension == 3:
+                    line_rigid = self._map[line]
+                    point_rigid = self._map[point]
+                    point_vertex = iter(point_rigid.vars).next()
+                    print "point_vertex", point_vertex
+                    line_vertex = line_rigid.vertex
+                    line_normal1 = line_rigid.normal1
+                    line_normal2 = line_rigid.normal2
+                    angle_hog = self._map[con]
+                    lv = vector.vector([0.0,0.0,0.0])
+                    pv = vector.vector([1.0,0.0,0.0])
+                    ln1 = vector.vector([0.0,1.0,0.0])
+                    ln2 = vector.vector([0.0,0.0,1.0])
+                    conf1 = Configuration({line_vertex:lv, line_normal1:ln1, line_normal2:ln2, point_vertex: 1.0*pv})
+                    conf2 = Configuration({line_vertex:lv, line_normal1:ln1, line_normal2:ln2, point_vertex:-1.0*pv})
+                    self.dr.set(angle_hog, [conf1,conf2])
+                    diag_print("set "+str(angle_hog)+" to "+str(conf1),"GeometricSolver")
+                    diag_print("set "+str(angle_hog)+" to "+str(conf2),"GeometricSolver")
+               #endif dimension
         else:
             raise StandardError, "unknown constraint type"
     
@@ -895,9 +1001,9 @@ class GeometricSolver (Listener):
     def _update_line(self, variable):
         cluster = self._map[variable]
         proto = self.problem.get_prototype(variable)
-        line_vertex = cluster.vertex
-        line_normal = cluster.normal
         if self.dimension == 2:
+            line_vertex = cluster.vertex
+            line_normal = cluster.normal
             # determine vertex and normal prototype coordinates
             p1 = proto[0:2]
             p2 = proto[2:4]
@@ -918,11 +1024,40 @@ class GeometricSolver (Listener):
             conf = Configuration({line_vertex:v, line_normal:n})
             self.dr.set(cluster, [conf])
             diag_print("set "+str(cluster)+" to "+str(conf),"GeometricSolver")
-
         elif self.dimension == 3:
-            raise NotImplementedError
-               
-
+            line_vertex = cluster.vertex
+            line_normal1 = cluster.normal1
+            line_normal2 = cluster.normal2
+            # determine vertex and normal prototype coordinates
+            p1 = proto[0:3]
+            p2 = proto[3:6]
+            v = p1
+            n0 = p2
+            n1,n2 = perp_3d(p2-p1)
+            n1 = n1 + p1
+            n2 = n2 + p1
+            # update prototypes of created point variables
+            if line_vertex in self._map:
+                vertex_rigid = self._map[line_vertex]
+                conf = Configuration({line_vertex: v})
+                self.dr.set(vertex_rigid, [conf])
+                diag_print("set "+str(vertex_rigid)+" to "+str(conf),"GeometricSolver")
+            if line_normal1 in self._map:
+                normal1_rigid = self._map[line_normal1]
+                conf = Configuration({line_normal1: n1})
+                self.dr.set(normal1_rigid, [conf])
+                diag_print("set "+str(normal1_rigid)+" to "+str(conf),"GeometricSolver")
+            if line_normal2 in self._map:
+                normal2_rigid = self._map[line_normal2]
+                conf = Configuration({line_normal2: n2})
+                self.dr.set(normal2_rigid, [conf])
+                diag_print("set "+str(normal2_rigid)+" to "+str(conf),"GeometricSolver")
+            # update line configuration
+            conf = Configuration({line_vertex:v, line_normal1:n1, line_normal2:n2})
+            self.dr.set(cluster, [conf])
+            diag_print("set "+str(cluster)+" to "+str(conf),"GeometricSolver")
+        #endif dimension
+    #fed _update_line
 
     def _update_fix(self):
         if self.fixcluster:
@@ -950,28 +1085,33 @@ class GeometricDecomposition:
        under/overconstrained
        
        instance attributes:
-            variables       - a list of point variable names
+            variables       - a list of int variable names
             solutions       - a list of solutions. Each solution is a dictionary 
                               mapping variable names to vectors. 
             subs            - a list of sub-clusters 
             flag            - value                 meaning
                               OK                    well constrained
-                              I_OVER                incicental over-constrained
-                              I_UNDER               incidental under-constrained
-                              S_OVER                structural overconstrained 
-                              S_UNDER               structural underconstrained
+                              INCONSISTENT                incicental over-constrained
+                              DEGENERTE               incidental under-constrained
+                              OVERCONSTRAINED                structural overconstrained 
+                              UNDERCONSTRAINED               structural underconstrained
                               UNSOLVED              unsolved (no input values)
                               EMPTY                 empty (no variables)
        """
 
     OK = "well-constrained"
-    I_OVER = "incidental over-constrained"      
-    I_UNDER = "incidental under-constrained" 
-    S_OVER = "structral over-constrained"
-    S_UNDER = "structural under-constrained"
     UNSOLVED = "unsolved"
     EMPTY = "empty"
-   
+    OVERCONSTRAINED = "over-constrained"
+    UNDERCONSTRAINED = "under-constrained"
+    INCONSISTENT = "inconsistent"
+    DEGENERATE = "degenerate"
+    # old, depricated terms
+    I_OVER = "inconsistent"      
+    I_UNDER = "degenerate" 
+    S_OVER = "over-constrained"
+    S_UNDER = "under-constrained"
+
     def __init__(self, variables):
         """initialise an empty new cluster"""
         self.variables = frozenset(variables)

@@ -9,7 +9,7 @@ Code: Some bits of the code are ugly:
 Speed: The solver is currently much too slow. The problem is the pattern
    matching algorithms that is used to find combinations of clusters that 
    can be rewritten/merged. Solutions:
-    - incremental pattern matching system (work in progress)
+    - incremental pattern matching system (RETE?) (work in progress)
     - compliled implementation (Psycho/C++/Haskell/???)
 
 Rules: More rewrite rules to increase the problem domain:
@@ -69,9 +69,9 @@ def diamond_3d():
     Angle(p3,p2,p4)
     Rigid(p1,p2,p4)    
     Distance(p1,p3)
-   Note: this pattern can be solved only in 2D. To keep DeriveADD general
-     (and simple), pattern matching should be more strict, allowing only
-     patterns where the angle constraint is in the derived triangle.
-     An extra rule is needed to merge two angles (radial clusters) in 2D. 
-     In 3D, three radial clusters can be merged.
+   Note: this pattern can be solved only in 2D. To use DeriveADD for 2D and 3D
+(and to keep it simple), pattern matching should be more strict, allowing only
+patterns where the angle constraint is in the derived triangle.  An extra rule
+is needed to merge two angles (radial clusters) in 2D.  In 3D, three radial
+clusters can be merged.
 

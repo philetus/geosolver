@@ -137,12 +137,12 @@ def line_problem_2d_4():
     problem.add_constraint(CoincidenceConstraint(Point('p1'), Line('l1')))
     problem.add_constraint(CoincidenceConstraint(Point('p2'), Line('l1')))
     problem.add_constraint(DistanceConstraint(Point('p1'), Point('p2'), 5.0))
-    problem.add_variable(Point('p3'),vector([0.0, 0.0, 1.0]))
+    problem.add_variable(Point('p3'),vector([2.0, 0.0]))
     problem.add_constraint(CoincidenceConstraint(Point('p3'), Line('l1')))
-    problem.add_constraint(DistanceConstraint(Point('p1'), Point('p3'), 8.0))
-    problem.add_variable(Point('p4'),vector([1.0, 0.0, 1.0]))
+    problem.add_constraint(DistanceConstraint(Point('p2'), Point('p3'), 8.0))
+    problem.add_variable(Point('p4'),vector([3.0, 0.0]))
     problem.add_constraint(CoincidenceConstraint(Point('p4'), Line('l1')))
-    problem.add_constraint(DistanceConstraint(Point('p1'), Point('p4'), 0.1))
+    problem.add_constraint(DistanceConstraint(Point('p2'), Point('p4'), 0.1))
     return problem 
 
 
@@ -151,13 +151,13 @@ def test_line():
     #test(line_problem_2d_0())
     #test(line_problem_2d_1())
     #test(line_problem_2d_2())
-    test(line_problem_2d_3a())
+    #test(line_problem_2d_3a())
     #test(line_problem_2d_3b())
     #test(line_problem_2d_4())
 
     #test(line_problem_3d_0())
     #test(line_problem_3d_1())
-    #test(line_problem_3d_2())
+    test(line_problem_3d_2())
     #test(line_problem_3d_3())
     #test(line_problem_3d_4())
 
