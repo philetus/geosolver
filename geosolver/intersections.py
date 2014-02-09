@@ -343,13 +343,13 @@ def make_hcs_3d (a, b, c, righthanded=True):
         v = vector.vector([0.0,1.0,0.0])
     elif tol_eq(nu, 0.0):
         # determine u perpendicular from v
-        u,dummy = perp_3d(v)[0]
+        u,dummy = perp_3d(v)
     elif tol_eq(nv, 0.0):
         # determine v perpendicular from u
-        dummy,v = perp_3d(u)[0]
+        dummy,v = perp_3d(u)
     # ensure that u and v are different
     if tol_eq(vector.norm(u-v),0.0):
-        dummy,v = perp_3d(u)[0]
+        dummy,v = perp_3d(u)
     # make the basis vectors orthogonal
     w = vector.cross(u,v)
     v = vector.cross(w,u)
